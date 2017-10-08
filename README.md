@@ -1,14 +1,3 @@
-User Stories:
-1. Login Page
-2. If first time login fil up a form of interested or pull from facebook api 
-3. home page - show feed from your everyone in your neighborhood
-4. top user should have ability to post and post media (text, image or video and also device camera to post)
-5. settings page - preferences of range (miles)
-6. Recommended group and user can create new group and ask friends to join. 
-7. Upcoming events
-8. Recommendation for services in your local area
-9. location based feedback
-
 # Group Project - *Hamlet*
 
 **Hamlet** is an android app that allows a user to stay in touch with their local negihboorhood. Whether you want to discover like minded friends in your neighborhood or want to organize walks after dropping kids to schools or organize the next halloween decorations now there is an easier way to connect and discover your hamlet. This app will utilize Facebook API for finding new connections.
@@ -20,9 +9,9 @@ The following **required** functionality:
 
 * [] User can **sign in to Hamlet** using facebook SDK.
 * [] User can view feed from everyone in their current geographic location.
-	* [] User can view feed based on their personal recommendations.
+* [] User can view feed based on their personal recommendations.
 * [] User can navigate to **view their own profile**
-  * [] User can see edit their preferences in the settings. 
+* [] User can see edit their preferences in the settings. 
 * [] User can add new post from home page in text , image or video format. 
 * [] User can join any recommneded groups or create a new group
 * [] User can view upcoming local events or create a new event
