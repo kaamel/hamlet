@@ -24,12 +24,13 @@ The following **required** functionality:
   * [ ] The list of matches on their phone will change accordingly
   * [ ] They will appear or disappear from the other users' lists accordingly
 * [ ] User can dismiss any user from their list
-  * [ ] They will disappear from the other user's list
+  * [ ] The dimssied user will dispear from the user's list for the duration of the session
+  * [ ] The user that takes the dismiss action will also disappear from the other user's list
 * [ ] When a user touchs another user on the list a **detail view** 
 * [ ] The detail view has several sub views
   * [ ] In a text view it shows the information that the other user has made available to **public** 
   * [ ] It has a **connect** button
-  * [ ] It has a ***return** button
+  * [ ] It has a **return** button
 * [ ] In the detail view the user can take actions 
   * [ ] When the user touches the **connect** button an alert dialog dialog appears with only a **end** button
   * [ ] The **end** button will terminate the user's attempt to connect
