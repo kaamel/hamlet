@@ -106,7 +106,7 @@ The following **optional** features are implemented:
   * [ ] An image button that can play the attached audio, **if applicable**
   * [ ] A video controller view (play, pause, stop, etc) than control the playback of the attached view **if applicable**
   * [ ] A map view that shows the current attached location, **if applicable**
-* [ ] **Extrem Stretch:** The users can establish long term relationshiops in the chat view
+* [ ] **Extreme Stretch:** The users can establish long term relationshiops in the chat view
   * [ ] Become Friends though Facebook
   * [ ] Follow each other on Twitter
   * [ ] Connected through Google+
