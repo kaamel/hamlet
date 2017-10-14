@@ -1,13 +1,6 @@
 apply plugin: 'com.android.application'
 apply from: '../config/quality/quality.gradle'
 
-// Load sensitive project properties
-ext.projectProps = {
-    def props = new Properties()
-    props.load(new FileInputStream(rootProject.file("project.properties")))
-    project.ext.projectProps = props
-}()
-
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
@@ -20,7 +13,6 @@ android {
         versionName "1.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.setUseSupportLibrary true
-        //buildConfigField "String", "FLICKR_API_KEY", projectProps.flickrApiKey
     }
 
     buildTypes {
