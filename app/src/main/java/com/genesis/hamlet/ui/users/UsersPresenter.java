@@ -1,7 +1,15 @@
 package com.genesis.hamlet.ui.users;
 
+import android.content.Context;
+
 import com.genesis.hamlet.data.DataRepository;
+import com.genesis.hamlet.data.DataSource;
+import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.util.mvp.BasePresenter;
+import com.genesis.hamlet.util.threading.MainUiThread;
+import com.genesis.hamlet.util.threading.ThreadExecutor;
+
+import java.util.List;
 
 /**
  * The Presenter that fetches photo data by calling {@link DataRepository} at the request of
@@ -16,4 +24,56 @@ import com.genesis.hamlet.util.mvp.BasePresenter;
  */
 public class UsersPresenter extends BasePresenter<UsersContract.View> implements
         UsersContract.Presenter {
+
+    private DataRepository dataRepository;
+    private ThreadExecutor threadExecutor;
+    private MainUiThread mainUiThread;
+
+    public UsersPresenter(UsersContract.View view, DataRepository dataRepository,
+                          ThreadExecutor threadExecutor, MainUiThread mainUiThread) {
+        this.view = view;
+        this.dataRepository = dataRepository;
+        this.threadExecutor = threadExecutor;
+        this.mainUiThread = mainUiThread;
+    }
+
+    @Override
+    public void getUsers(Context context) {
+        if (view == null) {
+            return;
+        }
+
+        view.setProgressBar(true);
+
+        dataRepository.getUsers(context, new DataSource.GetUsersCallback() {
+            @Override
+            public void onSuccess(List<User> users) {
+                if (view != null) {
+                    view.showUsers(users);
+                    view.setProgressBar(false);
+                    view.shouldShowPlaceholderText();
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                if (view != null) {
+                    view.setProgressBar(false);
+                    //// TODO: 10/14/17 set error message here
+                    view.showToastMessage("Something went wrong");
+                    view.shouldShowPlaceholderText();
+                }
+            }
+
+            @Override
+            public void onNetworkFailure() {
+                if (view != null) {
+                    view.setProgressBar(false);
+                    //// TODO: 10/14/17 set the network error message here
+                    view.showToastMessage("Something wrong with network");
+                    view.shouldShowPlaceholderText();
+                }
+            }
+        });
+    }
 }

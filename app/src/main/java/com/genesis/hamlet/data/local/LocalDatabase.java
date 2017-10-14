@@ -1,13 +1,14 @@
 package com.genesis.hamlet.data.local;
 
-import android.support.v4.util.LongSparseArray;
 import android.util.SparseArray;
 
 import com.genesis.hamlet.data.models.mmessage.MMessage;
 import com.genesis.hamlet.data.models.user.User;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The class defining the local datastore
@@ -29,7 +30,7 @@ public class LocalDatabase {
     /**
      * userId -> user
      */
-    private static final LongSparseArray<User> usersDB = new LongSparseArray<>();
+    private static final Map<String, User> usersDB = new HashMap<>();
 
     /**
      * mMessageId -> mMessage
@@ -37,26 +38,26 @@ public class LocalDatabase {
     private static final SparseArray<MMessage> mMessagesDB = new SparseArray<>();
 
     public static User getLoggedInUser() {
+        if (loggedInUser != null)
+            return loggedInUser;
+        //// TODO: 10/14/17 uncomment this section when Firebase is setup
+        /*
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser == null)
+            return null;
+        loggedInUser = UserHelper.extractUser(firebaseUser);
+        */
         return loggedInUser;
     }
 
-    public static void setLoggedInUser(User user) {
-        loggedInUser = user;
-    }
-
-    public static void setUsers(List<User> users) {
+    public static void storeUsers(List<User> users) {
         usersDB.clear();
         for (User user: users) {
-            usersDB.append(user.getId(), user);
+            usersDB.put(user.getUid(), user);
         }
     }
 
     public static List<User> getUsers() {
-        List<User> us = new ArrayList<>();
-        int size =usersDB.size();
-        for (int i = 0; i< size; i++) {
-            us.add(usersDB.valueAt(i));
-        }
-        return us;
+        return new ArrayList<>(usersDB.values());
     }
 }

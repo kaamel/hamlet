@@ -1,9 +1,14 @@
 package com.genesis.hamlet.data;
 
+import android.content.Context;
+
 import com.genesis.hamlet.data.local.LocalDataSource;
 import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.data.remote.RemoteDataSource;
+import com.genesis.hamlet.util.NetworkHelper;
 import com.genesis.hamlet.util.mvp.BasePresenter;
+
+import java.util.List;
 
 /**
  * The primary class for the presenters that extend
@@ -39,11 +44,35 @@ public class DataRepository {
     }
 
     public User getLoggedInUser() {
-        User user = localDataSource.getLoggedInUser();
-        if (user == null) {
-            user = remoteDataSource.getLoggedInUser();
+        return localDataSource.getLoggedInUser();
+    }
+
+    public void getUsers(Context context, final DataSource.GetUsersCallback getUsersCallback) {
+
+        if (NetworkHelper.getInstance().isNetworkAvailable(context)) {
+            remoteDataSource.getUsers(context, new DataSource.GetUsersCallback() {
+                @Override
+                public void onSuccess(List<User> users) {
+                    getUsersCallback.onSuccess(users);
+                    ((LocalDataSource) localDataSource).storeUsers(users);
+                }
+
+                @Override
+                public void onFailure(Throwable throwable) {
+                    getUsersCallback.onFailure(throwable);
+                }
+
+                @Override
+                public void onNetworkFailure() {
+                    getUsersCallback.onNetworkFailure();
+                }
+            }, 0);
+        } else {
+            localDataSource.getUsers(context, getUsersCallback, 0);
         }
-        return user;
+
+
+        //// TODO: 10/14/17
     }
 
 }

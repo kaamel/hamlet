@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.genesis.carouselmvp.R;
-import com.genesis.hamlet.HamletApplication;
 import com.genesis.hamlet.data.DataRepository;
 import com.genesis.hamlet.data.DataSource;
 import com.genesis.hamlet.data.local.LocalDataSource;
@@ -23,19 +22,16 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        DataRepository dataRepository = DataRepository.getInstance(
+        final DataRepository dataRepository = DataRepository.getInstance(
                 new RemoteDataSource(MainUiThread.getInstance(), ThreadExecutor.getInstance()),
                 new LocalDataSource(MainUiThread.getInstance(), ThreadExecutor.getInstance()));
 
-        if (HamletApplication.getMe() == null) {
-            HamletApplication.setMe(dataRepository.getLoggedInUser());
-        }
-        if (HamletApplication.getMe() == null)
+        User me = dataRepository.getLoggedInUser();
+        if (me == null)
             loginUser(new DataSource.GetUserCallback() {
 
                 @Override
                 public void onSuccess(User user) {
-                    HamletApplication.setMe(user);
                     continueToUsersList();
                 }
 

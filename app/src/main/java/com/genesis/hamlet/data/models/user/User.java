@@ -2,18 +2,18 @@
 package com.genesis.hamlet.data.models.user;
 
 public class User {
-    private long id;
+    private String uid;
     private String displayName;
-    private String firstName;
-    private String lastName;
-    private String phontId;
+    private String photoUrl;
+    private String email;
+    private String phoneNumber;
 
-    public long getId() {
-        return id;
+    public String getUid() {
+        return uid;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getDisplayName() {
@@ -24,27 +24,27 @@ public class User {
         this.displayName = displayName;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getPhotoUrl() {
+        return photoUrl;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getEmail() {
+        return email;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getPhontId() {
-        return phontId;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setPhontId(String phontId) {
-        this.phontId = phontId;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

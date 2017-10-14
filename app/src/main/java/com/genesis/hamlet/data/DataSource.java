@@ -1,5 +1,7 @@
 package com.genesis.hamlet.data;
 
+import android.content.Context;
+
 import com.genesis.hamlet.data.local.LocalDataSource;
 import com.genesis.hamlet.data.models.mmessage.MMessage;
 import com.genesis.hamlet.data.models.user.User;
@@ -53,6 +55,6 @@ public abstract class DataSource {
     }
 
     public abstract User getLoggedInUser();
-    public abstract void getUsers(GetUsersCallback getUsersCallback, long maxJoinTime);
-    public abstract void getMMessages(GetMMessagesCallback getMMessagesCallback, long maxId);
+    public abstract void getUsers(Context context, GetUsersCallback getUsersCallback, long maxJoinTime);
+    public abstract void getMMessages(Context context, GetMMessagesCallback getMMessagesCallback, long maxId);
 }

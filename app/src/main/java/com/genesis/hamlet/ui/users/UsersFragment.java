@@ -8,7 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.util.mvp.BaseView;
+
+import java.util.List;
 
 
 /**
@@ -53,5 +56,15 @@ public class UsersFragment extends BaseView implements UsersContract.View {
     @Override
     public void onPause() {
         super.onPause();
+    }
+
+    @Override
+    public void showUsers(List<User> users) {
+
+    }
+
+    @Override
+    public void shouldShowPlaceholderText() {
+
     }
 }
