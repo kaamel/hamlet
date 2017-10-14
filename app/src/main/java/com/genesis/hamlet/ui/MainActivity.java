@@ -9,7 +9,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
-import com.genesis.carouselmvp.R;
+import com.genesis.hamlet.R;
 import com.genesis.hamlet.util.BaseFragmentInteractionListener;
 import com.genesis.hamlet.util.FoaBaseActivity;
 import com.genesis.hamlet.util.NetworkHelper;

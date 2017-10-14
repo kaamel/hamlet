@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.genesis.carouselmvp.R;
+import com.genesis.hamlet.R;
 
 /**
  * The {@link android.support.v7.widget.RecyclerView.Adapter} that renders and populates each

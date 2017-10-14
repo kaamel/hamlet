@@ -3,7 +3,7 @@ package com.genesis.hamlet.util;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.genesis.carouselmvp.R;
+import com.genesis.hamlet.R;
 
 
 /**

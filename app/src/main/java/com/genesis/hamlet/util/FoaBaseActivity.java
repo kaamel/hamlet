@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import com.genesis.carouselmvp.R;
+import com.genesis.hamlet.R;
 
 /**
  * The abstract base container responsible for showing and destroying {@link Fragment} and handling
