@@ -20,10 +20,10 @@
             android:text="If you see this, you have not implemented the main activity and the users list fragment"
             android:textColor="@android:color/white"
             android:textSize="24sp"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <FrameLayout
-            android:visibility="invisible"
+            android:visibility="visible"
             android:id="@+id/fragmentPlaceHolder"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

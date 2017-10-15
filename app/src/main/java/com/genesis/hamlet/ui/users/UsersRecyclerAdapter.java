@@ -6,9 +6,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.genesis.hamlet.R;
 import com.genesis.hamlet.data.models.user.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,33 +20,58 @@ import java.util.List;
  */
 public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdapter.ViewHolder> {
 
+    private List<User> users = new ArrayList<>();
+    private Fragment fragment;
+
     public UsersRecyclerAdapter(Fragment fragment, List<User> users) {
+        this.users = users;
+        this.fragment = fragment;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
+        TextView tvDisplayName;
         public ViewHolder(View itemView) {
             super(itemView);
-
+            tvDisplayName = (TextView) itemView.findViewById(R.id.tvDisplayName);
         }
     }
 
     @Override
-    public UsersRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        return null;
+        View view = inflater.inflate(R.layout.item_user, parent, false);
+        ViewHolder viewHolder = new ViewHolder(view);
+        return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(UsersRecyclerAdapter.ViewHolder viewHolder, int position) {
+        User user = users.get(position);
 
+        viewHolder.tvDisplayName.setText(user.getDisplayName());
+
+        /*Glide.with(fragment).load(user.getPhotoUrl()).placeholder(R.drawable.drawable_placeholder).error(
+                R.drawable.drawable_placeholder).into(viewHolder.ivUserUrl);*/
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return users.size();
+    }
+
+    public void clear() {
+        int size = getItemCount();
+        users.clear();
+        notifyItemRangeRemoved(0, size);
+    }
+
+    public void addAll(List<User> users) {
+        int prevSize = getItemCount();
+        this.users.addAll(users);
+        notifyItemRangeInserted(prevSize, users.size());
     }
 
 }

@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.genesis.carouselmvp.R;
+import com.genesis.hamlet.R;
 
 /**
  * The {@link android.support.v7.widget.RecyclerView.Adapter} that renders and populates each
@@ -28,7 +28,7 @@ public class CommentsRecyclerAdapter extends
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        View view = inflater.inflate(R.layout.item_comment, parent, false);
+        View view = inflater.inflate(R.layout.item_message, parent, false);
 
         CommentsRecyclerAdapter.ViewHolder viewHolder = new CommentsRecyclerAdapter.ViewHolder(
                 view);

@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.genesis.carouselmvp.R;
+import com.genesis.hamlet.R;
 import com.genesis.hamlet.data.DataRepository;
 import com.genesis.hamlet.data.DataSource;
 import com.genesis.hamlet.data.local.LocalDataSource;

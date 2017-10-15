@@ -30,7 +30,10 @@ public class LocalDatabase {
     /**
      * userId -> user
      */
-    private static final Map<String, User> usersDB = new HashMap<>();
+    private static final Map<String, User> usersDB = new HashMap<String, User> (){{
+        put("uid1", new User("uid1", "user1"));
+        put("uid2", new User("uid2", "user2"));
+    }};
 
     /**
      * mMessageId -> mMessage

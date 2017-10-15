@@ -1,12 +1,29 @@
 
 package com.genesis.hamlet.data.models.user;
 
+import org.parceler.Parcel;
+
+@Parcel(value = Parcel.Serialization.BEAN, analyze = {User.class})
 public class User {
     private String uid;
     private String displayName;
     private String photoUrl;
     private String email;
     private String phoneNumber;
+    private long lat;
+    private long lon;
+    private long locationUpdateTime;
+
+    //// TODO: 10/14/17 replace this constructor with a real one
+
+    public User(String uid, String name) {
+        displayName = name;
+        this.uid = uid;
+    }
+
+    public User() {
+
+    }
 
     public String getUid() {
         return uid;
@@ -46,5 +63,29 @@ public class User {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public long getLat() {
+        return lat;
+    }
+
+    public void setLat(long lat) {
+        this.lat = lat;
+    }
+
+    public long getLon() {
+        return lon;
+    }
+
+    public void setLon(long lon) {
+        this.lon = lon;
+    }
+
+    public long getLocationUpdateTime() {
+        return locationUpdateTime;
+    }
+
+    public void setLocationUpdateTime(long locationUpdateTime) {
+        this.locationUpdateTime = locationUpdateTime;
     }
 }

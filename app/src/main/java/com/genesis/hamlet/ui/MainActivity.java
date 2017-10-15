@@ -7,9 +7,11 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
-import com.genesis.carouselmvp.R;
+import com.genesis.hamlet.R;
+import com.genesis.hamlet.ui.users.UsersFragment;
 import com.genesis.hamlet.util.BaseFragmentInteractionListener;
 import com.genesis.hamlet.util.FoaBaseActivity;
 import com.genesis.hamlet.util.NetworkHelper;
@@ -32,7 +34,11 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //showFragment(Users.class);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        showFragment(UsersFragment.class);
     }
 
 

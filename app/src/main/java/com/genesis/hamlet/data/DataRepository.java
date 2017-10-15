@@ -5,10 +5,7 @@ import android.content.Context;
 import com.genesis.hamlet.data.local.LocalDataSource;
 import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.data.remote.RemoteDataSource;
-import com.genesis.hamlet.util.NetworkHelper;
 import com.genesis.hamlet.util.mvp.BasePresenter;
-
-import java.util.List;
 
 /**
  * The primary class for the presenters that extend
@@ -49,6 +46,8 @@ public class DataRepository {
 
     public void getUsers(Context context, final DataSource.GetUsersCallback getUsersCallback) {
 
+        localDataSource.getUsers(context, getUsersCallback, 0);
+        /*
         if (NetworkHelper.getInstance().isNetworkAvailable(context)) {
             remoteDataSource.getUsers(context, new DataSource.GetUsersCallback() {
                 @Override
@@ -70,9 +69,9 @@ public class DataRepository {
         } else {
             localDataSource.getUsers(context, getUsersCallback, 0);
         }
+        */
 
-
-        //// TODO: 10/14/17
+        //// TODO: 10/14/17 the above for now just the users from local - this is not the final implementation
     }
 
 }

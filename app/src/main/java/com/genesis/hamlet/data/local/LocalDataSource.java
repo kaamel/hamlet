@@ -36,7 +36,9 @@ public class LocalDataSource extends DataSource {
 
     @Override
     public void getUsers(Context context, GetUsersCallback getUsersCallback, long maxJoinTime) {
-        //// TODO: 10/13/17
+        //// TODO: 10/13/17 turn this into the real method
+        getUsersCallback.onSuccess(LocalDatabase.getUsers());
+
     }
 
     public void storeUsers(List<User> users) {
