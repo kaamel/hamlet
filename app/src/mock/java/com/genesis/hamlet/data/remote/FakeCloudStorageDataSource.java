@@ -44,16 +44,17 @@ public class FakeCloudStorageDataSource extends DataSource {
             public void run() {
                 final Handler mainHandler = new Handler(context.getMainLooper());
                 final List<User> users = new ArrayList<>();
-                Runnable myRunnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        users.add(new User("John K", "Looking for someone to play tennis with"));
-                        users.add(new User("Kelly", "My 5 year old son wants to play in the park with same age kid"));
-                        getUsersCallback.onSuccess(users);
-                    }
-                };
-                mainHandler.post(myRunnable);
                 try {
+                    Thread.sleep(100);
+                    Runnable myRunnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            users.add(new User("John K", "Looking for someone to play tennis with"));
+                            users.add(new User("Kelly", "My 5 year old son wants to play in the park with same age kid"));
+                            getUsersCallback.onSuccess(users);
+                        }
+                    };
+                    mainHandler.post(myRunnable);
                     Thread.sleep(5000);
                     myRunnable = new Runnable() {
                         @Override

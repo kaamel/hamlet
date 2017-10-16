@@ -9,33 +9,42 @@
         tools:context="com.genesis.hamlet.ui.login.LoginActivity">
 
         <TextView
-            android:layout_width="368dp"
-            android:layout_height="wrap_content"
-            android:background="@android:color/holo_red_light"
-            android:gravity="center"
-            android:textColor="@android:color/white"
-            android:textSize="24sp"
-            android:text="If you see this, you have not impemented the Login layout. There should be at least two buttons, one for Google login, and one for Facebook login"
-            android:layout_marginLeft="8dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="8dp"
             android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            app:layout_constraintRight_toRightOf="parent" />
+            android:layout_marginTop="25dp"
+            android:gravity="center"
+            android:text="@string/sign_in_title"
+            android:textColor="@android:color/holo_green_dark"
+            android:textSize="24sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/btLoginExit"
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/btSignInWithGoogle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginTop="32dp"
-            android:onClick="onContinueWithoutLogin"
-            android:text="Continue without login"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+        <TextView
+            android:id="@+id/tvSigninStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:textColor="@android:color/holo_orange_dark"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>
