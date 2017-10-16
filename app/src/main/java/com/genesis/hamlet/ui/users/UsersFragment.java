@@ -9,6 +9,9 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -136,6 +139,16 @@ public class UsersFragment extends BaseView implements UsersContract.View {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void showUsers(List<User> users) {
         if (shouldRefreshUsers) {
             recyclerAdapter.clear();
@@ -152,7 +165,8 @@ public class UsersFragment extends BaseView implements UsersContract.View {
             endlessScrollListener.resetState();
             shouldRefreshUsers = false;
         }
-        recyclerAdapter.add(user);
+        if (user != null)
+            recyclerAdapter.add(user);
     }
 
     @Override

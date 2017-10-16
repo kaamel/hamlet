@@ -39,51 +39,38 @@ public class FakeCloudStorageDataSource extends DataSource {
 
     @Override
     public void getUsers(final Context context, final GetUsersCallback getUsersCallback, long maxJoinTime) {
-        new Thread(new Runnable() {
+
+        final Handler handler = new Handler();
+        final List<User> users = new ArrayList<>();
+        handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                final Handler mainHandler = new Handler(context.getMainLooper());
-                final List<User> users = new ArrayList<>();
-                try {
-                    Thread.sleep(100);
-                    Runnable myRunnable = new Runnable() {
-                        @Override
-                        public void run() {
-                            users.add(new User("John K", "Looking for someone to play tennis with"));
-                            users.add(new User("Kelly", "My 5 year old son wants to play in the park with same age kid"));
-                            getUsersCallback.onSuccess(users);
-                        }
-                    };
-                    mainHandler.post(myRunnable);
-                    Thread.sleep(5000);
-                    myRunnable = new Runnable() {
-                        @Override
-                        public void run() {
-                            getUsersCallback.onNewUserJoined(new User("Fay", "Need a ride to Mountain View"));
-                        }
-                    };
-                    mainHandler.post(myRunnable);
-                    Thread.sleep(5000);
-                    myRunnable = new Runnable() {
-                        @Override
-                        public void run() {
-                            getUsersCallback.onNewUserJoined(new User("Brad", "I love beer. Anyone wants to join me?"));
-                        }
-                    };
-                    mainHandler.post(myRunnable);
-                    Thread.sleep(5000);
-                    myRunnable = new Runnable() {
-                        @Override
-                        public void run() {
-                            getUsersCallback.onUserLeft(new User("John K", "Looking for someone to play tennis with"));
-                        }
-                    };
-                    mainHandler.post(myRunnable);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                users.add(new User("John K", "Looking for someone to play tennis with"));
+                users.add(new User("Kelly", "My 5 year old son wants to play in the park with same age kid"));
+                getUsersCallback.onSuccess(users);
             }
-        }).start();
+        }, 100);
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getUsersCallback.onNewUserJoined(new User("Fay", "Need a ride to Mountain View"));
+            }
+        }, 2100);
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getUsersCallback.onNewUserJoined(new User("Brad", "I love beer. Anyone wants to join me?"));
+            }
+        }, 4000);
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getUsersCallback.onUserLeft(new User("John K", "Looking for someone to play tennis with"));
+            }
+        }, 8000);
     }
 
     @Override

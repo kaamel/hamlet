@@ -93,7 +93,7 @@ public class GoogleSignIn implements GoogleApiClient.OnConnectionFailedListener 
                 });
     }
 
-    DataSource.GetUserCallback signInCallback;
+    private DataSource.GetUserCallback signInCallback;
     void signIn(Activity activity, int rcSignIn, DataSource.GetUserCallback getUserCallback) {
         signInCallback = getUserCallback;
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);

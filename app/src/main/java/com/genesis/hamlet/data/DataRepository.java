@@ -8,7 +8,6 @@ import com.genesis.hamlet.data.remote.RemoteDataSource;
 import com.genesis.hamlet.util.mvp.BasePresenter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * The primary class for the presenters that extend
@@ -22,21 +21,17 @@ import java.util.List;
 public class DataRepository {
 
     private DataSource remoteDataSource;
-    private DataSource localDataSource;
-
     boolean streaming = false;
 
     private static DataRepository dataRepository;
 
-    public DataRepository(DataSource remoteDataSource, DataSource localDataSource) {
+    public DataRepository(DataSource remoteDataSource) {
         this.remoteDataSource = remoteDataSource;
-        this.localDataSource = localDataSource;
     }
 
-    public static synchronized DataRepository getInstance(DataSource remoteDataSource,
-            DataSource localDataSource) {
+    public static synchronized DataRepository getInstance(DataSource remoteDataSource) {
         if (dataRepository == null) {
-            dataRepository = new DataRepository(remoteDataSource, localDataSource);
+            dataRepository = new DataRepository(remoteDataSource);
         }
         return dataRepository;
     }
@@ -47,21 +42,15 @@ public class DataRepository {
         streaming = false;
     }
 
-    public User getLoggedInUser() {
-        return localDataSource.getLoggedInUser();
-    }
-
     public void getUsers(Context context, final DataSource.GetUsersCallback getUsersCallback, int page) {
 
-        if (!streaming) {
+        if (!streaming || page == 0) {
             streaming = true;
-            List<User> users = new ArrayList<>();
-            getUsersCallback.onSuccess(users);
-            localDataSource.storeUsers(users);
             startUsersStream(context, getUsersCallback);
         }
-        else
-            localDataSource.getUsers(context, getUsersCallback, page);
+        else {
+            getUsersCallback.onSuccess(new ArrayList<User>());
+        }
     }
 
     private void startUsersStream(Context context, DataSource.GetUsersCallback getUsersCallback) {

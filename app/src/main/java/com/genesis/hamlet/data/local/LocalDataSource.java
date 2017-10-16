@@ -15,9 +15,9 @@ import java.util.List;
  * returning data via callbacks on the main UI thread
  */
 public class LocalDataSource extends DataSource implements DataSource.GetUsersCallback{
-    public static LocalDataSource localDataSource;
+    private static LocalDataSource localDataSource;
 
-    public LocalDataSource(MainUiThread mainUiThread, ThreadExecutor threadExecutor) {
+    private LocalDataSource(MainUiThread mainUiThread, ThreadExecutor threadExecutor) {
         super(mainUiThread, threadExecutor);
     }
 
@@ -34,7 +34,7 @@ public class LocalDataSource extends DataSource implements DataSource.GetUsersCa
     }
 
 
-    GetUsersCallback callback;
+    private GetUsersCallback callback;
     @Override
     public void getUsers(Context context, GetUsersCallback getUsersCallback, long maxJoinTime) {
         callback = getUsersCallback;

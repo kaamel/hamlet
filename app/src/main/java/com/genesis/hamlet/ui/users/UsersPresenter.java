@@ -49,8 +49,11 @@ public class UsersPresenter extends BasePresenter<UsersContract.View> implements
             @Override
             public void onSuccess(List<User> users) {
                 if (view != null) {
+                    if (users == null || users.size() == 0) {
+                        view.setProgressBar(false);
+                        return;
+                    }
                     view.showUsers(users);
-                    view.setProgressBar(false);
                     view.shouldShowPlaceholderText();
                 }
             }
