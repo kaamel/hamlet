@@ -15,6 +15,15 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.setUseSupportLibrary true
     }
+    signingConfigs {
+        debug {
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storeFile file('/Users/manoj/.android/debug.keystore')
+            storePassword 'android'
+            v2SigningEnabled false
+        }
+    }
 
     buildTypes {
         release {

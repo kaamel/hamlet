@@ -8,7 +8,8 @@
     <string name="no_comments_available">No comments available currently</string>
 
 
-    <string name="server_client_id">91110931708-legu7i2gv37st0r7hfbbpa2fokk28823.apps.googleusercontent.com</string>
+    <string name="server_client_id">377950550699-cl70ff19tee56crd47m5f9hhf3osk3u9.apps.googleusercontent.com</string>
+
     <string name="title_text">Google Sign-In\nQuickstart</string>
     <!-- Sign-in status messages -->
     <string name="signed_in_fmt">Signed in as: %s</string>
