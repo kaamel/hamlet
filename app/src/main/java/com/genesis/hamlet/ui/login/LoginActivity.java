@@ -8,12 +8,9 @@ import android.view.View;
 import com.genesis.hamlet.R;
 import com.genesis.hamlet.data.DataRepository;
 import com.genesis.hamlet.data.DataSource;
-import com.genesis.hamlet.data.local.LocalDataSource;
 import com.genesis.hamlet.data.models.user.User;
-import com.genesis.hamlet.data.remote.RemoteDataSource;
+import com.genesis.hamlet.di.Injection;
 import com.genesis.hamlet.ui.MainActivity;
-import com.genesis.hamlet.util.threading.MainUiThread;
-import com.genesis.hamlet.util.threading.ThreadExecutor;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -22,9 +19,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        final DataRepository dataRepository = DataRepository.getInstance(
-                new RemoteDataSource(MainUiThread.getInstance(), ThreadExecutor.getInstance()),
-                new LocalDataSource(MainUiThread.getInstance(), ThreadExecutor.getInstance()));
+        final DataRepository dataRepository = Injection.provideDataRepository();
 
         User me = dataRepository.getLoggedInUser();
         if (me == null)

@@ -7,6 +7,8 @@ import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.util.threading.MainUiThread;
 import com.genesis.hamlet.util.threading.ThreadExecutor;
 
+import java.util.List;
+
 /**
  * Created by kaamel on 10/13/17.
  */
@@ -33,7 +35,13 @@ public class FirebaseCloudDataSource extends DataSource {
 
     @Override
     public void getUsers(Context context, DataSource.GetUsersCallback getUsersCallback, long maxJoinTime) {
-        //// TODO: 10/13/17
+        //// TODO: 10/15/17 Set up the firebase, call back the initial list of users and call back as users join/leave
+        //// TODO: 10/15/17 I also think we need to add the filter to the method
+    }
+
+    @Override
+    public void storeUsers(List<User> users) {
+        //// TODO: 10/15/17 I think we should never use thib for firebase but ...
     }
 
     @Override

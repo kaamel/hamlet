@@ -7,6 +7,9 @@ import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.data.remote.RemoteDataSource;
 import com.genesis.hamlet.util.mvp.BasePresenter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * The primary class for the presenters that extend
  * {@link BasePresenter} to interact with
@@ -20,6 +23,8 @@ public class DataRepository {
 
     private DataSource remoteDataSource;
     private DataSource localDataSource;
+
+    boolean streaming = false;
 
     private static DataRepository dataRepository;
 
@@ -38,40 +43,33 @@ public class DataRepository {
 
     public void destroyInstance() {
         dataRepository = null;
+        stopUsersStream();
+        streaming = false;
     }
 
     public User getLoggedInUser() {
         return localDataSource.getLoggedInUser();
     }
 
-    public void getUsers(Context context, final DataSource.GetUsersCallback getUsersCallback) {
+    public void getUsers(Context context, final DataSource.GetUsersCallback getUsersCallback, int page) {
 
-        localDataSource.getUsers(context, getUsersCallback, 0);
-        /*
-        if (NetworkHelper.getInstance().isNetworkAvailable(context)) {
-            remoteDataSource.getUsers(context, new DataSource.GetUsersCallback() {
-                @Override
-                public void onSuccess(List<User> users) {
-                    getUsersCallback.onSuccess(users);
-                    ((LocalDataSource) localDataSource).storeUsers(users);
-                }
-
-                @Override
-                public void onFailure(Throwable throwable) {
-                    getUsersCallback.onFailure(throwable);
-                }
-
-                @Override
-                public void onNetworkFailure() {
-                    getUsersCallback.onNetworkFailure();
-                }
-            }, 0);
-        } else {
-            localDataSource.getUsers(context, getUsersCallback, 0);
+        if (!streaming) {
+            streaming = true;
+            List<User> users = new ArrayList<>();
+            getUsersCallback.onSuccess(users);
+            localDataSource.storeUsers(users);
+            startUsersStream(context, getUsersCallback);
         }
-        */
+        else
+            localDataSource.getUsers(context, getUsersCallback, page);
+    }
 
-        //// TODO: 10/14/17 the above for now just the users from local - this is not the final implementation
+    private void startUsersStream(Context context, DataSource.GetUsersCallback getUsersCallback) {
+        remoteDataSource.getUsers(context, getUsersCallback, 0);
+    }
+
+    public void stopUsersStream() {
+        //// TODO: 10/15/17 close down the firebase and do any clean up on the server side
     }
 
 }

@@ -14,7 +14,7 @@ import java.util.List;
  * The class for fetching from and storing data into a local SQLite DB on a background thread and
  * returning data via callbacks on the main UI thread
  */
-public class LocalDataSource extends DataSource {
+public class LocalDataSource extends DataSource implements DataSource.GetUsersCallback{
     public static LocalDataSource localDataSource;
 
     public LocalDataSource(MainUiThread mainUiThread, ThreadExecutor threadExecutor) {
@@ -34,13 +34,14 @@ public class LocalDataSource extends DataSource {
     }
 
 
+    GetUsersCallback callback;
     @Override
     public void getUsers(Context context, GetUsersCallback getUsersCallback, long maxJoinTime) {
-        //// TODO: 10/13/17 turn this into the real method
+        callback = getUsersCallback;
         getUsersCallback.onSuccess(LocalDatabase.getUsers());
-
     }
 
+    @Override
     public void storeUsers(List<User> users) {
         //// TODO: 10/14/17
     }
@@ -49,6 +50,34 @@ public class LocalDataSource extends DataSource {
     @Override
     public void getMMessages(Context context, GetMMessagesCallback getMMessagesCallback, long maxId) {
         //// TODO: 10/13/17
+    }
+
+    @Override
+    public void onSuccess(List<User> users) {
+        LocalDatabase.storeUsers(users);
+        callback.onSuccess(users);
+    }
+
+    @Override
+    public void onFailure(Throwable throwable) {
+
+    }
+
+    @Override
+    public void onNetworkFailure() {
+
+    }
+
+    @Override
+    public void onNewUserJoined(User user) {
+        LocalDatabase.addUser(user);
+        callback.onNewUserJoined(user);
+    }
+
+    @Override
+    public void onUserLeft(User user) {
+        LocalDatabase.removeUser(user);
+        callback.onUserLeft(user);
     }
 
     /**

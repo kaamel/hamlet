@@ -44,7 +44,7 @@ public class UsersFragment extends BaseView implements UsersContract.View {
     private EndlessRecyclerViewScrollListener endlessScrollListener;
     private UsersContract.Presenter presenter;
     private BaseFragmentInteractionListener fragmentInteractionListener;
-    private boolean shouldRefreshPhotos;
+    private boolean shouldRefreshUsers;
 
     RecyclerView rvUsers;
     TextView tvPlaceholder;
@@ -75,7 +75,6 @@ public class UsersFragment extends BaseView implements UsersContract.View {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-        users = new ArrayList<>();
         recyclerAdapter = new UsersRecyclerAdapter(this, users);
         rvUsers.setAdapter(recyclerAdapter);
 
@@ -104,7 +103,7 @@ public class UsersFragment extends BaseView implements UsersContract.View {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refreshPhotos();
+                refreshUsers();
             }
         });
 
@@ -138,12 +137,22 @@ public class UsersFragment extends BaseView implements UsersContract.View {
 
     @Override
     public void showUsers(List<User> users) {
-        if (shouldRefreshPhotos) {
+        if (shouldRefreshUsers) {
             recyclerAdapter.clear();
             endlessScrollListener.resetState();
-            shouldRefreshPhotos = false;
+            shouldRefreshUsers = false;
         }
         recyclerAdapter.addAll(users);
+    }
+
+    @Override
+    public void showUser(User user) {
+        if (shouldRefreshUsers) {
+            recyclerAdapter.clear();
+            endlessScrollListener.resetState();
+            shouldRefreshUsers = false;
+        }
+        recyclerAdapter.add(user);
     }
 
     @Override
@@ -151,12 +160,22 @@ public class UsersFragment extends BaseView implements UsersContract.View {
 
     }
 
-    private void getUsers(int page) {
-        presenter.getUsers(getContext().getApplicationContext());
+    @Override
+    public void remove(User user) {
+        if (shouldRefreshUsers) {
+            recyclerAdapter.clear();
+            endlessScrollListener.resetState();
+            shouldRefreshUsers = false;
+        }
+        recyclerAdapter.remove(user);
     }
 
-    private void refreshPhotos() {
-        shouldRefreshPhotos = true;
+    private void getUsers(int page) {
+        presenter.getUsers(getContext().getApplicationContext(), page);
+    }
+
+    private void refreshUsers() {
+        shouldRefreshUsers = true;
         recyclerAdapter.clear();
         getUsers(0);
     }

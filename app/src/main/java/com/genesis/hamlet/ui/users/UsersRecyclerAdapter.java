@@ -28,12 +28,33 @@ public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdap
         this.fragment = fragment;
     }
 
+    public void add(User user) {
+        int prevSize = getItemCount();
+        this.users.add(user);
+        notifyItemInserted(prevSize);
+    }
+
+    public void remove(User user) {
+        int size = users.size();
+        int position = -1;
+        for (int i=0; i< size; i++) {
+            if (users.get(i).getUid().equals(user.getUid())) {
+                position = i;
+                users.remove(i);
+                notifyItemRemoved(i);
+                break;
+            }
+        }
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvDisplayName;
+        TextView tvDetailMessage;
         public ViewHolder(View itemView) {
             super(itemView);
             tvDisplayName = (TextView) itemView.findViewById(R.id.tvDisplayName);
+            tvDetailMessage = (TextView) itemView.findViewById(R.id.tvDetailMessage);
         }
     }
 
@@ -51,7 +72,8 @@ public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdap
     public void onBindViewHolder(UsersRecyclerAdapter.ViewHolder viewHolder, int position) {
         User user = users.get(position);
 
-        viewHolder.tvDisplayName.setText(user.getDisplayName());
+        viewHolder.tvDisplayName.setText(user.getUid());
+        viewHolder.tvDetailMessage.setText(user.getDisplayName());
 
         /*Glide.with(fragment).load(user.getPhotoUrl()).placeholder(R.drawable.drawable_placeholder).error(
                 R.drawable.drawable_placeholder).into(viewHolder.ivUserUrl);*/

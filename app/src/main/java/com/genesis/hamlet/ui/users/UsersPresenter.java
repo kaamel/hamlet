@@ -38,7 +38,7 @@ public class UsersPresenter extends BasePresenter<UsersContract.View> implements
     }
 
     @Override
-    public void getUsers(Context context) {
+    public void getUsers(Context context, int page) {
         if (view == null) {
             return;
         }
@@ -74,6 +74,20 @@ public class UsersPresenter extends BasePresenter<UsersContract.View> implements
                     view.shouldShowPlaceholderText();
                 }
             }
-        });
+
+            @Override
+            public void onNewUserJoined(User user) {
+                if (view != null) {
+                    view.showUser(user);
+                }
+            }
+
+            @Override
+            public void onUserLeft(User user) {
+                if (view != null) {
+                    view.remove(user);
+                }
+            }
+        }, page);
     }
 }

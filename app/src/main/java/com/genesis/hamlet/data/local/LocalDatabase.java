@@ -30,10 +30,12 @@ public class LocalDatabase {
     /**
      * userId -> user
      */
-    private static final Map<String, User> usersDB = new HashMap<String, User> (){{
+    private static final Map<String, User> usersDB = new HashMap<String, User> (); /*{{
         put("uid1", new User("uid1", "user1"));
         put("uid2", new User("uid2", "user2"));
-    }};
+    }};*/
+
+    private static final List<String> uids = new ArrayList<>();
 
     /**
      * mMessageId -> mMessage
@@ -54,13 +56,37 @@ public class LocalDatabase {
     }
 
     public static void storeUsers(List<User> users) {
-        usersDB.clear();
-        for (User user: users) {
-            usersDB.put(user.getUid(), user);
+        synchronized (usersDB) {
+            usersDB.clear();
+            uids.clear();
+            for (User user : users) {
+                usersDB.put(user.getUid(), user);
+                uids.add(user.getUid());
+            }
         }
     }
 
+    public static void addUser(User user) {
+        synchronized (usersDB) {
+            usersDB.put(user.getUid(), user);
+            uids.add(user.getUid());
+        }
+
+    }
+
+    public static void removeUser(User user) {
+        synchronized (usersDB) {
+            usersDB.remove(user.getUid());
+            uids.remove(user.getUid());
+        }
+
+    }
+
     public static List<User> getUsers() {
-        return new ArrayList<>(usersDB.values());
+        List<User> users = new ArrayList<>();
+        for (int i =0;  i < uids.size(); i++) {
+            users.add(usersDB.get(uids.get(i)));
+        }
+        return users;
     }
 }

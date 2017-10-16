@@ -37,11 +37,10 @@ public abstract class DataSource {
 
     public interface GetUsersCallback {
         void onSuccess(List<User> users);
-
         void onFailure(Throwable throwable);
-
         void onNetworkFailure();
-
+        void onNewUserJoined(User user);
+        void onUserLeft(User user);
     }
 
     public interface GetMMessagesCallback {
@@ -56,5 +55,8 @@ public abstract class DataSource {
 
     public abstract User getLoggedInUser();
     public abstract void getUsers(Context context, GetUsersCallback getUsersCallback, long maxJoinTime);
+
+    public abstract void storeUsers(List<User> users);
+
     public abstract void getMMessages(Context context, GetMMessagesCallback getMMessagesCallback, long maxId);
 }

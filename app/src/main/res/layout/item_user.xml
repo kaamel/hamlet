@@ -4,17 +4,34 @@
     <data>
 
     </data>
-    <RelativeLayout
+    <LinearLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/item_photo_margin">
 
         <TextView
             android:id="@+id/tvDisplayName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:textColor="@android:color/holo_red_light"
+            android:textSize="18sp"
+            android:textStyle="bold|italic" />
 
-    </RelativeLayout>
+        <TextView
+            android:id="@+id/tvDetailMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/item_photo_margin"
+            android:layout_marginEnd="5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="5dp"
+            android:textColor="@android:color/black" />
+
+    </LinearLayout>
 </layout>
