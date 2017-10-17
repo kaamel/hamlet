@@ -20,7 +20,7 @@ public class User {
 
     //// TODO: 10/14/17 replace this constructor with a real one
 
-    public User(String uid, String name) {
+    public User(String name, String uid) {
         displayName = name;
         this.uid = uid;
     }

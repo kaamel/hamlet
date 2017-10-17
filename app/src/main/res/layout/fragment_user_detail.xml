@@ -15,8 +15,10 @@
                 android:id="@+id/ivPhoto"
                 android:layout_width="256dp"
                 android:layout_height="256dp"
-                android:layout_centerInParent="true"
-                android:scaleType="centerCrop"
+                android:layout_marginTop="16dp"
+                android:adjustViewBounds="true"
+                android:layout_centerHorizontal="true"
+                android:scaleType="fitCenter"
                 android:visibility="visible" />
 
             <TextView
@@ -38,7 +40,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="4dp"
                 android:fontFamily="sans-serif-black"
-                tools:text="Brad"
+                tools:text="Keep Walking!"
                 android:textSize="14sp" />
 
             <TextView
@@ -57,15 +59,20 @@
 
             <Button
                 android:id="@+id/btnConnected"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tvDetailMessage"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true"
                 android:text="@string/connect"
+                android:textColor="@android:color/white"
                 android:textSize="20sp"
-                android:background="@android:color/holo_blue_dark" />
+                android:background="@color/colorBlue" />
 
         </RelativeLayout>
 
