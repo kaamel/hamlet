@@ -49,8 +49,16 @@ public class FakeCloudStorageDataSource extends DataSource {
                     Runnable myRunnable = new Runnable() {
                         @Override
                         public void run() {
-                            users.add(new User("John K", "Looking for someone to play tennis with"));
-                            users.add(new User("Kelly", "My 5 year old son wants to play in the park with same age kid"));
+                            User user1 = new User("John K", "Looking for someone to play tennis with");
+                            user1.setTagline("love walking");
+                            user1.setPhotoUrl("https://scontent.fsnc1-1.fna.fbcdn.net/v/t1.0-9/11880524_10207583816890476_7006713471158652602_n.jpg?oh=1d95b3dce9f849b86cc9faec563757c8&oe=5A785E69");
+                            users.add(user1);
+
+                            User user2 = new User("Kelly", "My 5 year old son wants to play in the park with same age kid");
+                            user1.setTagline("love cat");
+                            user2.setPhotoUrl("https://scontent.fsnc1-1.fna.fbcdn.net/v/t1.0-9/12472243_10153792983241605_1589806110665512082_n.jpg?oh=f7e57de11f58977d74001b49b615ba25&oe=5A3BE974");
+                            users.add(user2);
+
                             getUsersCallback.onSuccess(users);
                         }
                     };

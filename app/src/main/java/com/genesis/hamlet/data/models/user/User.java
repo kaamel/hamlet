@@ -10,6 +10,10 @@ public class User {
     private String photoUrl;
     private String email;
     private String phoneNumber;
+
+
+
+    private String tagline;
     private long lat;
     private long lon;
     private long locationUpdateTime;
@@ -87,5 +91,13 @@ public class User {
 
     public void setLocationUpdateTime(long locationUpdateTime) {
         this.locationUpdateTime = locationUpdateTime;
+    }
+
+    public String getTagline() {
+        return tagline;
+    }
+
+    public void setTagline(String tagline) {
+        this.tagline = tagline;
     }
 }

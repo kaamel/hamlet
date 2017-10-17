@@ -8,11 +8,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.genesis.hamlet.R;
 import com.genesis.hamlet.UserChatFragment;
 import com.genesis.hamlet.data.DataRepository;
@@ -33,6 +38,9 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
+import static android.R.attr.button;
+import static android.R.attr.tag;
+import static android.content.ContentValues.TAG;
 import static com.genesis.hamlet.R.id.rvUsers;
 import static com.genesis.hamlet.R.id.swipeRefreshLayout;
 
@@ -46,17 +54,31 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
 
 
     private BaseFragmentInteractionListener fragmentInteractionListener;
-    private User user;
+    private TextView userName;
+    private TextView tagLine;
+    private TextView currentInterest;
+    private ImageView userProfile;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        user = Parcels.unwrap(getActivity().getIntent().getParcelableExtra(Properties.BUNDLE_KEY_PHOTO));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_detail, container, false);
+
+        Parcelable parcelable = getArguments().getParcelable(Properties.BUNDLE_KEY_PHOTO);
+
+        final User user = Parcels.unwrap(parcelable);
+
+        userProfile = (ImageView) view.findViewById(R.id.ivPhoto);
+
+        tagLine = (TextView) view.findViewById(R.id.tvTagline);
+
+        currentInterest = (TextView) view.findViewById(R.id.tvDetailMessage);
+
+        userName = (TextView) view.findViewById(R.id.tvUserName);
 
 
         Button button = (Button) view.findViewById(R.id.btnConnected);
@@ -67,6 +89,8 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
                 showUserChatFragment(user);
             }
         });
+
+        displayUserInfo(user);
 
         return view;
     }
@@ -97,6 +121,17 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
     @Override
     public void onPause() {
         super.onPause();
+    }
+
+    private void displayUserInfo(@Nullable User user) {
+
+        if (!TextUtils.isEmpty(user.getPhotoUrl())) {
+            Glide.with(getActivity()).load(user.getPhotoUrl()).into(userProfile);
+        }
+
+        userName.setText(user.getDisplayName());
+        tagLine.setText(user.getTagline());
+        currentInterest.setText(user.getUid());
     }
 
     private void showUserChatFragment(User user) {
