@@ -43,6 +43,13 @@
                 android:textSize="@dimen/title_textSize"
                 android:visibility="visible" />
 
+            <Button
+                android:id="@+id/btnConnected"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/connect"
+                android:background="@android:color/holo_blue_dark"/>
+
         </RelativeLayout>
 
 
