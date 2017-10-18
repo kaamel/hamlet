@@ -2,4 +2,6 @@
 
 <resources>
     <item name="item_click_support" type="id" />
+    <string name="facebook_app_id">1498305923579415</string>
+    <string name="fb_login_protocol_scheme">fb1498305923579415</string>
 </resources>
