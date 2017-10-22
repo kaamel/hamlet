@@ -18,8 +18,10 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.genesis.hamlet.R;
+import com.genesis.hamlet.data.DataRepository;
 import com.genesis.hamlet.data.DataSource;
 import com.genesis.hamlet.data.models.user.User;
+import com.genesis.hamlet.di.Injection;
 import com.genesis.hamlet.ui.MainActivity;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -31,6 +33,7 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class LoginActivity extends AppCompatActivity implements DataSource.OnUserCallback {

@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.genesis.hamlet.R;
-import com.genesis.hamlet.UserChatFragment;
 import com.genesis.hamlet.ui.mmessages.MessagesActivity;
 import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.ui.users.UsersFragment;
@@ -124,7 +123,7 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
         //        true);
 
         Intent intent = new Intent(getActivity(), MessagesActivity.class);
-        intent.putExtra(Properties.BUNDLE_KEY_PHOTO, parcelable);
+        intent.putExtra(Properties.BUNDLE_KEY_USER, parcelable);
         startActivity(intent);
     }
 
