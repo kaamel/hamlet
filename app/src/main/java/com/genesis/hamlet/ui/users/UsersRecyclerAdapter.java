@@ -72,8 +72,8 @@ public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdap
     public void onBindViewHolder(UsersRecyclerAdapter.ViewHolder viewHolder, int position) {
         User user = users.get(position);
 
-        viewHolder.tvDisplayName.setText(user.getUid());
-        viewHolder.tvDetailMessage.setText(user.getDisplayName());
+        viewHolder.tvDisplayName.setText(user.getDisplayName());
+        viewHolder.tvDetailMessage.setText(user.getUid());
 
         /*Glide.with(fragment).load(user.getPhotoUrl()).placeholder(R.drawable.drawable_placeholder).error(
                 R.drawable.drawable_placeholder).into(viewHolder.ivUserUrl);*/

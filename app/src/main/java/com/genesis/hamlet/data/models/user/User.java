@@ -10,13 +10,17 @@ public class User {
     private String photoUrl;
     private String email;
     private String phoneNumber;
+
+
+
+    private String tagline;
     private long lat;
     private long lon;
     private long locationUpdateTime;
 
     //// TODO: 10/14/17 replace this constructor with a real one
 
-    public User(String uid, String name) {
+    public User(String name, String uid) {
         displayName = name;
         this.uid = uid;
     }
@@ -87,5 +91,13 @@ public class User {
 
     public void setLocationUpdateTime(long locationUpdateTime) {
         this.locationUpdateTime = locationUpdateTime;
+    }
+
+    public String getTagline() {
+        return tagline;
+    }
+
+    public void setTagline(String tagline) {
+        this.tagline = tagline;
     }
 }
