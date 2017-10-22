@@ -168,7 +168,6 @@ public class MessagesActivity extends AppCompatActivity {
                 if (friendlyMessage.getText() != null) {
                         viewHolder.getMessageTextView().setText(friendlyMessage.getText());
                         viewHolder.getMessageTextView().setVisibility(TextView.VISIBLE);
-                        //viewHolder.messageImageView.setVisibility(ImageView.GONE);
                         viewHolder.getMessageImageView().setVisibility(ImageView.GONE);
                 } else {
                     String imageUrl = friendlyMessage.getImageUrl();
@@ -181,9 +180,9 @@ public class MessagesActivity extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<Uri> task) {
                                         if (task.isSuccessful()) {
                                             String downloadUrl = task.getResult().toString();
-                                            Glide.with(viewHolder.messageImageView.getContext())
+                                            Glide.with(viewHolder.getMessageImageView().getContext())
                                                     .load(downloadUrl)
-                                                    .into(viewHolder.messageImageView);
+                                                    .into(viewHolder.getMessageImageView());
                                         } else {
                                             Log.w(TAG, "Getting download url was not successful.",
                                                     task.getException());
@@ -191,18 +190,15 @@ public class MessagesActivity extends AppCompatActivity {
                                     }
                                 });
                     } else {
-                        Glide.with(viewHolder.messageImageView.getContext())
+                        Glide.with(viewHolder.getMessageImageView().getContext())
                                 .load(friendlyMessage.getImageUrl())
-                                .into(viewHolder.messageImageView);
+                                .into(viewHolder.getMessageImageView());
                     }
-                    //viewHolder.messageImageView.setVisibility(ImageView.VISIBLE);
-                    //viewHolder.messageTextView.setVisibility(TextView.GONE);
-                    viewHolder.getMessageTextView().setVisibility(ImageView.VISIBLE);
-                    viewHolder.getMessageImageView().setVisibility(ImageView.GONE);
+
+                    viewHolder.getMessageTextView().setVisibility(ImageView.INVISIBLE);
+                    viewHolder.getMessageImageView().setVisibility(ImageView.VISIBLE);
                 }
 
-
-                //viewHolder.messengerTextView.setText(friendlyMessage.getName());
                 viewHolder.getMessengerTextView().setText(friendlyMessage.getName());
                 if (friendlyMessage.getPhotoUrl() == null) {
                     viewHolder.messengerImageView.setImageDrawable(ContextCompat.getDrawable(MessagesActivity.this,
