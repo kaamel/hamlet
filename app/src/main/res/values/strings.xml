@@ -18,4 +18,9 @@
 
     <string name="hello_chat_fragment">Hello Chat fragment</string>
     <string name="connect">Connect</string>
+
+    <string name="title_location_permission">Location Permission Needed</string>
+    <string name="text_location_permission">Hamlet need your  location !</string>
+    <string name="ok">OK</string>
+
 </resources>
