@@ -15,13 +15,16 @@ interface UsersContract {
 
     interface View extends IBaseView {
         void showUsers(List<User> users);
-        void showUser(User user);
+        void addUser(User user);
+        void updateUser(User user);
         void shouldShowPlaceholderText();
-
         void remove(User user);
     }
 
     interface Presenter extends IBasePresenter<View> {
-        void getUsers(Context context, int page);
+        boolean isConnected();
+        void connect(Context context);
+        void loadMoreUsers(Context context, int page);
+        void interestsUpdated(Context context);
     }
 }

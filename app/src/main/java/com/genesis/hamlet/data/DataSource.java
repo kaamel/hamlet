@@ -1,6 +1,7 @@
 package com.genesis.hamlet.data;
 
 import android.content.Context;
+import android.location.Location;
 
 import com.genesis.hamlet.data.local.LocalDataSource;
 import com.genesis.hamlet.data.models.mmessage.MMessage;
@@ -19,14 +20,23 @@ import java.util.List;
  */
 public abstract class DataSource {
 
+    public static final String USER_ARRIVAL_DEPARTURE_ACTION = "com.hamlet.broadcast.USER_IN_OUT";
+
     protected MainUiThread mainUiThread;
     protected ThreadExecutor threadExecutor;
+
+    Location currentLocation;
+
     public DataSource(MainUiThread mainUiThread, ThreadExecutor threadExecutor) {
         this.mainUiThread = mainUiThread;
         this.threadExecutor = threadExecutor;
+
+
     }
 
-    public interface GetUserCallback {
+    public abstract void disconnect(Context context);
+
+    public interface OnUserCallback {
         void onSuccess(User user);
 
         void onFailure(Throwable throwable);
@@ -35,15 +45,17 @@ public abstract class DataSource {
 
     }
 
-    public interface GetUsersCallback {
+    public interface OnUsersCallback {
         void onSuccess(List<User> users);
         void onFailure(Throwable throwable);
         void onNetworkFailure();
         void onNewUserJoined(User user);
         void onUserLeft(User user);
+
+        void onUserUpdate(User user);
     }
 
-    public interface GetMMessagesCallback {
+    public interface OnMMessagesCallback {
 
         void onSuccess(List<MMessage> mMessages);
 
@@ -54,9 +66,10 @@ public abstract class DataSource {
     }
 
     public abstract User getLoggedInUser();
-    public abstract void getUsers(Context context, GetUsersCallback getUsersCallback, long maxJoinTime);
+    public abstract void goOnline(Context context, OnUsersCallback onUsersCallback, long maxJoinTime);
+    public abstract void updateUser();
 
-    public abstract void storeUsers(List<User> users);
+    //public abstract void storeUsers(List<User> users);
 
-    public abstract void getMMessages(Context context, GetMMessagesCallback getMMessagesCallback, long maxId);
+    public abstract void getMMessages(Context context, OnMMessagesCallback onMMessagesCallback, long maxId);
 }

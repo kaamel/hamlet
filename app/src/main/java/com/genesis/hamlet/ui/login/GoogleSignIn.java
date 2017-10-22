@@ -39,7 +39,7 @@ public class GoogleSignIn implements GoogleApiClient.OnConnectionFailedListener 
     private GoogleApiClient mGoogleApiClient;
 //
 
-    GoogleSignIn(Context context) {
+    public GoogleSignIn(Context context) {
 
         if (!(context instanceof FragmentActivity)) {
             throw new RuntimeException(context.toString()
@@ -93,15 +93,15 @@ public class GoogleSignIn implements GoogleApiClient.OnConnectionFailedListener 
                 });
     }
 
-    private DataSource.GetUserCallback signInCallback;
-    void signIn(Activity activity, int rcSignIn, DataSource.GetUserCallback getUserCallback) {
-        signInCallback = getUserCallback;
+    private DataSource.OnUserCallback signInCallback;
+    public void signIn(Activity activity, int rcSignIn, DataSource.OnUserCallback onUserCallback) {
+        signInCallback = onUserCallback;
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         activity.startActivityForResult(signInIntent, rcSignIn);
     }
     // [END signin]
 
-    private void signOut() {
+    public void signOut() {
         // Firebase sign out
         mAuth.signOut();
 
@@ -115,7 +115,7 @@ public class GoogleSignIn implements GoogleApiClient.OnConnectionFailedListener 
                 });
     }
 
-    private void revokeAccess() {
+    public void revokeAccess() {
         // Firebase sign out
         mAuth.signOut();
 

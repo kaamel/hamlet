@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/actionFilter"
+        android:orderInCategory="100"
+        android:title="Interests"
+        android:icon="@drawable/ic_filter_list_white_24dp"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menuSignOut"
+        android:orderInCategory="101"
+        android:title="Sign Out"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menuRevokAuth"
+        android:orderInCategory="102"
+        android:title="Clear Authentication"
+        app:showAsAction="never" />
+</menu>

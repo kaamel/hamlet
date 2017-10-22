@@ -30,7 +30,7 @@
                 android:textSize="@dimen/title_textSize" />
 
             <TextView
-                android:id="@+id/tvDetailMessage"
+                android:id="@+id/tvIntroTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tvTitle"

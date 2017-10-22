@@ -14,11 +14,16 @@ import java.util.List;
  * The class for fetching from and storing data into a local SQLite DB on a background thread and
  * returning data via callbacks on the main UI thread
  */
-public class LocalDataSource extends DataSource implements DataSource.GetUsersCallback{
+public class LocalDataSource extends DataSource implements DataSource.OnUsersCallback {
     private static LocalDataSource localDataSource;
 
     private LocalDataSource(MainUiThread mainUiThread, ThreadExecutor threadExecutor) {
         super(mainUiThread, threadExecutor);
+    }
+
+    @Override
+    public void disconnect(Context context) {
+
     }
 
     @Override
@@ -34,21 +39,26 @@ public class LocalDataSource extends DataSource implements DataSource.GetUsersCa
     }
 
 
-    private GetUsersCallback callback;
+    private OnUsersCallback callback;
     @Override
-    public void getUsers(Context context, GetUsersCallback getUsersCallback, long maxJoinTime) {
-        callback = getUsersCallback;
-        getUsersCallback.onSuccess(LocalDatabase.getUsers());
+    public void goOnline(Context context, OnUsersCallback onUsersCallback, long maxJoinTime) {
+        callback = onUsersCallback;
+        onUsersCallback.onSuccess(LocalDatabase.getUsers());
     }
 
     @Override
+    public void updateUser() {
+
+    }
+
+    //@Override
     public void storeUsers(List<User> users) {
         //// TODO: 10/14/17
     }
 
 
     @Override
-    public void getMMessages(Context context, GetMMessagesCallback getMMessagesCallback, long maxId) {
+    public void getMMessages(Context context, OnMMessagesCallback onMMessagesCallback, long maxId) {
         //// TODO: 10/13/17
     }
 
@@ -78,6 +88,11 @@ public class LocalDataSource extends DataSource implements DataSource.GetUsersCa
     public void onUserLeft(User user) {
         LocalDatabase.removeUser(user);
         callback.onUserLeft(user);
+    }
+
+    @Override
+    public void onUserUpdate(User user) {
+        //
     }
 
     /**

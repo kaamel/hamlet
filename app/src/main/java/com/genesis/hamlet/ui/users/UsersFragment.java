@@ -1,6 +1,7 @@
 package com.genesis.hamlet.ui.users;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -14,12 +15,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.genesis.hamlet.R;
 import com.genesis.hamlet.data.DataRepository;
+import com.genesis.hamlet.data.models.interests.Interests;
 import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.di.Injection;
+import com.genesis.hamlet.ui.interests.InterestsFragment;
+import com.genesis.hamlet.ui.login.LoginActivity;
 import com.genesis.hamlet.ui.userdetail.UserDetailFragment;
 import com.genesis.hamlet.util.BaseFragmentInteractionListener;
 import com.genesis.hamlet.util.EndlessRecyclerViewScrollListener;
@@ -28,10 +31,10 @@ import com.genesis.hamlet.util.Properties;
 import com.genesis.hamlet.util.mvp.BaseView;
 import com.genesis.hamlet.util.threading.MainUiThread;
 import com.genesis.hamlet.util.threading.ThreadExecutor;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.parceler.Parcels;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -43,27 +46,30 @@ import java.util.List;
 public class UsersFragment extends BaseView implements UsersContract.View {
 
     private UsersRecyclerAdapter recyclerAdapter;
-    private List<User> users;
     private EndlessRecyclerViewScrollListener endlessScrollListener;
     private UsersContract.Presenter presenter;
     private BaseFragmentInteractionListener fragmentInteractionListener;
     private boolean shouldRefreshUsers;
 
+    DataRepository dataRepository;
+
     RecyclerView rvUsers;
-    TextView tvPlaceholder;
     SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        users = new ArrayList<>();
+        setupRepository();
+        setHasOptionsMenu(true);
+        setRetainInstance(true);
+    }
+
+    private void setupRepository() {
         ThreadExecutor threadExecutor = ThreadExecutor.getInstance();
         MainUiThread mainUiThread = MainUiThread.getInstance();
-        DataRepository dataRepository = Injection.provideDataRepository();
+        dataRepository = Injection.provideDataRepository();
         presenter = new UsersPresenter(this, dataRepository, threadExecutor, mainUiThread);
-
-        setRetainInstance(true);
     }
 
     @Override
@@ -78,7 +84,7 @@ public class UsersFragment extends BaseView implements UsersContract.View {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-        recyclerAdapter = new UsersRecyclerAdapter(this, users);
+        recyclerAdapter = new UsersRecyclerAdapter();
         rvUsers.setAdapter(recyclerAdapter);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -88,7 +94,7 @@ public class UsersFragment extends BaseView implements UsersContract.View {
                 0) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                getUsers(page);
+                presenter.loadMoreUsers(getContext(), page);
             }
         };
 
@@ -98,7 +104,7 @@ public class UsersFragment extends BaseView implements UsersContract.View {
                 new ItemClickSupport.OnItemClickListener() {
                     @Override
                     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                        showDetailFragment(position);
+                        showDetailFragment(recyclerAdapter.getItem(position));
                     }
                 });
 
@@ -112,7 +118,7 @@ public class UsersFragment extends BaseView implements UsersContract.View {
 
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark, R.color.colorPrimary);
 
-        getUsers(0);
+        //goOnline(0);
 
     }
 
@@ -131,6 +137,19 @@ public class UsersFragment extends BaseView implements UsersContract.View {
     @Override
     public void onResume() {
         super.onResume();
+        Interests interests = Interests.getInstance();
+        if (interests == null || !interests.isIncomplete()) {
+            setUpInterests();
+        }
+        else if (presenter.isConnected()) {
+            if (interests.isChanged()) {
+                interests.setChanged(false);
+                refreshUsers();
+            }
+        }
+        else {
+            presenter.connect(getContext());
+        }
     }
 
     @Override
@@ -140,12 +159,37 @@ public class UsersFragment extends BaseView implements UsersContract.View {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_users, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getTitle().equals("Sign Out")) {
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            startActivity(intent);
+            getActivity().finish();
+            return true;
+        }
+
+        if (item.getTitle().equals("Clear Authentication")) {
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            intent.putExtra("action", "revoke");
+            startActivity(intent);
+            getActivity().finish();
+            return true;
+        }
+
+        if (item.getTitle().equals("Interests")) {
+            setUpInterests();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setUpInterests() {
+        fragmentInteractionListener.showFragment(InterestsFragment.class, new Bundle(), true);
     }
 
     @Override
@@ -159,7 +203,7 @@ public class UsersFragment extends BaseView implements UsersContract.View {
     }
 
     @Override
-    public void showUser(User user) {
+    public void addUser(User user) {
         if (shouldRefreshUsers) {
             recyclerAdapter.clear();
             endlessScrollListener.resetState();
@@ -167,6 +211,17 @@ public class UsersFragment extends BaseView implements UsersContract.View {
         }
         if (user != null)
             recyclerAdapter.add(user);
+    }
+
+    @Override
+    public void updateUser(User user) {
+        if (shouldRefreshUsers) {
+            recyclerAdapter.clear();
+            endlessScrollListener.resetState();
+            shouldRefreshUsers = false;
+        }
+        if (user != null)
+            recyclerAdapter.update(user);
     }
 
     @Override
@@ -184,14 +239,12 @@ public class UsersFragment extends BaseView implements UsersContract.View {
         recyclerAdapter.remove(user);
     }
 
-    private void getUsers(int page) {
-        presenter.getUsers(getContext().getApplicationContext(), page);
-    }
-
     private void refreshUsers() {
-        shouldRefreshUsers = true;
+        shouldRefreshUsers = false;
         recyclerAdapter.clear();
-        getUsers(0);
+        dataRepository.destroyInstance(getContext());
+        setupRepository();
+        presenter.connect(getContext());
     }
 
     @Override
@@ -199,11 +252,10 @@ public class UsersFragment extends BaseView implements UsersContract.View {
         swipeRefreshLayout.setRefreshing(show);
     }
 
-    private void showDetailFragment(int userPosition) {
-        User user = users.get(userPosition);
+    private void showDetailFragment(User user) {
         Parcelable parcelable = Parcels.wrap(user);
         Bundle bundle = new Bundle();
-        bundle.putParcelable(Properties.BUNDLE_KEY_PHOTO, parcelable);
+        bundle.putParcelable(Properties.BUNDLE_KEY_USER, parcelable);
         fragmentInteractionListener.showFragment(UserDetailFragment.class, bundle,
                 true);
     }

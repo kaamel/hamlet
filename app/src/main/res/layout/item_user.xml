@@ -22,7 +22,7 @@
             android:textStyle="bold|italic" />
 
         <TextView
-            android:id="@+id/tvDetailMessage"
+            android:id="@+id/tvIntroTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/item_photo_margin"

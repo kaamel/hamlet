@@ -1,6 +1,6 @@
 # Group Project - *Hamlet*
 
-**Hamlet** is an android app that allows a user to connect with other nearby users that are looking for others who are interested in common topics of interest to interact with. The "nearby" is based on the GPS location of the two users, and the interests are dynamically defined by each user for that moment and location. Whether one is looking for a walking companion in the afternoon, a playmate for their 5 year old son in the park, or other geeky Android developers in a convention, they can be looked by a few touches on the screen.
+**Hamlet** is an android app that allows a user to connect with other nearby users that are looking for others who are interested in common topics of interest to interact with. The "nearby" is based on the GPS location of the two users, and the interestCats are dynamically defined by each user for that moment and location. Whether one is looking for a walking companion in the afternoon, a playmate for their 5 year old son in the park, or other geeky Android developers in a convention, they can be looked by a few touches on the screen.
 
 
 ## User Stories
@@ -93,7 +93,7 @@ The following **optional** features are implemented:
   * [ ] Twitter account
   * [ ] Email/password
   * [ ] Phone number
-* [ ] In addition to the preset category of interests, users can enter up to 5 comma separated interests 
+* [ ] In addition to the preset category of interestCats, users can enter up to 5 comma separated interestCats 
 * [ ] **Stretch:** The **multimedia chat screen** also has and supports additional media types
   * [ ] A **multimedia list view*
   * [ ] An image button that can be used to add an attached audio

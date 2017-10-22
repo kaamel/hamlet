@@ -3,11 +3,8 @@ package com.genesis.hamlet.data;
 import android.content.Context;
 
 import com.genesis.hamlet.data.local.LocalDataSource;
-import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.data.remote.RemoteDataSource;
 import com.genesis.hamlet.util.mvp.BasePresenter;
-
-import java.util.ArrayList;
 
 /**
  * The primary class for the presenters that extend
@@ -21,7 +18,7 @@ import java.util.ArrayList;
 public class DataRepository {
 
     private DataSource remoteDataSource;
-    boolean streaming = false;
+    boolean connected = false;
 
     private static DataRepository dataRepository;
 
@@ -36,29 +33,40 @@ public class DataRepository {
         return dataRepository;
     }
 
-    public void destroyInstance() {
-        dataRepository = null;
-        stopUsersStream();
-        streaming = false;
+    public void destroyInstance(Context context) {
+        disconnect(context);
     }
 
-    public void getUsers(Context context, final DataSource.GetUsersCallback getUsersCallback, int page) {
+    public void connectRemote(Context context, final DataSource.OnUsersCallback onUsersCallback, int page) {
 
-        if (!streaming || page == 0) {
-            streaming = true;
-            startUsersStream(context, getUsersCallback);
+        if (!connected || page ==0) {
+            connected = true;
+            startUsersStream(context, onUsersCallback);
         }
         else {
-            getUsersCallback.onSuccess(new ArrayList<User>());
+            if (page == 0) {
+                //// TODO: 10/20/17 refresh data
+            }
+            //onUsersCallback.onSuccess(new ArrayList<User>());
         }
     }
 
-    private void startUsersStream(Context context, DataSource.GetUsersCallback getUsersCallback) {
-        remoteDataSource.getUsers(context, getUsersCallback, 0);
+    public void updateUserInterests() {
+        remoteDataSource.updateUser();
     }
 
-    public void stopUsersStream() {
-        //// TODO: 10/15/17 close down the firebase and do any clean up on the server side
+    private void startUsersStream(Context context, DataSource.OnUsersCallback onUsersCallback) {
+        remoteDataSource.goOnline(context, onUsersCallback, 0);
     }
 
+    public void disconnect(Context context) {
+        remoteDataSource.disconnect(context);
+        dataRepository = null;
+        remoteDataSource = null;
+        connected = false;
+    }
+
+    public boolean isConnected() {
+        return connected;
+    }
 }

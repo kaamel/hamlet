@@ -38,19 +38,22 @@ public class UsersPresenter extends BasePresenter<UsersContract.View> implements
     }
 
     @Override
-    public void getUsers(Context context, int page) {
-        if (view == null) {
-            return;
-        }
+    public boolean isConnected() {
+        return dataRepository.isConnected();
+    }
 
+    @Override
+    public void connect(Context context) {
+        if (dataRepository.isConnected())
+            return;
         view.setProgressBar(true);
 
-        dataRepository.getUsers(context, new DataSource.GetUsersCallback() {
+        dataRepository.connectRemote(context, new DataSource.OnUsersCallback() {
             @Override
             public void onSuccess(List<User> users) {
                 if (view != null) {
+                    view.setProgressBar(false);
                     if (users == null || users.size() == 0) {
-                        view.setProgressBar(false);
                         return;
                     }
                     view.showUsers(users);
@@ -81,16 +84,47 @@ public class UsersPresenter extends BasePresenter<UsersContract.View> implements
             @Override
             public void onNewUserJoined(User user) {
                 if (view != null) {
-                    view.showUser(user);
+                    view.setProgressBar(false);
+                    view.addUser(user);
                 }
             }
 
             @Override
             public void onUserLeft(User user) {
                 if (view != null) {
+                    view.setProgressBar(false);
                     view.remove(user);
                 }
             }
-        }, page);
+
+            @Override
+            public void onUserUpdate(User user) {
+                if (view != null) {
+                    view.setProgressBar(false);
+                    view.updateUser(user);
+                }
+            }
+        }, 0);
+    }
+
+    @Override
+    public void loadMoreUsers(Context context, int page) {
+        if (dataRepository.isConnected()) {
+            if (view != null)
+                view.setProgressBar(false);
+            return;
+        }
+        connect(context);
+    }
+
+    @Override
+    public void interestsUpdated(Context context) {
+        if (dataRepository.isConnected()) {
+            if (view != null)
+                view.setProgressBar(false);
+            dataRepository.updateUserInterests();
+            return;
+        }
+        connect(context);
     }
 }

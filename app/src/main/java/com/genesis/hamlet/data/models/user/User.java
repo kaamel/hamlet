@@ -7,12 +7,15 @@ import org.parceler.Parcel;
 public class User {
     private String uid;
     private String displayName;
+    private String introTitle;
+    private String introDetail;
     private String photoUrl;
     private String email;
     private String phoneNumber;
     private long lat;
     private long lon;
     private long locationUpdateTime;
+    private boolean[] interests;
 
     //// TODO: 10/14/17 replace this constructor with a real one
 
@@ -35,6 +38,22 @@ public class User {
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    public String getIntroTitle() {
+        return introTitle;
+    }
+
+    public void setIntroTitle(String introTitle) {
+        this.introTitle = introTitle;
+    }
+
+    public String getIntroDetail() {
+        return introDetail;
+    }
+
+    public void setIntroDetail(String introDetail) {
+        this.introDetail = introDetail;
     }
 
     public void setDisplayName(String displayName) {
@@ -87,5 +106,13 @@ public class User {
 
     public void setLocationUpdateTime(long locationUpdateTime) {
         this.locationUpdateTime = locationUpdateTime;
+    }
+
+    public boolean[] getInterests() {
+        return interests;
+    }
+
+    public void setInterests(boolean[] interests) {
+        this.interests = interests;
     }
 }
