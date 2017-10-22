@@ -1,15 +1,12 @@
 package com.genesis.hamlet.ui.userdetail;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,30 +16,14 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.genesis.hamlet.R;
-import com.genesis.hamlet.UserChatFragment;
-import com.genesis.hamlet.data.DataRepository;
+import com.genesis.hamlet.ui.mmessages.MessagesActivity;
 import com.genesis.hamlet.data.models.user.User;
-import com.genesis.hamlet.di.Injection;
 import com.genesis.hamlet.ui.users.UsersFragment;
-import com.genesis.hamlet.ui.users.UsersPresenter;
-import com.genesis.hamlet.ui.users.UsersRecyclerAdapter;
 import com.genesis.hamlet.util.BaseFragmentInteractionListener;
-import com.genesis.hamlet.util.EndlessRecyclerViewScrollListener;
-import com.genesis.hamlet.util.ItemClickSupport;
 import com.genesis.hamlet.util.Properties;
 import com.genesis.hamlet.util.mvp.BaseView;
-import com.genesis.hamlet.util.threading.MainUiThread;
-import com.genesis.hamlet.util.threading.ThreadExecutor;
 
 import org.parceler.Parcels;
-
-import java.util.ArrayList;
-
-import static android.R.attr.button;
-import static android.R.attr.tag;
-import static android.content.ContentValues.TAG;
-import static com.genesis.hamlet.R.id.rvUsers;
-import static com.genesis.hamlet.R.id.swipeRefreshLayout;
 
 /**
  * The {@link Fragment} that receives photo data from
@@ -138,8 +119,13 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
         Parcelable parcelable = Parcels.wrap(user);
         Bundle bundle = new Bundle();
         bundle.putParcelable(Properties.BUNDLE_KEY_PHOTO, parcelable);
-        fragmentInteractionListener.showFragment(UserChatFragment.class, bundle,
-                true);
+//        fragmentInteractionListener.showFragment(UserChatFragment.class, bundle,
+//                true);
+
+        Intent intent = new Intent(getActivity(), MessagesActivity.class);
+        intent.putExtra(Properties.BUNDLE_KEY_PHOTO, parcelable);
+        startActivity(intent);
+
     }
 
 }
