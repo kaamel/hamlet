@@ -75,8 +75,7 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
                     == PackageManager.PERMISSION_GRANTED) {
 
                 showFragment(UsersFragment.class);
-                //Request location updates:
-//                locationManager.requestLocationUpdates(provider, 400, 1, this);
+
 
             }
         }
