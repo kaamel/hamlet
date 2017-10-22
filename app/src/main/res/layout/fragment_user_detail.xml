@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <android.support.v4.widget.NestedScrollView
 
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -12,36 +13,66 @@
 
             <ImageView
                 android:id="@+id/ivPhoto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="256dp"
+                android:layout_height="256dp"
+                android:layout_marginTop="16dp"
                 android:adjustViewBounds="true"
-                android:background="@android:drawable/ic_secure"
-                android:scaleType="fitCenter" />
+                android:layout_centerHorizontal="true"
+                android:scaleType="fitCenter"
+                android:visibility="visible" />
 
             <TextView
-                android:id="@+id/tvTitle"
-                android:layout_width="match_parent"
+                android:id="@+id/tvUserName"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/ivPhoto"
-                android:layout_marginLeft="@dimen/title_marginLeftRight"
-                android:layout_marginRight="@dimen/title_marginLeftRight"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="16dp"
                 android:fontFamily="sans-serif-black"
-                android:text="Brad"
+                tools:text="Brad"
                 android:textSize="@dimen/title_textSize" />
 
             <TextView
-                android:id="@+id/tvIntroTitle"
+                android:id="@+id/tvTagline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tvTitle"
+                android:layout_below="@+id/tvUserName"
                 android:layout_centerHorizontal="true"
-                android:layout_marginLeft="@dimen/comment_marginLeftRight"
-                android:layout_marginRight="@dimen/comment_marginLeftRight"
-                android:layout_marginTop="@dimen/comments_marginTop"
+                android:layout_marginTop="4dp"
+                android:fontFamily="sans-serif-black"
+                tools:text="Keep Walking!"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvDetailMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvTagline"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
                 android:fontFamily="sans-serif"
-                android:text="I love beer. Anyone wants to join me?"
-                android:textSize="@dimen/title_textSize"
+                tools:text="I love beer. Anyone wants to join me?"
+                android:textSize="18sp"
                 android:visibility="visible" />
+
+            <Button
+                android:id="@+id/btnConnected"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvDetailMessage"
+                android:layout_marginTop="32dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                android:text="@string/connect"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:background="@color/colorBlue" />
 
         </RelativeLayout>
 

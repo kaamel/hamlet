@@ -15,4 +15,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="settings">Go to Settings</string>
+
+    <string name="hello_chat_fragment">Hello Chat fragment</string>
+    <string name="connect">Connect</string>
 </resources>
