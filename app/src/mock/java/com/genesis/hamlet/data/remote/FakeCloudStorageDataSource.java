@@ -38,13 +38,13 @@ public class FakeCloudStorageDataSource extends DataSource {
     }
 
     @Override
-    public void getUsers(final Context context, final GetUsersCallback getUsersCallback, long maxJoinTime) {
+    public void getUsers(final Context context, final OnUserCallback onUserCallback, long maxJoinTime) {
 
         final Handler handler = new Handler();
         final List<User> users = new ArrayList<>();
 
         final User user1 = new User("John K", "Looking for someone to play tennis with");
-        user1.setTagline("love walking");
+        user1.setIntroTitle("love walking");
         user1.setPhotoUrl("https://scontent.fsnc1-1.fna.fbcdn.net/v/t1.0-9/11880524_10207583816890476_7006713471158652602_n.jpg?oh=1d95b3dce9f849b86cc9faec563757c8&oe=5A785E69");
         handler.postDelayed(new Runnable() {
             @Override
@@ -52,11 +52,11 @@ public class FakeCloudStorageDataSource extends DataSource {
                 users.add(user1);
 
                 User user2 = new User("Kelly", "My 5 year old son wants to play in the park with same age kid");
-                user2.setTagline("hate walking!");
+                user2.setIntroTitle("hate walking!");
                 user2.setPhotoUrl("https://scontent.fsnc1-1.fna.fbcdn.net/v/t1.0-9/12472243_10153792983241605_1589806110665512082_n.jpg?oh=f7e57de11f58977d74001b49b615ba25&oe=5A3BE974");
                 users.add(user2);
 
-                getUsersCallback.onSuccess(users);
+                onUserCallback.onSuccess(users);
             }
         }, 100);
 
@@ -65,17 +65,17 @@ public class FakeCloudStorageDataSource extends DataSource {
             public void run() {
 
                 User user3 = new User("Fay", "Need a ride to Mountain View");
-                user3.setTagline("Need a ride!");
+                user3.setIntroTitle("Need a ride!");
                 user3.setPhotoUrl("https://scontent.fsnc1-1.fna.fbcdn.net/v/t1.0-9/12472243_10153792983241605_1589806110665512082_n.jpg?oh=f7e57de11f58977d74001b49b615ba25&oe=5A3BE974");
 
-                getUsersCallback.onNewUserJoined(user3);
+                onUserCallback.onNewUserJoined(user3);
             }
         }, 2100);
 
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                getUsersCallback.onUserLeft(user1);
+                onUserCallback.onUserLeft(user1);
             }
         }, 8000);
     }
@@ -86,7 +86,7 @@ public class FakeCloudStorageDataSource extends DataSource {
     }
 
     @Override
-    public void getMMessages(Context context, GetMMessagesCallback getMMessagesCallback, long maxId) {
+    public void getMMessages(Context context, OnMMessagesCallback onMMessagesCallback, long maxId) {
         //// TODO: 10/13/17
     }
 }
