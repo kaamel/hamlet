@@ -149,16 +149,32 @@ public class MessagesActivity extends AppCompatActivity {
 
         DatabaseReference messagesRef = mFirebaseDatabaseReference.child(MESSAGES_CHILD);
 
-        FirebaseRecyclerOptions<ChatMessage> options = new FirebaseRecyclerOptions.Builder<ChatMessage>()
+        final FirebaseRecyclerOptions<ChatMessage> options = new FirebaseRecyclerOptions.Builder<ChatMessage>()
                                                             .setQuery(messagesRef, parser)
                                                             .build();
 
         mFirebaseAdapter = new FirebaseRecyclerAdapter<ChatMessage, MMessageViewHolder>(options) {
 
             @Override
+            public int getItemViewType(int position) {
+                ChatMessage msg = mFirebaseAdapter.getItem(position);
+                if(msg.getName().equals(mFirebaseUser.getDisplayName())){
+                    return 0;
+                }
+                else
+                    return 1;
+                //return super.getItemViewType(position);
+            }
+
+            @Override
             public MMessageViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
                 LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-                return new MMessageViewHolder(inflater.inflate(R.layout.mmessage_user, viewGroup, false));
+                if(i == 0){
+                return new MMessageViewHolder(inflater.inflate(R.layout.mmessage_friend, viewGroup, false));
+                }
+                else {
+                    return new MMessageViewHolder(inflater.inflate(R.layout.mmessage_user, viewGroup, false));
+                }
             }
 
             @Override
