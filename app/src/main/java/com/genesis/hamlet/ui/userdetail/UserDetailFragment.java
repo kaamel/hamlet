@@ -1,6 +1,7 @@
 package com.genesis.hamlet.ui.userdetail;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.genesis.hamlet.R;
 import com.genesis.hamlet.UserChatFragment;
+import com.genesis.hamlet.ui.mmessages.MessagesActivity;
 import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.ui.users.UsersFragment;
 import com.genesis.hamlet.util.BaseFragmentInteractionListener;
@@ -118,8 +120,12 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
         Parcelable parcelable = Parcels.wrap(user);
         Bundle bundle = new Bundle();
         bundle.putParcelable(Properties.BUNDLE_KEY_USER, parcelable);
-        fragmentInteractionListener.showFragment(UserChatFragment.class, bundle,
-                true);
+        //fragmentInteractionListener.showFragment(UserChatFragment.class, bundle,
+        //        true);
+
+        Intent intent = new Intent(getActivity(), MessagesActivity.class);
+        intent.putExtra(Properties.BUNDLE_KEY_PHOTO, parcelable);
+        startActivity(intent);
     }
 
 }

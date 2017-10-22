@@ -23,6 +23,7 @@ public class MMessages {
     public String getMMessagesId() {
         return mMessagesId;
     }
+
     public List<MMessage> getMMessages() {
         return mMessages;
     }
@@ -30,6 +31,7 @@ public class MMessages {
     public void setMMessages(List<MMessage> mMessages) {
         this.mMessages = mMessages;
     }
+
     public MMessage getMMessage(int position) {
         return mMessages.get(position);
     }

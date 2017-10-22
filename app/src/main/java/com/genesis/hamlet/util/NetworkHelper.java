@@ -5,7 +5,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 
-public class NetworkHelper {
+public class  NetworkHelper {
 
     private static NetworkHelper networkHelper;
 
