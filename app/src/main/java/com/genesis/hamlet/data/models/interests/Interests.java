@@ -51,10 +51,10 @@ public class Interests {
 
     @Exclude
     public boolean isIncomplete() {
-        return !((nickName != null && nickName.trim().length() > 0)
+        return (nickName != null && nickName.trim().length() > 0)
                 && (interestTopics != null)
                 && (interestTopics.length > 0)
-                && (introTitle != null && introTitle.trim().length() > 0));
+                && (introTitle != null && introTitle.trim().length() > 0);
     }
 
     public static String[] getInterestTopics() {

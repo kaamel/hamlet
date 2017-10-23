@@ -174,12 +174,7 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
 
     @Override
     public void onDetach() {
-        Interests interests = Interests.getInstance();
-        if (interests.isIncomplete()) {
-            getActivity().finish();
-        }
-        else
-            Interests.getInstance().setChanged(true);
+        Interests.getInstance().setChanged(true);
         super.onDetach();
     }
 }
