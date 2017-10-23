@@ -138,7 +138,7 @@ public class UsersFragment extends BaseView implements UsersContract.View {
     public void onResume() {
         super.onResume();
         Interests interests = Interests.getInstance();
-        if (interests == null || !interests.isIncomplete()) {
+        if (interests == null || interests.isIncomplete()) {
             setUpInterests();
         }
         else if (presenter.isConnected()) {
@@ -155,6 +155,12 @@ public class UsersFragment extends BaseView implements UsersContract.View {
     @Override
     public void onPause() {
         super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        dataRepository.disconnect(getContext());
+        super.onDestroy();
     }
 
     @Override
