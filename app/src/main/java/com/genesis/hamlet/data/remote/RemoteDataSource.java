@@ -56,7 +56,7 @@ public class RemoteDataSource extends DataSource {
     @Override
     public void disconnect(Context context) {
         Intent intent = new Intent(context.getApplicationContext(), HamletConnectionService.class);
-        context.startService(intent);
+        //context.startService(intent);
         context.stopService(intent);
         context.unregisterReceiver(br);
     }

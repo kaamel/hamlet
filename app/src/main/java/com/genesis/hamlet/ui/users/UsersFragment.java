@@ -158,7 +158,7 @@ public class UsersFragment extends BaseView implements UsersContract.View {
 
     @Override
     public void onDestroy() {
-        dataRepository.disconnect(getContext());
+        //dataRepository.disconnect(getContext());
         super.onDestroy();
     }
 
