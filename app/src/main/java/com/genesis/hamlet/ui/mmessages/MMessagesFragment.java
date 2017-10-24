@@ -118,7 +118,7 @@ public class MMessagesFragment extends Fragment {
         mLinearLayoutManager.setStackFromEnd(true);
 
         //get root reference.
-        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference(MESSAGES_CHILD);
 
         //load previous messages
         SnapshotParser<ChatMessage> parser = new SnapshotParser<ChatMessage>() {
@@ -132,7 +132,7 @@ public class MMessagesFragment extends Fragment {
             }
         };
 
-        DatabaseReference messagesRef = mFirebaseDatabaseReference.child(MESSAGES_CHILD);
+        DatabaseReference messagesRef = mFirebaseDatabaseReference.child(MESSAGES_SESSION);
 
         final FirebaseRecyclerOptions<ChatMessage> options =
                 new FirebaseRecyclerOptions.Builder<ChatMessage>()
@@ -277,7 +277,7 @@ public class MMessagesFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 ChatMessage friendlyMessage = new ChatMessage(mMessageEditText.getText().toString(), mUsername, mPhotoUrl, null);
-                mFirebaseDatabaseReference.child(MESSAGES_CHILD).push().setValue(friendlyMessage);
+                mFirebaseDatabaseReference.child(MESSAGES_SESSION).push().setValue(friendlyMessage);
                 mMessageEditText.setText("");
                 //mFirebaseAnalytics.logEvent(MESSAGE_SENT_EVENT, null);
             }
@@ -318,7 +318,7 @@ public class MMessagesFragment extends Fragment {
                                     new ChatMessage(null, mUsername, mPhotoUrl,
                                             task.getResult().getDownloadUrl()
                                                     .toString());
-                            mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(key)
+                            mFirebaseDatabaseReference.child(MESSAGES_SESSION).child(key)
                                     .setValue(friendlyMessage);
                         } else {
                             Log.w(TAG, "Image upload task was not successful.",
@@ -341,7 +341,7 @@ public class MMessagesFragment extends Fragment {
 
                     ChatMessage tempMessage = new ChatMessage(null, mUsername, mPhotoUrl,
                             LOADING_IMAGE_URL);
-                    mFirebaseDatabaseReference.child(MESSAGES_CHILD).push()
+                    mFirebaseDatabaseReference.child(MESSAGES_SESSION).push()
                             .setValue(tempMessage, new DatabaseReference.CompletionListener() {
                                 @Override
                                 public void onComplete(DatabaseError databaseError,
@@ -366,41 +366,4 @@ public class MMessagesFragment extends Fragment {
         }
     }
 
-//        @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
-//
-//        if (requestCode == REQUEST_IMAGE) {
-//            if (resultCode == RESULT_OK) {
-//                if (data != null) {
-//                    final Uri uri = data.getData();
-//                    Log.d(TAG, "Uri: " + uri.toString());
-//
-//                    ChatMessage tempMessage = new ChatMessage(null, mUsername, mPhotoUrl,
-//                            LOADING_IMAGE_URL);
-//                    mFirebaseDatabaseReference.child(MESSAGES_CHILD).push()
-//                            .setValue(tempMessage, new DatabaseReference.CompletionListener() {
-//                                @Override
-//                                public void onComplete(DatabaseError databaseError,
-//                                                       DatabaseReference databaseReference) {
-//                                    if (databaseError == null) {
-//                                        String key = databaseReference.getKey();
-//                                        StorageReference storageReference =
-//                                                FirebaseStorage.getInstance()
-//                                                        .getReference(mFirebaseUser.getUid())
-//                                                        .child(key)
-//                                                        .child(uri.getLastPathSegment());
-//
-//                                        putImageInStorage(storageReference, uri, key);
-//                                    } else {
-//                                        Log.w(TAG, "Unable to write message to database.",
-//                                                databaseError.toException());
-//                                    }
-//                                }
-//                            });
-//                }
-//            }
-//        }
-//    }
 }
