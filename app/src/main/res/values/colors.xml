@@ -4,19 +4,4 @@
     <color name="colorPrimaryDark">#3A4AAD</color>
     <color name="colorAccent">#3A4AAD</color>
     <color name="colorBlue">#2196F3</color>
-    <!--//custom palette-->
-    <!--<color name="mulledwine">#4C4655</color>-->
-    <!--<color name="topaz">#817C8E</color>-->
-    <!--<color name="venus">#9D7783</color>-->
-    <!--<color name="mountbattenpink">#9F7F8E</color>-->
-    <!--<color name="shadylady">#A798A1</color>-->
-    <!--<color name="aluminium">#878D90</color>-->
-
-    <color name="mulledwine">#53C6EE</color>
-    <color name="topaz">#169CCE</color>
-    <color name="venus">#FDFEFF</color>
-    <color name="mountbattenpink">#28B9EB</color>
-    <color name="shadylady">#8FCCE4</color>
-    <color name="aluminium">#398AC1</color>
-
 </resources>
