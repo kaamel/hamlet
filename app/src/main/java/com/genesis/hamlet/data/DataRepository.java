@@ -6,6 +6,8 @@ import com.genesis.hamlet.data.local.LocalDataSource;
 import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.data.remote.RemoteDataSource;
 import com.genesis.hamlet.util.mvp.BasePresenter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * The primary class for the presenters that extend
@@ -53,11 +55,13 @@ public class DataRepository {
     }
 
     public void sendNotification(User user, String action, String title, String message) {
-        remoteDataSource.sendNotification(user, action, title, message);
+        FirebaseUser me = FirebaseAuth.getInstance().getCurrentUser();
+        if (me != null)
+            remoteDataSource.sendNotification(user, me.getUid(), action, title, message);
     }
 
-    public void sendNotification(String uId, String action, String title, String message) {
-        remoteDataSource.sendNotification(uId, action, title, message);
+    public void sendNotification(String senduerUid, String receiverUid, String chatRoom, String action, String title, String message) {
+        remoteDataSource.sendNotification(senduerUid, receiverUid, chatRoom, action, title, message);
     }
 
     public void updateUserInterests() {

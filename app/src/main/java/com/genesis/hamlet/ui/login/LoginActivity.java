@@ -21,6 +21,7 @@ import com.genesis.hamlet.R;
 import com.genesis.hamlet.data.DataSource;
 import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.ui.MainActivity;
+import com.genesis.hamlet.util.threading.FirebaseHelper;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
@@ -48,6 +49,8 @@ public class LoginActivity extends AppCompatActivity implements DataSource.OnUse
 
     String action = null;
     User otherUser = null;
+    String chatRoom = null;
+    String myUid = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,20 +60,27 @@ public class LoginActivity extends AppCompatActivity implements DataSource.OnUse
 
         if (getIntent().getExtras() != null) {
             //The LoginActivity is not the entry point for the app
-            String uid = getIntent().getStringExtra("uid");
-            if (uid != null) {
+            String senderUid = getIntent().getStringExtra("senderUid");
+            if (senderUid != null) {
                 //this is a notification
+
+                String receiverUid = getIntent().getStringExtra("receiverUid");
+                String chatRoom = getIntent().getStringExtra("chatRoom");
                 String title = getIntent().getStringExtra("title");
                 String action = getIntent().getStringExtra("action");
                 String name = getIntent().getStringExtra("name");
                 String message = getIntent().getStringExtra("message");
                 User user = new User();
-                user.setUid(uid);
+                user.setUid(senderUid);
                 user.setDisplayName(name);
                 user.setIntroTitle(title);
                 user.setIntroDetail(message);
                 this.action = action;
                 this.otherUser = user;
+                this.chatRoom = chatRoom;
+                this.myUid = receiverUid;
+
+                FirebaseHelper.deleteFirebaseNode("/notifications/" +receiverUid, senderUid);
             }
         }
 
@@ -178,7 +188,7 @@ public class LoginActivity extends AppCompatActivity implements DataSource.OnUse
     private void continueToUsersList() {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         if (action != null) {
-            MainActivity.setRemoteAction(action, otherUser);
+            MainActivity.setRemoteAction(action, myUid, otherUser, chatRoom);
         }
         startActivity(intent);
         finish();

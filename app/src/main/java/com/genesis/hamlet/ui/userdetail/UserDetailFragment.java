@@ -1,5 +1,6 @@
 package com.genesis.hamlet.ui.userdetail;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -115,6 +116,8 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
     }
 
     private void showUserChatFragment(User user) {
+        //// TODO: 10/24/17 Manoj, I changed the code here to send a notification instead of starting the chat session
+        //// TODO: 10/24/17 Please verify/change as you fit and remove the todo when done
         fragmentInteractionListener.getDataRepository().sendNotification(user, "request_to_connect", Interests.getInstance().getIntroTitle(), Interests.getInstance().getIntroDetail());
 
         /*
@@ -130,4 +133,21 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
         */
     }
 
+    public static void onConnectAccepted(Activity activity, String chatRoom, User otherUser) {
+        //// TODO: 10/24/17 Manoj, I added this callback - please remove the todo when done
+        //// TODO: 10/24/17 please add code to manage the case when invitaiton to connect is accepted
+        //// TODO: 10/24/17 I have copied your previous code here and added the chatroom but it is commented out
+
+        /*
+        Parcelable parcelable = Parcels.wrap(otherUser);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Properties.BUNDLE_KEY_USER, parcelable);
+        //fragmentInteractionListener.showFragment(UserChatFragment.class, bundle,
+        //        true);
+
+        Intent intent = new Intent(activity, MessagesActivity.class);
+        intent.putExtra(Properties.BUNDLE_KEY_USER, parcelable);
+        activity.startActivity(intent);
+        */
+    }
 }

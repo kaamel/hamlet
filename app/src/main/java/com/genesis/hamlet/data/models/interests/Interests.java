@@ -32,7 +32,7 @@ public class Interests {
     private String introTitle = "";
     private String introDetail = "";
 
-    private List<Boolean> interestCats = new ArrayList<>();// boolean[interestTopics.length];
+    private static final List<Boolean> interestCats = new ArrayList<>();// boolean[interestTopics.length];
 
     @Exclude
     private boolean changed = false;
@@ -80,11 +80,11 @@ public class Interests {
     public List getInterestCats() {
         return interestCats;
     }
-
+/*
     public void setInterestCats(List interestCats) {
         this.interestCats = interestCats;
     }
-
+*/
     public boolean getInterest(int pos) {
         return interestCats.get(pos);
     }
@@ -102,6 +102,8 @@ public class Interests {
     }
 
     public void clearInterests() {
+        if (interestCats.size() == interestTopics.length)
+            return;
         for (String item: interestTopics) {
             interestCats.add(false);
         }

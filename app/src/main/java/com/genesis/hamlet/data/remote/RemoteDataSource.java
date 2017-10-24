@@ -103,16 +103,16 @@ public class RemoteDataSource extends DataSource {
 
                             }
                         };
-                        usersRef.child(user.getUid()).addValueEventListener(eventListener);
-                        listenerMap.put(user.getUid(), eventListener);
+                        usersRef.child(user.getSenderUid()).addValueEventListener(eventListener);
+                        listenerMap.put(user.getSenderUid(), eventListener);
                         */
                         onUsersCallback.onNewUserJoined(user);
                         break;
                     case -1:
                         onUsersCallback.onUserLeft(user);
                         /*
-                        usersRef.child(user.getUid()).removeEventListener(listenerMap.get(user.getUid()));
-                        listenerMap.remove(user.getUid());
+                        usersRef.child(user.getSenderUid()).removeEventListener(listenerMap.get(user.getSenderUid()));
+                        listenerMap.remove(user.getSenderUid());
                         */
                         break;
                     default:
@@ -168,7 +168,7 @@ public class RemoteDataSource extends DataSource {
                     HashMap map = (HashMap) dataSnapshot.getValue();
                     for (Object obj: map.keySet()) {
                         String key = (String) obj;
-                        if (key.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                        if (key.equals(FirebaseAuth.getInstance().getCurrentUser().getSenderUid())) {
                             continue;
                         }
                         User user = RemoteUser.getUser((HashMap) map.get(obj));
@@ -185,19 +185,16 @@ public class RemoteDataSource extends DataSource {
     }
 
     @Override
-    public void sendNotification(User user, String action, String title, String message) {
-        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/notifications/" + user.getUid() + "/" + FirebaseAuth.getInstance().getCurrentUser().getUid(),
-                new NotificationMessage(uid, Interests.getInstance().getNickName(), action, title, message));
-        database.getReference().updateChildren(childUpdates);
+    public void sendNotification(User user, String chatRoom, String action, String title, String message) {
+        String senderUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String receiverUid = user.getUid();
+        sendNotification(senderUid, receiverUid, chatRoom, action, title, message);
     }
     @Override
-    public void sendNotification(String uId, String action, String title, String message) {
-        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    public void sendNotification(String senduerUid, String receiverUid, String chatRoom, String action, String title, String message) {
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/notifications/" + uId + "/" + FirebaseAuth.getInstance().getCurrentUser().getUid(),
-                new NotificationMessage(uid, Interests.getInstance().getNickName(), action, title, message));
+        childUpdates.put("/notifications/" + receiverUid + "/" + senduerUid,
+                new NotificationMessage(senduerUid, receiverUid, chatRoom, Interests.getInstance().getNickName(), action, title, message));
         database.getReference().updateChildren(childUpdates);
     }
 

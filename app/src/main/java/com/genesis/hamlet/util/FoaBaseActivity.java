@@ -42,6 +42,8 @@ public abstract class FoaBaseActivity extends AppCompatActivity implements
                 throw new RuntimeException("New Fragment should have been created", e);
             }
         }
+        else if (!fragment.isDetached())
+            return;
 
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right,
                 R.anim.slide_out_left, android.R.anim.slide_in_left,

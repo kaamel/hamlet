@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -28,6 +29,8 @@ import com.genesis.hamlet.util.BaseFragmentInteractionListener;
 import com.genesis.hamlet.util.FoaBaseActivity;
 import com.genesis.hamlet.util.NetworkHelper;
 import com.genesis.hamlet.util.Properties;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.parceler.Parcels;
 
@@ -56,6 +59,11 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
 
     static String action = null;
     static User otherUser = null;
+    private static String myUid = null;
+    private static String chatRoom = null;
+
+    BroadcastReceiver br;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +73,7 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
         setSupportActionBar(toolbar);
 
         dataRepository = Injection.provideDataRepository();
+        setUpNotificationReceiver();
     }
 
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
@@ -102,6 +111,12 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
     }
 
     @Override
+    protected void onDestroy() {
+        unregisterReceiver(br);
+        super.onDestroy();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
@@ -112,7 +127,7 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
         @Override
         public void onReceive(Context context, Intent intent) {
             if (!NetworkHelper.getInstance().isNetworkAvailable(context)) {
-                Toast.makeText(getApplicationContext(), "Network is not available", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Network is not available", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getApplicationContext(), "Network is available", Toast.LENGTH_SHORT).show();
             }
@@ -198,9 +213,8 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
                             Manifest.permission.ACCESS_FINE_LOCATION)
                             == PackageManager.PERMISSION_GRANTED) {
 
-                        //Request location updates:
-//                        locationManager.requestLocationUpdates(provider, 400, 1, this);
-                        showFragment(UsersFragment.class);
+                        showTheFragment();
+                        //showFragment(UsersFragment.class);
 
                     }
 
@@ -214,8 +228,84 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
         }
     }
 
-    public static void setRemoteAction(String action, User user) {
+    void setUpNotificationReceiver() {
+        br = new BroadcastReceiver() {
+            @Override
+            public void onReceive(final Context context, final Intent intent) {
+                String myUid = intent.getStringExtra("receiverUid");
+                String senderUid = intent.getStringExtra("senderUid");
+                FirebaseUser me = FirebaseAuth.getInstance().getCurrentUser();
+                /*
+                if (myUid == null ||  me == null || !(myUid.equals(me.getUid()))) {
+                    FirebaseHelper.deleteFirebaseNode(myUid, senderUid);
+                    return;
+                }
+                */
+                String chatRoom = intent.getStringExtra("chatRoom");
+                String name = intent.getStringExtra("name");
+                String action = intent.getStringExtra("action");
+                String title = intent.getStringExtra("title");
+                String message = intent.getStringExtra("message");
+                User user = new User();
+                user.setUid(senderUid);
+                user.setDisplayName(name);
+                user.setIntroTitle(title);
+                user.setIntroDetail(message);
+                //FirebaseHelper.deleteFirebaseNode("/notifications/" +myUid, senderUid);
+                if (action.equals("request_to_connect_accepted")) {
+                    UserDetailFragment.onConnectAccepted(MainActivity.this, chatRoom, user);
+                }
+                else {
+
+                    Parcelable parcelable = Parcels.wrap(user);
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable(Properties.BUNDLE_KEY_USER, parcelable);
+
+                    bundle.putString("chatRoom", chatRoom);
+                    bundle.putString("myUid", myUid);
+
+                    showFragment(UserDetailFragment.class, bundle, true);
+                }
+            }
+        };
+
+        IntentFilter filter = new IntentFilter(Properties.FCN_RECEIVED_NOTIFICATION);
+        registerReceiver(br, filter);
+    }
+
+    private void showTheFragment() {
+        if (action != null && (action.equals("request_to_connect") || action.equals("request_to_connect_accepted"))) {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(Properties.BUNDLE_KEY_USER, Parcels.wrap(otherUser));
+            bundle.putString("chatRoom", chatRoom);
+            bundle.putString("myUid", myUid);
+            otherUser = null;
+            action = null;
+            chatRoom = null;
+            myUid = null;
+
+            FirebaseUser me = FirebaseAuth.getInstance().getCurrentUser();
+            if (me != null
+                    && me.getUid().equals(myUid)) {
+                if (action.equals("request_to_connect_accepted")) {
+                    UserDetailFragment.onConnectAccepted(this, chatRoom, otherUser);
+                }
+                else
+                    showFragment(UserDetailFragment.class, bundle, true);
+            }
+            else {
+                //this is an response and we are no longer interested
+                finish();
+            }
+        }
+        else
+            showFragment(UsersFragment.class);
+    }
+
+    public static void setRemoteAction(String action, String myUid, User user, String chatRoom) {
         MainActivity.otherUser = user;
         MainActivity.action = action;
+        MainActivity.myUid = myUid;
+        MainActivity.chatRoom = chatRoom;
     }
 }

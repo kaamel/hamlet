@@ -65,8 +65,8 @@ public abstract class DataSource {
 
     }
 
-    public abstract void sendNotification(User user, String action, String title, String message);
-    public abstract void sendNotification(String uId, String action, String title, String message);
+    public abstract void sendNotification(User user, String chatRoom, String action, String title, String message);
+    public abstract void sendNotification(String senduerUid, String receiverUid, String chatRoom, String action, String title, String message);
     public abstract User getLoggedInUser();
     public abstract void goOnline(Context context, OnUsersCallback onUsersCallback, long maxJoinTime);
     public abstract void updateUser();

@@ -11,8 +11,8 @@ import android.util.Log;
 
 import com.genesis.hamlet.R;
 import com.genesis.hamlet.ui.login.LoginActivity;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
+import com.genesis.hamlet.util.Properties;
+import com.genesis.hamlet.util.threading.FirebaseHelper;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -20,21 +20,9 @@ public class FCMService extends FirebaseMessagingService {
     private static final String TAG = "MyFirebaseMsgService";
 
     @Override
-    public void onStart(Intent intent, int startId) {
-        super.onStart(intent, startId);
-        //FirebaseMessaging.getInstance().subscribeToTopic("DQmvYVIQC8R4rTGFWesxCSPPhND2");
-    }
-
-    @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
         /* There are two types of messages data messages and notification messages. Data messages are handled here in onMessageReceived whether the app is in the foreground or background. Data messages are the type traditionally used with GCM. Notification messages are only received here in onMessageReceived when the app is in the foreground. When the app is in the background an automatically generated notification is displayed. */
-
-        String uid = null;
-        String name = null;
-        String action = null;
-        String title = null;
-        String message = null;
 
         String notificationTitle = null;
         String notificationBody = null;
@@ -43,11 +31,16 @@ public class FCMService extends FirebaseMessagingService {
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData().get("message"));
             //uid, Interests.getInstance().getNickName(), action, title, message)
-            uid = remoteMessage.getData().get("uid");
-            name = remoteMessage.getData().get("name");
-            action = remoteMessage.getData().get("action");
-            title = remoteMessage.getData().get("title");
-            message = remoteMessage.getData().get("message");
+            String senderUid = remoteMessage.getData().get("senderUid");
+            String receiverUid = remoteMessage.getData().get("receiverUid");
+            String chatRoom = remoteMessage.getData().get("chatRoom");
+            String name = remoteMessage.getData().get("name");
+            String action = remoteMessage.getData().get("action");
+            String title = remoteMessage.getData().get("title");
+            String message = remoteMessage.getData().get("message");
+
+            broadcast(senderUid, receiverUid, chatRoom, name, action,title, message);
+            FirebaseHelper.deleteFirebaseNode("/notifications/" +receiverUid,senderUid);
         }
 
         // Check if message contains a notification payload.
@@ -59,10 +52,30 @@ public class FCMService extends FirebaseMessagingService {
 
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
-        sendNotification(uid, name, action,title, message, notificationTitle, notificationBody);
+        // sendNotification(uid, name, action,title, message, notificationTitle, notificationBody);
+
+        /*
         FirebaseDatabase.getInstance()
-                .getReference("/notifications/" + FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .getReference("/notifications/" + FirebaseAuth.getInstance().getCurrentUser().getSenderUid())
                 .child(remoteMessage.getData().get("uid")).setValue(null);
+                */
+    }
+
+    @Override
+    public void onDeletedMessages() {
+        super.onDeletedMessages();
+    }
+
+    private void broadcast(String senderUid, String receiverUid, String chatRoom, String name, String action, String title, String message) {
+        Intent intent = new Intent();
+        intent.setAction(Properties.FCN_RECEIVED_NOTIFICATION);
+        intent.putExtra("senderUid", senderUid);
+        intent.putExtra("receiverUid", receiverUid);
+        intent.putExtra("chatRoom", chatRoom);
+        intent.putExtra("action",action);
+        intent.putExtra("title",title);
+        intent.putExtra("message",message);
+        sendBroadcast(intent);
     }
 
     /**

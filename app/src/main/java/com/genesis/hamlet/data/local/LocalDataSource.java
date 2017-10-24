@@ -27,12 +27,12 @@ public class LocalDataSource extends DataSource implements DataSource.OnUsersCal
     }
 
     @Override
-    public void sendNotification(User user, String action, String title, String message) {
+    public void sendNotification(User user, String chatRoom, String action, String title, String message) {
 
     }
 
     @Override
-    public void sendNotification(String uId, String action, String title, String message) {
+    public void sendNotification(String senduerUid, String receiverUid, String chatRoom, String action, String title, String message) {
 
     }
 
