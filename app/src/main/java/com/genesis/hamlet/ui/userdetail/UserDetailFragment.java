@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.genesis.hamlet.R;
+import com.genesis.hamlet.data.models.interests.Interests;
 import com.genesis.hamlet.ui.mmessages.MessagesActivity;
 import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.ui.users.UsersFragment;
@@ -116,6 +117,7 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
     }
 
     private void showUserChatFragment(User user) {
+        fragmentInteractionListener.getDataRepository().sendNotification(user, "request_to_connect", Interests.getInstance().getIntroTitle(), Interests.getInstance().getIntroDetail());
         Parcelable parcelable = Parcels.wrap(user);
         Bundle bundle = new Bundle();
         bundle.putParcelable(Properties.BUNDLE_KEY_USER, parcelable);

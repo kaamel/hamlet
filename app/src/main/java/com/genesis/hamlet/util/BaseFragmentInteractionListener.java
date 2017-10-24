@@ -4,6 +4,8 @@ package com.genesis.hamlet.util;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import com.genesis.hamlet.data.DataRepository;
+
 /**
  * Base {@link Fragment} listener interface to be implemented by the hosting
  * {@link android.support.v4.app.ActivityCompat}. It should be extended by a
@@ -26,4 +28,6 @@ public interface BaseFragmentInteractionListener {
      */
     <T extends Fragment> void showFragment(Class<T> fragmentClass, Bundle bundle,
             boolean addToBackStack);
+
+    DataRepository getDataRepository();
 }

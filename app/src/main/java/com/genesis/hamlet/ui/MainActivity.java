@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -20,10 +19,16 @@ import android.view.MenuInflater;
 import android.widget.Toast;
 
 import com.genesis.hamlet.R;
+import com.genesis.hamlet.data.DataRepository;
+import com.genesis.hamlet.di.Injection;
+import com.genesis.hamlet.ui.userdetail.UserDetailFragment;
 import com.genesis.hamlet.ui.users.UsersFragment;
 import com.genesis.hamlet.util.BaseFragmentInteractionListener;
 import com.genesis.hamlet.util.FoaBaseActivity;
 import com.genesis.hamlet.util.NetworkHelper;
+import com.genesis.hamlet.util.Properties;
+
+import org.parceler.Parcels;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
@@ -46,7 +51,10 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
 
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    private DataRepository dataRepository;
 
+    String action = null;
+    Bundle userBundle = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +63,12 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        checkPermision();
+        dataRepository = Injection.provideDataRepository();
+
+        if (getIntent() != null) {
+            action = getIntent().getStringExtra("action");
+            userBundle = Parcels.unwrap(getIntent().getBundleExtra(Properties.BUNDLE_KEY_USER));
+        }
     }
 
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
@@ -68,13 +81,16 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
     protected void onResume() {
         super.onResume();
         registerReceiver(connectivityBroadcastReceiver, new IntentFilter(CONNECTIVITY_ACTION));
-
         if (checkLocationPermission()) {
             if (ContextCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
 
-                showFragment(UsersFragment.class);
+                if (action != null && action.equals("request_to_connect")) {
+                    showFragment(UserDetailFragment.class, userBundle, true);
+                }
+                else
+                    showFragment(UsersFragment.class);
 
 
             }
@@ -123,6 +139,11 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
         appBarLayout.setExpanded(true, true);
     }
 
+    @Override
+    public DataRepository getDataRepository() {
+        return dataRepository;
+    }
+
     public boolean checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
@@ -166,6 +187,7 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
+        MainActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
@@ -190,9 +212,7 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
                     // functionality that depends on this permission.
 
                 }
-                return;
             }
-
         }
     }
 }

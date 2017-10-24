@@ -3,6 +3,7 @@ package com.genesis.hamlet.data;
 import android.content.Context;
 
 import com.genesis.hamlet.data.local.LocalDataSource;
+import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.data.remote.RemoteDataSource;
 import com.genesis.hamlet.util.mvp.BasePresenter;
 
@@ -17,12 +18,12 @@ import com.genesis.hamlet.util.mvp.BasePresenter;
  */
 public class DataRepository {
 
-    private DataSource remoteDataSource;
+    private static DataSource remoteDataSource;
     boolean connected = false;
 
     private static DataRepository dataRepository;
 
-    public DataRepository(DataSource remoteDataSource) {
+    private DataRepository(DataSource remoteDataSource) {
         this.remoteDataSource = remoteDataSource;
     }
 
@@ -51,6 +52,14 @@ public class DataRepository {
         }
     }
 
+    public void sendNotification(User user, String action, String title, String message) {
+        remoteDataSource.sendNotification(user, action, title, message);
+    }
+
+    public void sendNotification(String uId, String action, String title, String message) {
+        remoteDataSource.sendNotification(uId, action, title, message);
+    }
+
     public void updateUserInterests() {
         remoteDataSource.updateUser();
     }
@@ -62,7 +71,7 @@ public class DataRepository {
     public void disconnect(Context context) {
         remoteDataSource.disconnect(context);
         dataRepository = null;
-        remoteDataSource = null;
+        //remoteDataSource = null;
         connected = false;
     }
 

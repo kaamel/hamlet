@@ -20,7 +20,6 @@ import com.genesis.hamlet.R;
 import com.genesis.hamlet.data.DataRepository;
 import com.genesis.hamlet.data.models.interests.Interests;
 import com.genesis.hamlet.data.models.user.User;
-import com.genesis.hamlet.di.Injection;
 import com.genesis.hamlet.ui.interests.InterestsFragment;
 import com.genesis.hamlet.ui.login.LoginActivity;
 import com.genesis.hamlet.ui.userdetail.UserDetailFragment;
@@ -68,7 +67,7 @@ public class UsersFragment extends BaseView implements UsersContract.View {
     private void setupRepository() {
         ThreadExecutor threadExecutor = ThreadExecutor.getInstance();
         MainUiThread mainUiThread = MainUiThread.getInstance();
-        dataRepository = Injection.provideDataRepository();
+        dataRepository = fragmentInteractionListener.getDataRepository();
         presenter = new UsersPresenter(this, dataRepository, threadExecutor, mainUiThread);
     }
 

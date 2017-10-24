@@ -2,6 +2,7 @@ package com.genesis.hamlet.ui.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -18,11 +19,10 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.genesis.hamlet.R;
-import com.genesis.hamlet.data.DataRepository;
 import com.genesis.hamlet.data.DataSource;
 import com.genesis.hamlet.data.models.user.User;
-import com.genesis.hamlet.di.Injection;
 import com.genesis.hamlet.ui.MainActivity;
+import com.genesis.hamlet.util.Properties;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
@@ -34,6 +34,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import org.parceler.Parcels;
 
 
 public class LoginActivity extends AppCompatActivity implements DataSource.OnUserCallback {
@@ -48,15 +50,41 @@ public class LoginActivity extends AppCompatActivity implements DataSource.OnUse
     TextView tvSignInStatus;
     ProgressBar pbLogin;
 
+    String action = null;
+    User otherUser = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
+
+        if (getIntent().getExtras() != null) {
+            //The LoginActivity is not the entry point for the app
+            String uid = getIntent().getStringExtra("uid");
+            if (uid != null) {
+                //this is a notification
+                String title = getIntent().getStringExtra("title");
+                String action = getIntent().getStringExtra("action");
+                String name = getIntent().getStringExtra("name");
+                String message = getIntent().getStringExtra("message");
+                User user = new User();
+                user.setUid(uid);
+                user.setDisplayName(name);
+                user.setIntroTitle(title);
+                user.setIntroDetail(message);
+                this.action = action;
+                this.otherUser = user;
+            }
+        }
+
+
         mAuth = FirebaseAuth.getInstance();
 
         //// TODO: 10/16/17 add a revoke button if action is "revoke"
         String action = getIntent().getStringExtra("action");
+
+
 
         tvSignInStatus = (TextView) findViewById(R.id.tvSigninStatus);
         pbLogin = (ProgressBar) findViewById(R.id.pbLogin);
@@ -69,8 +97,6 @@ public class LoginActivity extends AppCompatActivity implements DataSource.OnUse
                 onGoogleSignIn();
             }
         });
-        //final DataRepository dataRepository = Injection.provideDataRepository();
-        final DataRepository dataRepository = Injection.provideDataRepository();
 
         mCallbackManager = CallbackManager.Factory.create();
         btnFacebookLogIn = (LoginButton) findViewById(R.id.btnFaceBookLogin);
@@ -155,6 +181,11 @@ public class LoginActivity extends AppCompatActivity implements DataSource.OnUse
 
     private void continueToUsersList() {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        if (action != null) {
+            intent.putExtra("actin", action);
+            Parcelable parcelable = Parcels.wrap(otherUser);
+            intent.putExtra(Properties.BUNDLE_KEY_USER, Parcels.wrap(otherUser));
+        }
         startActivity(intent);
         finish();
     }
