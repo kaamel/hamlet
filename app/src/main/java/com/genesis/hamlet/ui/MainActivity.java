@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.genesis.hamlet.R;
 import com.genesis.hamlet.data.DataRepository;
+import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.di.Injection;
 import com.genesis.hamlet.ui.userdetail.UserDetailFragment;
 import com.genesis.hamlet.ui.users.UsersFragment;
@@ -53,8 +54,8 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private DataRepository dataRepository;
 
-    String action = null;
-    Bundle userBundle = null;
+    static String action = null;
+    static User otherUser = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,11 +65,6 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
         setSupportActionBar(toolbar);
 
         dataRepository = Injection.provideDataRepository();
-
-        if (getIntent() != null) {
-            action = getIntent().getStringExtra("action");
-            userBundle = Parcels.unwrap(getIntent().getBundleExtra(Properties.BUNDLE_KEY_USER));
-        }
     }
 
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
@@ -87,12 +83,14 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
                     == PackageManager.PERMISSION_GRANTED) {
 
                 if (action != null && action.equals("request_to_connect")) {
-                    showFragment(UserDetailFragment.class, userBundle, true);
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable(Properties.BUNDLE_KEY_USER, Parcels.wrap(otherUser));
+                    showFragment(UserDetailFragment.class, bundle, true);
+                    otherUser = null;
+                    action = null;
                 }
                 else
                     showFragment(UsersFragment.class);
-
-
             }
         }
     }
@@ -214,5 +212,10 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
                 }
             }
         }
+    }
+
+    public static void setRemoteAction(String action, User user) {
+        MainActivity.otherUser = user;
+        MainActivity.action = action;
     }
 }

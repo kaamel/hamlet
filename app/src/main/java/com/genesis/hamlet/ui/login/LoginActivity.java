@@ -2,7 +2,6 @@ package com.genesis.hamlet.ui.login;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -22,7 +21,6 @@ import com.genesis.hamlet.R;
 import com.genesis.hamlet.data.DataSource;
 import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.ui.MainActivity;
-import com.genesis.hamlet.util.Properties;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
@@ -34,8 +32,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import org.parceler.Parcels;
 
 
 public class LoginActivity extends AppCompatActivity implements DataSource.OnUserCallback {
@@ -182,9 +178,7 @@ public class LoginActivity extends AppCompatActivity implements DataSource.OnUse
     private void continueToUsersList() {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         if (action != null) {
-            intent.putExtra("actin", action);
-            Parcelable parcelable = Parcels.wrap(otherUser);
-            intent.putExtra(Properties.BUNDLE_KEY_USER, Parcels.wrap(otherUser));
+            MainActivity.setRemoteAction(action, otherUser);
         }
         startActivity(intent);
         finish();
