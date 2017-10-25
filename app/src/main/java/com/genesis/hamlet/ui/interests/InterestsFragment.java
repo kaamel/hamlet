@@ -1,6 +1,7 @@
 package com.genesis.hamlet.ui.interests;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -174,7 +175,20 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        fragmentInteractionListener.setTitle("Set Up Interests");
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        fragmentInteractionListener = (BaseFragmentInteractionListener) context;
+    }
+
+    @Override
     public void onDetach() {
+        fragmentInteractionListener = null;
         Interests.getInstance().setChanged(true);
         super.onDetach();
     }

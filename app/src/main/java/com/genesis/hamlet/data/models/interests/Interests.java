@@ -50,7 +50,7 @@ public class Interests {
     }
 
     @Exclude
-    public boolean isIncomplete() {
+    public boolean isComplete() {
         return (nickName != null && nickName.trim().length() > 0)
                 && (interestTopics != null)
                 && (interestTopics.length > 0)

@@ -30,4 +30,6 @@ public interface BaseFragmentInteractionListener {
             boolean addToBackStack);
 
     DataRepository getDataRepository();
+
+    void setTitle(String s);
 }
