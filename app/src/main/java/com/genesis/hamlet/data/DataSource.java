@@ -59,7 +59,7 @@ public abstract class DataSource {
 
     public interface OnMMessagesCallback {
 
-        void onSuccess(List<MMessage> mMessages);
+        void onSuccess(List<MMessage> mMessages, String senderId);
 
         void onFailure(Throwable throwable);
 
@@ -74,10 +74,7 @@ public abstract class DataSource {
     public abstract void refereshUsers(Context context);
     public abstract void updateUser();
 
-    public abstract void connectChatroom(Context context, DataSource.OnMMessagesCallback onMMessagesCallback, String Chatroom, int page);
+    public abstract void connectChatroom(Context context, OnMMessagesCallback onMMessageCallback, String Chatroom, int page);
     public abstract void sendMMessage(MMessage message, User user, String chatRoom);
 
-    //public abstract void storeUsers(List<User> users);
-
-    public abstract void getMMessages(Context context, OnMMessagesCallback onMMessagesCallback, long maxId);
 }

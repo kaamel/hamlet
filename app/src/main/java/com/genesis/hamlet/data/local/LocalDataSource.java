@@ -4,6 +4,7 @@ package com.genesis.hamlet.data.local;
 import android.content.Context;
 
 import com.genesis.hamlet.data.DataSource;
+import com.genesis.hamlet.data.models.mmessage.MMessage;
 import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.util.threading.MainUiThread;
 import com.genesis.hamlet.util.threading.ThreadExecutor;
@@ -71,15 +72,19 @@ public class LocalDataSource extends DataSource implements DataSource.OnUsersCal
 
     }
 
+    @Override
+    public void connectChatroom(Context context, OnMMessagesCallback onMMessageCallback, String Chatroom, int page) {
+
+    }
+
+    @Override
+    public void sendMMessage(MMessage message, User user, String chatRoom) {
+
+    }
+
     //@Override
     public void storeUsers(List<User> users) {
         //// TODO: 10/14/17
-    }
-
-
-    @Override
-    public void getMMessages(Context context, OnMMessagesCallback onMMessagesCallback, long maxId) {
-        //// TODO: 10/13/17
     }
 
     @Override

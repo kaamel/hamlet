@@ -8,20 +8,27 @@ import android.content.IntentFilter;
 
 import com.genesis.hamlet.data.DataSource;
 import com.genesis.hamlet.data.models.interests.Interests;
+import com.genesis.hamlet.data.models.mmessage.MMessage;
 import com.genesis.hamlet.data.models.user.RemoteUser;
 import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.location.HamletConnectionService;
 import com.genesis.hamlet.notifiations.NotificationMessage;
 import com.genesis.hamlet.util.UserHelper;
+import com.genesis.hamlet.util.threading.FirebaseHelper;
 import com.genesis.hamlet.util.threading.MainUiThread;
 import com.genesis.hamlet.util.threading.ThreadExecutor;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.parceler.Parcels;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +53,7 @@ public class RemoteDataSource extends DataSource {
         super(mainUiThread, threadExecutor);
         database = FirebaseDatabase.getInstance();
         usersRef = database.getReference("/users/");
-        messagesRef = database.getReference("messages");
+        messagesRef = database.getReference("/messages/");
         notificationsRef = database.getReference("notifications");
         //geoFire = new GeoFire(database.getReference("/geofire/"));
 
@@ -173,20 +180,43 @@ public class RemoteDataSource extends DataSource {
         database.getReference().updateChildren(childUpdates);
     }
 
+    @Override
+    public void connectChatroom(Context context, final OnMMessagesCallback onMMessageCallback, String chatroom, int page) {
+        FirebaseHelper.deleteFirebaseNode("/messages/", chatroom);
+        Query messagesQuery = database.getReference().child("/messages/"+chatroom + "/")
+                .limitToFirst(20);
+        messagesQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() == null)
+                    return;
+                List<MMessage> nmsgs = new ArrayList<MMessage>();
+                MMessage msg = dataSnapshot.getValue(MMessage.class);
+                nmsgs.add(msg);
+                onMMessageCallback.onSuccess(nmsgs, msg.getSenderUid());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                onMMessageCallback.onFailure(databaseError.toException());
+            }
+        });
+    }
+
+    @Override
+    public void sendMMessage(MMessage message, User user, String chatRoom) {
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/message/" + user.getUid() + "/", message);
+        database.getReference().updateChildren(childUpdates);
+        database.getReference().child(
+                "/messages/" + chatRoom + "/")
+                .push().setValue(message);
+    }
+
     private void initializeNewConnection(final Context context) {
         updateUser();
         FirebaseMessaging.getInstance().subscribeToTopic(FirebaseAuth.getInstance().getCurrentUser().getUid());
         Intent intent = new Intent(context.getApplicationContext(), HamletConnectionService.class);
         context.getApplicationContext().startService(intent);
-    }
-
-    //@Override
-    public void storeUsers(List<User> users) {
-        //// TODO: 10/15/17 I think we should never use this for firebase but ...
-    }
-
-    @Override
-    public void getMMessages(Context context, OnMMessagesCallback onMMessagesCallback, long maxId) {
-        //// TODO: 10/13/17
     }
 }
