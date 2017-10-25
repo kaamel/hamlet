@@ -36,6 +36,8 @@ public abstract class DataSource {
 
     public abstract void disconnect(Context context);
 
+    public abstract boolean isConnected();
+
     public interface OnUserCallback {
         void onSuccess(User user);
 
@@ -69,6 +71,7 @@ public abstract class DataSource {
     public abstract void sendNotification(String senduerUid, String receiverUid, String chatRoom, String action, String title, String message);
     public abstract User getLoggedInUser();
     public abstract void goOnline(Context context, OnUsersCallback onUsersCallback, long maxJoinTime);
+    public abstract void refereshUsers(Context context);
     public abstract void updateUser();
 
     //public abstract void storeUsers(List<User> users);

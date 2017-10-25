@@ -53,12 +53,22 @@ public class RemoteDataSource extends DataSource {
         FirebaseMessaging.getInstance().subscribeToTopic("notifications");
     }
 
+    private static boolean connected = false;
+
     @Override
     public void disconnect(Context context) {
+        if (!connected)
+            return;
+        connected = false;
         Intent intent = new Intent(context.getApplicationContext(), HamletConnectionService.class);
         //context.startService(intent);
-        context.stopService(intent);
-        context.unregisterReceiver(br);
+        context.getApplicationContext().stopService(intent);
+        context.getApplicationContext().unregisterReceiver(br);
+    }
+
+    @Override
+    public boolean isConnected() {
+        return connected;
     }
 
     public static synchronized RemoteDataSource getInstance(MainUiThread mainUiThread, ThreadExecutor threadExecutor) {
@@ -77,10 +87,10 @@ public class RemoteDataSource extends DataSource {
 
     @Override
     public void goOnline(Context context, final OnUsersCallback onUsersCallback, long maxJoinTime) {
-        //// TODO: 10/15/17 Set up the firebase, call back the initial list of users and call back as users join/leave
-        //// TODO: 10/15/17 I also think we need to add the filter to the method
 
-        initializeNewConnection(context);
+        if (connected)
+            return;
+        initializeNewConnection(context.getApplicationContext());
 
         br = new BroadcastReceiver() {
             @Override
@@ -124,64 +134,16 @@ public class RemoteDataSource extends DataSource {
 
         IntentFilter filter = new IntentFilter(USER_ARRIVAL_DEPARTURE_ACTION);
         filter.addAction(USER_ARRIVAL_DEPARTURE_ACTION);
-        context.registerReceiver(br, filter);
+        context.getApplicationContext().registerReceiver(br, filter);
 
-/*
-        usersRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if (s != null) {
-                    User user = RemoteUser.getUser((HashMap) dataSnapshot.getValue());
-                    onUsersCallback.onNewUserJoined(user);
-                }
-            }
+    connected = true;
+    }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                if (s != null) {
-                    User user = RemoteUser.getUser((HashMap) dataSnapshot.getValue());
-                    onUsersCallback.onUserUpdate(user);
-                }
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                dataSnapshot.exists();
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                String b = s==null?"":s.trim();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                databaseError.getMessage();
-            }
-        });
-
-
-        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot != null) {
-                    HashMap map = (HashMap) dataSnapshot.getValue();
-                    for (Object obj: map.keySet()) {
-                        String key = (String) obj;
-                        if (key.equals(FirebaseAuth.getInstance().getCurrentUser().getSenderUid())) {
-                            continue;
-                        }
-                        User user = RemoteUser.getUser((HashMap) map.get(obj));
-                        onUsersCallback.onNewUserJoined(user);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                databaseError.getMessage();
-            }
-        });*/
+    @Override
+    public void refereshUsers(Context context) {
+        Intent intent = new Intent(context.getApplicationContext(), HamletConnectionService.class);
+        intent.putExtra("command", "referesh");
+        context.getApplicationContext().startService(intent);
     }
 
     @Override
@@ -215,7 +177,7 @@ public class RemoteDataSource extends DataSource {
         updateUser();
         FirebaseMessaging.getInstance().subscribeToTopic(FirebaseAuth.getInstance().getCurrentUser().getUid());
         Intent intent = new Intent(context.getApplicationContext(), HamletConnectionService.class);
-        context.startService(intent);
+        context.getApplicationContext().startService(intent);
     }
 
     //@Override

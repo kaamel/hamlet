@@ -127,9 +127,9 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
         @Override
         public void onReceive(Context context, Intent intent) {
             if (!NetworkHelper.getInstance().isNetworkAvailable(context)) {
-                //Toast.makeText(getApplicationContext(), "Network is not available", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Network is not available", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(getApplicationContext(), "Network is available", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Network is available", Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -253,7 +253,7 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
                 user.setIntroDetail(message);
                 //FirebaseHelper.deleteFirebaseNode("/notifications/" +myUid, senderUid);
                 if (action.equals("request_to_connect_accepted")) {
-                    UserDetailFragment.onConnectAccepted(MainActivity.this, chatRoom, user);
+                    UserDetailFragment.onConnectAccepted(chatRoom, user);
                 }
                 else {
 
@@ -288,7 +288,7 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
             if (me != null
                     && me.getUid().equals(myUid)) {
                 if (action.equals("request_to_connect_accepted")) {
-                    UserDetailFragment.onConnectAccepted(this, chatRoom, otherUser);
+                    UserDetailFragment.onConnectAccepted(chatRoom, otherUser);
                 }
                 else
                     showFragment(UserDetailFragment.class, bundle, true);

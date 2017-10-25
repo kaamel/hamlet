@@ -21,7 +21,6 @@ import com.google.firebase.auth.FirebaseUser;
 public class DataRepository {
 
     private static DataSource remoteDataSource;
-    boolean connected = false;
 
     private static DataRepository dataRepository;
 
@@ -36,22 +35,16 @@ public class DataRepository {
         return dataRepository;
     }
 
+    public void refereshUsers() {
+        dataRepository.refereshUsers();
+    }
+
     public void destroyInstance(Context context) {
         disconnect(context);
     }
 
     public void connectRemote(Context context, final DataSource.OnUsersCallback onUsersCallback, int page) {
-
-        if (!connected || page ==0) {
-            connected = true;
-            startUsersStream(context, onUsersCallback);
-        }
-        else {
-            if (page == 0) {
-                //// TODO: 10/20/17 refresh data
-            }
-            //onUsersCallback.onSuccess(new ArrayList<User>());
-        }
+        startUsersStream(context, onUsersCallback);
     }
 
     public void sendNotification(User user, String action, String title, String message) {
@@ -76,10 +69,9 @@ public class DataRepository {
         remoteDataSource.disconnect(context);
         dataRepository = null;
         //remoteDataSource = null;
-        connected = false;
     }
 
     public boolean isConnected() {
-        return connected;
+        return remoteDataSource.isConnected();
     }
 }

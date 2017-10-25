@@ -23,7 +23,7 @@ import com.genesis.hamlet.util.mvp.BaseView;
  */
 public class InterestsFragment extends BaseView implements InterestsContract.View {
 
-    private Interests interests;
+    //private Interests interests;
     private InterestsContract.Presenter presenter;
     private BaseFragmentInteractionListener fragmentInteractionListener;
 
@@ -41,7 +41,7 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
         super.onCreate(savedInstanceState);
 
         presenter = new InterestsPresenter(this);
-        interests = Interests.getInstance();
+        //interests = Interests.getInstance();
         setHasOptionsMenu(true);
         setRetainInstance(true);
     }
@@ -115,11 +115,12 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
 
     @Override
     public Interests getInterests() {
-        return null;
+        return Interests.getInstance();
     }
 
     @Override
     public void resetForm() {
+        Interests interests = getInterests();
         interests.setNickName("");
         interests.setIntroTitle("");
         interests.setIntroDetail("");
@@ -130,15 +131,15 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
     }
 
     void updateView() {
-        etDescription.setText(interests.getIntroDetail());
-        etTitle.setText(interests.getIntroTitle());
-        etNickName.setText(interests.getNickName());
+        etDescription.setText(getInterests().getIntroDetail());
+        etTitle.setText(getInterests().getIntroTitle());
+        etNickName.setText(getInterests().getNickName());
 
         int m = Interests.getInterestTopics().length;
         CheckBox checkBox;
         for (int i= 0; i<m; i++) {
             checkBox = (CheckBox) llCheckboxesList.getChildAt(i);
-            boolean isSelected = interests.getInterest(i);
+            boolean isSelected = getInterests().getInterest(i);
             checkBox.setChecked(isSelected);
         }
     }

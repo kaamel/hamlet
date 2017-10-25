@@ -77,6 +77,12 @@ public class HamletConnectionService extends Service implements
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
+        if (intent != null && intent.getStringExtra("command") != null) {
+            if ("refresh".equals(intent.getStringExtra("command"))) {
+                referesh();
+            }
+            return START_STICKY;
+        }
         database = FirebaseDatabase.getInstance();
         geoFire = new GeoFire(database.getReference("/geofire/"));
 
@@ -206,49 +212,59 @@ public class HamletConnectionService extends Service implements
         }
     }
 
+    private void referesh() {
+        synchronized (listenerMap) {
+            if (listenerMap.size() > 0) {
+                for (String key : listenerMap.keySet()) {
+                    filterAndBroadcastByInterests(key, 1);
+                }
+            }
+        }
+    }
+
     protected static final Map<String, ValueEventListener> listenerMap = new HashMap<>();
 
     private void filterAndBroadcastByInterests(final String key, final int what) {
         FirebaseDatabase.getInstance().getReference("users").child(key).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                User user = RemoteUser.getUser((HashMap) dataSnapshot.getValue());
-                user.setUid(key);
+                synchronized (listenerMap) {
+                    User user = RemoteUser.getUser((HashMap) dataSnapshot.getValue());
+                    user.setUid(key);
 
-                if (what == 1) {
-                    ValueEventListener eventListener = new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            User user = RemoteUser.getUser((HashMap) dataSnapshot.getValue());
-                            user.setUid(dataSnapshot.getKey());
-                            if (isInteresting(user))
-                                broadcast(user, 1);
-                            else {
-                                broadcast(user, -1);
+                    if (what == 1) {
+                        ValueEventListener eventListener = new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                User user = RemoteUser.getUser((HashMap) dataSnapshot.getValue());
+                                user.setUid(dataSnapshot.getKey());
+                                if (isInteresting(user))
+                                    broadcast(user, 1);
+                                else {
+                                    broadcast(user, -1);
+                                }
                             }
-                        }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
 
+                            }
+                        };
+                        FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).addValueEventListener(eventListener);
+                        listenerMap.put(user.getUid(), eventListener);
+                        if (isInteresting(user)) {
+                            broadcast(user, what);
                         }
-                    };
-                    FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).addValueEventListener(eventListener);
-                    listenerMap.put(user.getUid(), eventListener);
-                    if (isInteresting(user)) {
+                    } else if (what == -1) {
+                        FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).removeEventListener(listenerMap.get(user.getUid()));
+                        listenerMap.remove(user.getUid());
                         broadcast(user, what);
                     }
-                }
-                else if (what == -1) {
-                    FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).removeEventListener(listenerMap.get(user.getUid()));
-                    listenerMap.remove(user.getUid());
-                    broadcast(user, what);
-                }
-                if (isInteresting(user)) {
-                    broadcast(user, what);
-                }
-                else {
-                    broadcast(user, what);
+                    if (isInteresting(user)) {
+                        broadcast(user, what);
+                    } else {
+                        broadcast(user, what);
+                    }
                 }
             }
 

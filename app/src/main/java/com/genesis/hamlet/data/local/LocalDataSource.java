@@ -27,6 +27,11 @@ public class LocalDataSource extends DataSource implements DataSource.OnUsersCal
     }
 
     @Override
+    public boolean isConnected() {
+        return false;
+    }
+
+    @Override
     public void sendNotification(User user, String chatRoom, String action, String title, String message) {
 
     }
@@ -54,6 +59,11 @@ public class LocalDataSource extends DataSource implements DataSource.OnUsersCal
     public void goOnline(Context context, OnUsersCallback onUsersCallback, long maxJoinTime) {
         callback = onUsersCallback;
         onUsersCallback.onSuccess(LocalDatabase.getUsers());
+    }
+
+    @Override
+    public void refereshUsers(Context context) {
+
     }
 
     @Override
