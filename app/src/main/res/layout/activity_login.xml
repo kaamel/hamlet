@@ -8,30 +8,14 @@
         android:layout_height="match_parent"
         tools:context="com.genesis.hamlet.ui.login.LoginActivity">
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="40dp"
-            android:gravity="center"
-            android:text="@string/sign_in_title"
-            android:textColor="@color/colorBlue"
-            android:textSize="24sp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp" />
 
         <Button
             android:id="@+id/btSignInWithGoogle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="32dp"
-            android:layout_marginRight="32dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginLeft="64dp"
+            android:layout_marginRight="64dp"
+            android:layout_marginTop="40dp"
             android:text="@string/signInGoogle"
             android:textColor="@android:color/white"
             android:background="@color/googleRed"
@@ -41,6 +25,23 @@
             android:gravity="center"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp" />
+
+
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_marginTop="40dp"
+            android:text="@string/sign_in_title"
+            android:minLines="2"
+            android:textColor="@color/FBBlue"
+            android:textSize="26sp"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:layout_above="@+id/btSignInWithGoogle"/>
 
         <com.facebook.login.widget.LoginButton
             android:id="@+id/btnFaceBookLogin"
