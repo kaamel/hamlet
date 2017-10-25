@@ -9,23 +9,32 @@
         tools:context="com.genesis.hamlet.ui.login.LoginActivity">
 
 
-        <Button
+
+        <LinearLayout
             android:id="@+id/btSignInWithGoogle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="64dp"
-            android:layout_marginRight="64dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:layout_marginTop="40dp"
-            android:text="@string/signInGoogle"
-            android:textColor="@android:color/white"
-            android:background="@color/googleRed"
             android:layout_centerInParent="true"
-            android:elevation="0dp"
             android:layout_gravity="center_horizontal"
             android:gravity="center"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp" />
-
+            android:background="@drawable/drawable_google_background">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/googleloginicon" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/signInGoogle"
+                android:layout_marginLeft="8dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:textSize="20sp"
+                android:textColor="@android:color/white"/>
+        </LinearLayout>
 
 
         <TextView
