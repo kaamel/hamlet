@@ -4,7 +4,7 @@ import android.content.Context;
 import android.location.Location;
 
 import com.genesis.hamlet.data.local.LocalDataSource;
-import com.genesis.hamlet.data.models.mmessage.ChatMessage;
+import com.genesis.hamlet.data.models.mmessage.MMessage;
 import com.genesis.hamlet.data.models.mmessage.MMessage;
 import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.data.remote.RemoteDataSource;
@@ -58,7 +58,7 @@ public abstract class DataSource {
 
     public interface OnMMessagesCallback {
 
-        void onSuccess(List<ChatMessage> mMessages,User user, String chatRoom);
+        void onSuccess(List<MMessage> mMessages,User user, String chatRoom);
 
         void onFailure(Throwable throwable);
 

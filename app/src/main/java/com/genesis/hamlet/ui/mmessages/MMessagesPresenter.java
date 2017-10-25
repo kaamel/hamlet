@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.genesis.hamlet.data.DataRepository;
 import com.genesis.hamlet.data.DataSource;
-import com.genesis.hamlet.data.models.mmessage.ChatMessage;
+import com.genesis.hamlet.data.models.mmessage.MMessage;
 import com.genesis.hamlet.data.models.mmessage.MMessage;
 import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.util.mvp.BasePresenter;
@@ -46,7 +46,7 @@ public class MMessagesPresenter extends BasePresenter<MMessagesContract.View> im
         dataRepository.connectRemote(context, new DataSource.OnMMessagesCallback() {
 
             @Override
-            public void onSuccess(List<ChatMessage> mMessages,User user, String chatRoom) {
+            public void onSuccess(List<MMessage> mMessages,User user, String chatRoom) {
                 view.onMessageReceived(mMessages,user, chatRoom);
             }
 
@@ -66,7 +66,7 @@ public class MMessagesPresenter extends BasePresenter<MMessagesContract.View> im
     //send message from fragment to data repos
     @Override
     public void sendMessage(String message) {
-        ChatMessage friendlyMessage = new ChatMessage();
+        MMessage friendlyMessage = new MMessage();
         friendlyMessage.setText(message);
         User user = new User();
         String chatRoom = "Session1";

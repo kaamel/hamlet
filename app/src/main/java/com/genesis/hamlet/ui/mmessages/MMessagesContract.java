@@ -2,7 +2,8 @@ package com.genesis.hamlet.ui.mmessages;
 
 import android.content.Context;
 
-import com.genesis.hamlet.data.models.mmessage.ChatMessage;
+import com.genesis.hamlet.data.models.mmessage.MMessage;
+import com.genesis.hamlet.data.models.mmessage.MMessage;
 import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.util.mvp.IBasePresenter;
 import com.genesis.hamlet.util.mvp.IBaseView;
@@ -16,7 +17,7 @@ import java.util.List;
 public class MMessagesContract {
 
     interface View extends IBaseView {
-        void onMessageReceived(List<ChatMessage> messages,User user, String ChatRoom);
+        void onMessageReceived(List<MMessage> messages, User user, String ChatRoom);
     }
 
     interface Presenter extends IBasePresenter<View> {

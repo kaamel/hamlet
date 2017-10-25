@@ -3,7 +3,7 @@ package com.genesis.hamlet.data;
 import android.content.Context;
 
 import com.genesis.hamlet.data.local.LocalDataSource;
-import com.genesis.hamlet.data.models.mmessage.ChatMessage;
+import com.genesis.hamlet.data.models.mmessage.MMessage;
 import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.data.remote.RemoteDataSource;
 import com.genesis.hamlet.util.mvp.BasePresenter;
@@ -68,7 +68,7 @@ public class DataRepository {
     }
 
     //send message to firebase
-    public void sendMMessage(ChatMessage message, User user, String chatRoom) {
+    public void sendMMessage(MMessage message, User user, String chatRoom) {
 
     }
 

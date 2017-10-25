@@ -4,9 +4,9 @@ package com.genesis.hamlet.data.models.mmessage;
 public class MMessage {
 
     String id;
-
     String text;
-    String imageUrl;
+    String messengerUrl;
+    String messageURL;
     String audioUrl;
     String videoUrl;
 
@@ -18,6 +18,22 @@ public class MMessage {
 
     String senderUid;
 
+    public String getMessengerUrl() {
+        return messengerUrl;
+    }
+
+    public void setMessengerUrl(String messengerUrl) {
+        this.messengerUrl = messengerUrl;
+    }
+
+    public String getMessageURL() {
+        return messageURL;
+    }
+
+    public void setMessageURL(String messageURL) {
+        this.messageURL = messageURL;
+    }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -28,14 +44,6 @@ public class MMessage {
 
     public void setText(String text) {
         this.text = text;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
     public String getAudioUrl() {

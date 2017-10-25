@@ -48,7 +48,6 @@ public class RemoteDataSource extends DataSource {
         usersRef = database.getReference("/users/");
         messagesRef = database.getReference("messages");
         notificationsRef = database.getReference("notifications");
-        //geoFire = new GeoFire(database.getReference("/geofire/"));
 
         FirebaseMessaging.getInstance().subscribeToTopic("notifications");
     }

@@ -10,7 +10,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.genesis.hamlet.R;
-import com.genesis.hamlet.data.models.mmessage.ChatMessage;
+import com.genesis.hamlet.data.models.mmessage.MMessage;
+import com.genesis.hamlet.data.models.mmessage.MMessage;
 import com.genesis.hamlet.data.models.user.User;
 
 import java.util.ArrayList;
@@ -22,15 +23,12 @@ import java.util.List;
 
 public class MMessageRecyclerAdapter extends RecyclerView.Adapter<MMessageViewHolder>{
 
-    private static List<ChatMessage> messages = new ArrayList<>();
+    private static List<MMessage> messages = new ArrayList<>();
     private static User currentUser = new User();
     private Context mContext;
 
 //(Context context, ArrayList<ChatMessage> messages, User user) {
     public MMessageRecyclerAdapter(){
-//        mContext = context;
-//        this.messages = messages;
-//        currentUser = user;
 
     }
 
@@ -49,7 +47,7 @@ public class MMessageRecyclerAdapter extends RecyclerView.Adapter<MMessageViewHo
     @Override
     public void onBindViewHolder(MMessageViewHolder viewHolder, int position) {
 
-        ChatMessage friendlyMessage = messages.get(position);
+        MMessage friendlyMessage = messages.get(position);
 
         // if message is text then add text else if message is image use glide to load image
         if (friendlyMessage.getText() != null) {
@@ -58,7 +56,7 @@ public class MMessageRecyclerAdapter extends RecyclerView.Adapter<MMessageViewHo
             viewHolder.getMessageImageView().setVisibility(ImageView.GONE);
         }
         else {
-            String messageImageUrl = friendlyMessage.getMessageImageUrl();
+            String messageImageUrl = friendlyMessage.getMessageURL();
             Glide.with(viewHolder.getMessageImageView().getContext())
                     .load(messageImageUrl)
                     .into(viewHolder.getMessageImageView());
@@ -68,12 +66,12 @@ public class MMessageRecyclerAdapter extends RecyclerView.Adapter<MMessageViewHo
         }
 
         // add messenger name and image
-        viewHolder.getMessengerTextView().setText(friendlyMessage.getName());
-        if (friendlyMessage.getMessengerImageUrl() == null) {
+        viewHolder.getMessengerTextView().setText(friendlyMessage.getSenderUid());
+        if (friendlyMessage.getMessengerUrl() == null) {
             viewHolder.messengerImageView.setImageDrawable(ContextCompat.getDrawable(mContext,R.drawable.ic_account_circle));
         } else {
             Glide.with(mContext)
-                    .load(friendlyMessage.getMessengerImageUrl())
+                    .load(friendlyMessage.getMessageURL())
                     .into(viewHolder.messengerImageView);
         }
     }
@@ -85,9 +83,9 @@ public class MMessageRecyclerAdapter extends RecyclerView.Adapter<MMessageViewHo
 
     @Override
     public int getItemViewType(int position) {
-        ChatMessage msg = messages.get(position);
+        MMessage msg = messages.get(position);
 
-        if(msg.getName().equals(currentUser.getDisplayName())){
+        if(msg.getSenderUid().equals(currentUser.getDisplayName())){
             return 0;
         }
         else
@@ -96,7 +94,7 @@ public class MMessageRecyclerAdapter extends RecyclerView.Adapter<MMessageViewHo
     }
 
     //load past messages
-    public void showMMessages(List<ChatMessage> messages){
+    public void showMMessages(List<MMessage> messages){
         this.messages.clear();
         this.messages = messages;
         notifyDataSetChanged();

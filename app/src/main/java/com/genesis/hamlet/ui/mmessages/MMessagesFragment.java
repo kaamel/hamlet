@@ -16,7 +16,8 @@ import android.widget.ImageButton;
 
 import com.genesis.hamlet.R;
 import com.genesis.hamlet.data.DataRepository;
-import com.genesis.hamlet.data.models.mmessage.ChatMessage;
+import com.genesis.hamlet.data.models.mmessage.MMessage;
+import com.genesis.hamlet.data.models.mmessage.MMessage;
 import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.util.BaseFragmentInteractionListener;
 import com.genesis.hamlet.util.EndlessRecyclerViewScrollListener;
@@ -160,7 +161,7 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
     }
 
     @Override
-    public void onMessageReceived(List<ChatMessage> messages, User user, String ChatRoom) {
+    public void onMessageReceived(List<MMessage> messages, User user, String ChatRoom) {
         mMessageRecyclerAdapter.showMMessages(messages);
     }
 
