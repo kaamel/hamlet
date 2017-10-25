@@ -6,7 +6,7 @@
     <string name="offline_mode_msg">No network - Offline mode</string>
     <string name="no_photos_available">No photos available currently</string>
     <string name="no_comments_available">No comments available currently</string>
-    <string name="sign_in_title">You need to sign in before you can continue. Please sign in</string>
+    <string name="sign_in_title">Sign In to connect to your buddy</string>
 
     <string name="permission_rationale">Location permission is needed for core functionality</string>
     <string name="permission_denied_explanation">Permission was denied, but is needed for core
@@ -25,5 +25,7 @@
     <string name="end">End</string>
     <string name="accept">Accept</string>
     <string name="ignore">Ignore</string>
+    <string name="signInGoogle">Continue with Google</string>
+    <string name="signInFacebook">Continue with Facebook</string>
 
 </resources>
