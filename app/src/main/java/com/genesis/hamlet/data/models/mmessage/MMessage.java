@@ -18,6 +18,10 @@ public class MMessage {
 
     String senderUid;
 
+    public MMessage() {
+
+    }
+
     public void setId(String id) {
         this.id = id;
     }

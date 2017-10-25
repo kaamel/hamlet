@@ -30,6 +30,7 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -183,17 +184,22 @@ public class RemoteDataSource extends DataSource {
     @Override
     public void connectChatroom(Context context, final OnMMessagesCallback onMMessageCallback, String chatroom, int page) {
         FirebaseHelper.deleteFirebaseNode("/messages/", chatroom);
-        Query messagesQuery = database.getReference().child("/messages/"+chatroom + "/")
+        Query messagesQuery = messagesRef.child(chatroom)
                 .limitToFirst(20);
         messagesQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() == null)
                     return;
-                List<MMessage> nmsgs = new ArrayList<MMessage>();
-                MMessage msg = dataSnapshot.getValue(MMessage.class);
-                nmsgs.add(msg);
-                onMMessageCallback.onSuccess(nmsgs, msg.getSenderUid());
+                List<MMessage> nmsgs;
+                Iterator<DataSnapshot> iter = dataSnapshot.getChildren().iterator();
+                MMessage msg;
+                while (iter.hasNext()) {
+                    msg = iter.next().getValue(MMessage.class);
+                    nmsgs = new ArrayList<>();
+                    nmsgs.add(msg);
+                    onMMessageCallback.onSuccess(nmsgs, msg.getSenderUid());
+                }
             }
 
             @Override
@@ -205,12 +211,8 @@ public class RemoteDataSource extends DataSource {
 
     @Override
     public void sendMMessage(MMessage message, User user, String chatRoom) {
-        Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/message/" + user.getUid() + "/", message);
-        database.getReference().updateChildren(childUpdates);
-        database.getReference().child(
-                "/messages/" + chatRoom + "/")
-                .push().setValue(message);
+        message.setSenderUid(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        messagesRef.child(chatRoom).push().setValue(message);
     }
 
     private void initializeNewConnection(final Context context) {
