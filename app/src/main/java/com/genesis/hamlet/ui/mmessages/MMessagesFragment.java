@@ -165,9 +165,7 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
     }
 
     public void sendMMessage(String messageText){
-        ChatMessage friendlyMessage = new ChatMessage();
-        friendlyMessage.setText(messageText);
-        presenter.sendMessage(friendlyMessage);
+        presenter.sendMessage(messageText);
     }
 
 

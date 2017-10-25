@@ -22,7 +22,7 @@ public class MMessagesContract {
     interface Presenter extends IBasePresenter<View> {
         boolean isConnected();
         void connect(Context context);
-        void sendMessage(ChatMessage message);
+        void sendMessage(String message);
 
     }
 }

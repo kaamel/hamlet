@@ -65,11 +65,12 @@ public class MMessagesPresenter extends BasePresenter<MMessagesContract.View> im
 
     //send message from fragment to data repos
     @Override
-    public void sendMessage(ChatMessage message) {
-
+    public void sendMessage(String message) {
+        ChatMessage friendlyMessage = new ChatMessage();
+        friendlyMessage.setText(message);
         User user = new User();
         String chatRoom = "Session1";
-        dataRepository.sendMMessage(message,user,chatRoom);
+        dataRepository.sendMMessage(friendlyMessage,user,chatRoom);
 
     }
 
