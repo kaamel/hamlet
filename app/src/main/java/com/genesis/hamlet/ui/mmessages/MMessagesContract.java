@@ -16,9 +16,7 @@ import java.util.List;
 public class MMessagesContract {
 
     interface View extends IBaseView {
-        void showMMessages(List<ChatMessage> messages);
-        void addNewMMessage(ChatMessage message);
-        void remove(ChatMessage message);
+        void onMessageReceived(List<ChatMessage> messages,User user, String ChatRoom);
     }
 
     interface Presenter extends IBasePresenter<View> {

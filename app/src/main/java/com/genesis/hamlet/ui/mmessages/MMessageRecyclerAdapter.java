@@ -96,17 +96,11 @@ public class MMessageRecyclerAdapter extends RecyclerView.Adapter<MMessageViewHo
     }
 
     //load past messages
-    public void loadMessages(List<ChatMessage> messages){
+    public void showMMessages(List<ChatMessage> messages){
         this.messages.clear();
         this.messages = messages;
         notifyDataSetChanged();
 
     }
 
-    //add new messages
-    public void addNewMessages(ChatMessage newMessage){
-        messages.add(newMessage);
-        notifyItemChanged(messages.size()-1);
-
-    }
 }

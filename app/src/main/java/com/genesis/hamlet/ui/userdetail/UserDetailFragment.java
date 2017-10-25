@@ -18,7 +18,6 @@ import com.bumptech.glide.Glide;
 import com.genesis.hamlet.R;
 import com.genesis.hamlet.data.models.interests.Interests;
 import com.genesis.hamlet.ui.mmessages.MMessagesFragment;
-import com.genesis.hamlet.ui.mmessages.MessagesActivity;
 import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.ui.users.UsersFragment;
 import com.genesis.hamlet.util.BaseFragmentInteractionListener;
@@ -124,9 +123,6 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
         bundle.putParcelable(Properties.BUNDLE_KEY_USER, parcelable);
         fragmentInteractionListener.showFragment(MMessagesFragment.class, bundle,true);
 
-//        Intent intent = new Intent(getActivity(), MessagesActivity.class);
-//        intent.putExtra(Properties.BUNDLE_KEY_USER, parcelable);
-//        startActivity(intent);
     }
 
 }

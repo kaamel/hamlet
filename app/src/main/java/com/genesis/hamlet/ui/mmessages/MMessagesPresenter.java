@@ -6,6 +6,7 @@ import com.genesis.hamlet.data.DataRepository;
 import com.genesis.hamlet.data.DataSource;
 import com.genesis.hamlet.data.models.mmessage.ChatMessage;
 import com.genesis.hamlet.data.models.mmessage.MMessage;
+import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.util.mvp.BasePresenter;
 import com.genesis.hamlet.util.threading.MainUiThread;
 import com.genesis.hamlet.util.threading.ThreadExecutor;
@@ -23,8 +24,8 @@ public class MMessagesPresenter extends BasePresenter<MMessagesContract.View> im
     private MainUiThread mainUiThread;
 
 
-    public MMessagesPresenter(MMessagesContract.View view, DataRepository dataRepository,
-                              ThreadExecutor threadExecutor, MainUiThread mainUiThread) {
+    public MMessagesPresenter(MMessagesContract.View view, DataRepository dataRepository,ThreadExecutor threadExecutor, MainUiThread mainUiThread)
+    {
         this.view = view;
         this.dataRepository = dataRepository;
         this.threadExecutor = threadExecutor;
@@ -45,8 +46,8 @@ public class MMessagesPresenter extends BasePresenter<MMessagesContract.View> im
         dataRepository.connectRemote(context, new DataSource.OnMMessagesCallback() {
 
             @Override
-            public void onSuccess(List<MMessage> mMessages) {
-
+            public void onSuccess(List<ChatMessage> mMessages,User user, String chatRoom) {
+                view.onMessageReceived(mMessages,user, chatRoom);
             }
 
             @Override
@@ -62,12 +63,14 @@ public class MMessagesPresenter extends BasePresenter<MMessagesContract.View> im
 
     }
 
+    //send message from fragment to data repos
     @Override
     public void sendMessage(ChatMessage message) {
 
+        User user = new User();
+        String chatRoom = "Session1";
+        dataRepository.sendMMessage(message,user,chatRoom);
+
     }
 
-    public interface View {
-
-    }
 }

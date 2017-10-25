@@ -3,6 +3,7 @@ package com.genesis.hamlet.data;
 import android.content.Context;
 
 import com.genesis.hamlet.data.local.LocalDataSource;
+import com.genesis.hamlet.data.models.mmessage.ChatMessage;
 import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.data.remote.RemoteDataSource;
 import com.genesis.hamlet.util.mvp.BasePresenter;
@@ -52,6 +53,7 @@ public class DataRepository {
         }
     }
 
+    //receive messages from firebase
     public void connectRemote(Context context, final DataSource.OnMMessagesCallback onMMessagesCallback, int page) {
 
         if (!connected || page ==0) {
@@ -62,8 +64,12 @@ public class DataRepository {
             if (page == 0) {
                 //// TODO: 10/20/17 refresh data
             }
-            //onUsersCallback.onSuccess(new ArrayList<User>());
         }
+    }
+
+    //send message to firebase
+    public void sendMMessage(ChatMessage message, User user, String chatRoom) {
+
     }
 
     public void sendNotification(User user, String action, String title, String message) {
@@ -96,4 +102,6 @@ public class DataRepository {
     public boolean isConnected() {
         return connected;
     }
+
+
 }

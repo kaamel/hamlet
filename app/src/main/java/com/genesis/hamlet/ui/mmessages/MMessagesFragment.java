@@ -11,10 +11,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.genesis.hamlet.R;
 import com.genesis.hamlet.data.DataRepository;
 import com.genesis.hamlet.data.models.mmessage.ChatMessage;
+import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.util.BaseFragmentInteractionListener;
 import com.genesis.hamlet.util.EndlessRecyclerViewScrollListener;
 import com.genesis.hamlet.util.mvp.BaseView;
@@ -27,7 +30,7 @@ import java.util.List;
  * Created by dipenrana on 10/24/17.
  */
 
-public class MMessagesFragment extends BaseView implements MMessagesContract.View  {
+public class MMessagesFragment extends BaseView implements MMessagesContract.View,View.OnClickListener {
 
     private EndlessRecyclerViewScrollListener endlessScrollListener;
     private MMessagesContract.Presenter presenter;
@@ -39,6 +42,8 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
     private RecyclerView rvMMessages;
     private MMessageRecyclerAdapter mMessageRecyclerAdapter;
     private LinearLayoutManager mLinearLayoutManager;
+    ImageButton btnSend;
+    EditText mMessageEditText;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,6 +59,8 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
         View view = inflater.inflate(R.layout.fragment_mmessages, container, false);
         rvMMessages = (RecyclerView) view.findViewById(R.id.messageRecyclerView );
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.messagesSwipeRefreshLayout);
+        btnSend = (ImageButton) view.findViewById(R.id.sendButton);
+        mMessageEditText = (EditText) view.findViewById(R.id.messageEditText);
         return view;
     }
 
@@ -66,6 +73,9 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
 
         mLinearLayoutManager = new LinearLayoutManager(getContext());
         mLinearLayoutManager.setStackFromEnd(true);
+
+
+        btnSend.setOnClickListener(this);
 
         endlessScrollListener = new EndlessRecyclerViewScrollListener(mLinearLayoutManager,
                 0) {
@@ -80,12 +90,26 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refreshUsers();
+                //refreshUsers();
             }
         });
 
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark, R.color.colorPrimary);
 
+
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            //send text message
+            case R.id.sendButton:
+                sendMMessage(mMessageEditText.getText().toString());
+                break;
+            //send images
+            case R.id.addMessageImageView:
+                break;
+        }
 
     }
 
@@ -103,7 +127,7 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
     @Override
     public void onResume() {
         super.onResume();
-        //presenter.connect(getContext());
+        presenter.connect(getContext());
     }
 
     @Override
@@ -113,6 +137,7 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
 
     @Override
     public void onDestroy() {
+        dataRepository.disconnect(getContext());
         super.onDestroy();
     }
 
@@ -127,10 +152,6 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
         return super.onOptionsItemSelected(item);
     }
 
-    private void refreshUsers() {
-
-    }
-
     private void setupRepository() {
         ThreadExecutor threadExecutor = ThreadExecutor.getInstance();
         MainUiThread mainUiThread = MainUiThread.getInstance();
@@ -139,20 +160,15 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
     }
 
     @Override
-    public void showMMessages(List<ChatMessage> messages) {
+    public void onMessageReceived(List<ChatMessage> messages, User user, String ChatRoom) {
+        mMessageRecyclerAdapter.showMMessages(messages);
+    }
 
-        mMessageRecyclerAdapter.loadMessages(messages);
-
+    public void sendMMessage(String messageText){
+        ChatMessage friendlyMessage = new ChatMessage();
+        friendlyMessage.setText(messageText);
+        presenter.sendMessage(friendlyMessage);
     }
 
 
-    @Override
-    public void addNewMMessage(ChatMessage message) {
-        mMessageRecyclerAdapter.addNewMessages(message);
-    }
-
-    @Override
-    public void remove(ChatMessage message) {
-
-    }
 }
