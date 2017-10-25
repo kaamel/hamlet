@@ -52,6 +52,20 @@ public class DataRepository {
         }
     }
 
+    public void connectRemote(Context context, final DataSource.OnMMessagesCallback onMMessagesCallback, int page) {
+
+        if (!connected || page ==0) {
+            connected = true;
+            startUsersStream(context, onMMessagesCallback);
+        }
+        else {
+            if (page == 0) {
+                //// TODO: 10/20/17 refresh data
+            }
+            //onUsersCallback.onSuccess(new ArrayList<User>());
+        }
+    }
+
     public void sendNotification(User user, String action, String title, String message) {
         remoteDataSource.sendNotification(user, action, title, message);
     }
@@ -66,6 +80,10 @@ public class DataRepository {
 
     private void startUsersStream(Context context, DataSource.OnUsersCallback onUsersCallback) {
         remoteDataSource.goOnline(context, onUsersCallback, 0);
+    }
+
+    private void startUsersStream(Context context, DataSource.OnMMessagesCallback onMMessagesCallback) {
+
     }
 
     public void disconnect(Context context) {

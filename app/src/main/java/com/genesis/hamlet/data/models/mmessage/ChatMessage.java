@@ -1,7 +1,5 @@
 package com.genesis.hamlet.data.models.mmessage;
 
-import java.util.Date;
-
 /**
  * Created by dipenrana on 10/21/17.
  */
@@ -11,8 +9,8 @@ public class ChatMessage {
     private String id;
     private String text;
     private String name;
-    private String photoUrl;
-    private String imageUrl;
+    private String messengerImageUrl;
+    private String messageImageUrl;
 
     public ChatMessage() {
     }
@@ -20,8 +18,8 @@ public class ChatMessage {
     public ChatMessage(String text, String name, String photoUrl, String imageUrl) {
         this.text = text;
         this.name = name;
-        this.photoUrl = photoUrl;
-        this.imageUrl = imageUrl;
+        this.messengerImageUrl = photoUrl;
+        this.messageImageUrl = imageUrl;
     }
 
     public String getId() {
@@ -48,20 +46,20 @@ public class ChatMessage {
         this.name = name;
     }
 
-    public String getPhotoUrl() {
-        return photoUrl;
+    public String getMessengerImageUrl() {
+        return messengerImageUrl;
     }
 
-    public void setPhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
+    public void setMessengerImageUrl(String messengerImageUrl) {
+        this.messengerImageUrl = messengerImageUrl;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getMessageImageUrl() {
+        return messageImageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setMessageImageUrl(String messageImageUrl) {
+        this.messageImageUrl = messageImageUrl;
     }
 
 }
