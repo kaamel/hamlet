@@ -21,8 +21,8 @@ public class MMessagesContract {
 
     interface Presenter extends IBasePresenter<View> {
         boolean isConnected();
-        void connect(Context context);
-        void sendMessage(String message);
+        void connect(Context context, String chatRoom);
+        void sendMessage(String message,User user,String chatRoom);
 
     }
 }

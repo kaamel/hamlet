@@ -9,6 +9,8 @@ import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.util.mvp.BasePresenter;
 import com.genesis.hamlet.util.threading.MainUiThread;
 import com.genesis.hamlet.util.threading.ThreadExecutor;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
@@ -21,8 +23,8 @@ public class MMessagesPresenter extends BasePresenter<MMessagesContract.View> im
     private DataRepository dataRepository;
     private ThreadExecutor threadExecutor;
     private MainUiThread mainUiThread;
-
-    private String chatRoom;
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseUser mFirebaseUser;
 
 
     public MMessagesPresenter(MMessagesContract.View view, DataRepository dataRepository, ThreadExecutor threadExecutor, MainUiThread mainUiThread)
@@ -31,6 +33,8 @@ public class MMessagesPresenter extends BasePresenter<MMessagesContract.View> im
         this.dataRepository = dataRepository;
         this.threadExecutor = threadExecutor;
         this.mainUiThread = mainUiThread;
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
     }
 
     @Override
@@ -39,16 +43,17 @@ public class MMessagesPresenter extends BasePresenter<MMessagesContract.View> im
     }
 
     @Override
-    public void connect(Context context) {
-        if (dataRepository.isConnected())
-            return;
-        view.setProgressBar(true);
+    public void connect(Context context,String chatRoom)
+    {
+//        if (dataRepository.isConnected())
+//            return;
+        //view.setProgressBar(true);
 
         dataRepository.connectChatroom(context,new DataSource.OnMMessagesCallback(){
 
             @Override
             public void onSuccess(List<MMessage> mMessages, String senderId) {
-
+                view.onMessageReceived(mMessages,senderId);
             }
 
             @Override
@@ -66,11 +71,11 @@ public class MMessagesPresenter extends BasePresenter<MMessagesContract.View> im
 
     //send message from fragment to data repos
     @Override
-    public void sendMessage(String message) {
+    public void sendMessage(String message,User user,String chatRoom) {
         MMessage friendlyMessage = new MMessage();
+        friendlyMessage.setDisplayName(mFirebaseUser.getDisplayName());
+        friendlyMessage.setUserImage(mFirebaseUser.getPhotoUrl().toString());
         friendlyMessage.setText(message);
-        User user = new User();
-        String chatRoom = "Session1";
         dataRepository.sendMMessage(friendlyMessage,user,chatRoom);
 
     }

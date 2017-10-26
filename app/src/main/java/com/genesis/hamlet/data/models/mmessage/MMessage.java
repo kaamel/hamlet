@@ -5,6 +5,10 @@ public class MMessage {
 
     String id;
 
+
+
+    String displayName;
+    String userImage;
     String text;
     String imageUrl;
     String audioUrl;
@@ -20,6 +24,23 @@ public class MMessage {
 
     public MMessage() {
 
+    }
+
+
+    public String getUserImage() {
+        return userImage;
+    }
+
+    public void setUserImage(String userImage) {
+        this.userImage = userImage;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public void setId(String id) {

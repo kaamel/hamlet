@@ -1,6 +1,7 @@
 package com.genesis.hamlet.ui.mmessages;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,9 +21,12 @@ import com.genesis.hamlet.data.models.mmessage.MMessage;
 import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.util.BaseFragmentInteractionListener;
 import com.genesis.hamlet.util.EndlessRecyclerViewScrollListener;
+import com.genesis.hamlet.util.Properties;
 import com.genesis.hamlet.util.mvp.BaseView;
 import com.genesis.hamlet.util.threading.MainUiThread;
 import com.genesis.hamlet.util.threading.ThreadExecutor;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -45,6 +49,9 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
     ImageButton btnSend;
     EditText mMessageEditText;
 
+    Parcelable parcelable;
+    String chatRoom;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,11 +63,17 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_mmessages, container, false);
         rvMMessages = (RecyclerView) view.findViewById(R.id.messageRecyclerView );
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.messagesSwipeRefreshLayout);
+
         btnSend = (ImageButton) view.findViewById(R.id.sendButton);
         mMessageEditText = (EditText) view.findViewById(R.id.messageEditText);
+
+        parcelable = getArguments().getParcelable(Properties.BUNDLE_KEY_USER);
+
+        chatRoom = getArguments().getString("chatRoom");
+
         return view;
     }
 
@@ -87,14 +100,14 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
 
         rvMMessages.addOnScrollListener(endlessScrollListener);
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                //refreshUsers();
-            }
-        });
-
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark, R.color.colorPrimary);
+//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                //refreshUsers();
+//            }
+//        });
+//
+//        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark, R.color.colorPrimary);
 
 
     }
@@ -105,6 +118,7 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
             //send text message
             case R.id.sendButton:
                 sendMMessage(mMessageEditText.getText().toString());
+                mMessageEditText.setText("");
                 break;
             //send images
             case R.id.addMessageImageView:
@@ -127,17 +141,18 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
     @Override
     public void onResume() {
         super.onResume();
-        presenter.connect(getContext());
+        presenter.connect(getContext(),chatRoom);
     }
 
     @Override
     public void onPause() {
+        dataRepository.disconnect(getContext());
         super.onPause();
     }
 
     @Override
     public void onDestroy() {
-        dataRepository.disconnect(getContext());
+        //dataRepository.disconnect(getContext());
         super.onDestroy();
     }
 
@@ -165,7 +180,8 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
     }
 
     public void sendMMessage(String messageText){
-        presenter.sendMessage(messageText);
+        User user = Parcels.unwrap(parcelable);
+        presenter.sendMessage(messageText,user,chatRoom);
     }
 
 

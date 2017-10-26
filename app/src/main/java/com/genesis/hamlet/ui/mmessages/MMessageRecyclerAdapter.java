@@ -22,7 +22,7 @@ import java.util.List;
 
 public class MMessageRecyclerAdapter extends RecyclerView.Adapter<MMessageViewHolder>{
 
-    private static List<MMessage> messages = new ArrayList<>();
+    private static List<MMessage> mmessages = new ArrayList<>();
     private static User currentUser = new User();
     private Context mContext;
 
@@ -46,7 +46,7 @@ public class MMessageRecyclerAdapter extends RecyclerView.Adapter<MMessageViewHo
     @Override
     public void onBindViewHolder(MMessageViewHolder viewHolder, int position) {
 
-        MMessage friendlyMessage = messages.get(position);
+        MMessage friendlyMessage = mmessages.get(position);
 
         // if message is text then add text else if message is image use glide to load image
         if (friendlyMessage.getText() != null) {
@@ -65,25 +65,25 @@ public class MMessageRecyclerAdapter extends RecyclerView.Adapter<MMessageViewHo
         }
 
         // add messenger name and image
-        viewHolder.getMessengerTextView().setText(friendlyMessage.getSenderUid());
-        viewHolder.messengerImageView.setImageDrawable(ContextCompat.getDrawable(mContext,R.drawable.ic_account_circle));
-//        if (friendlyMessage.getMessengerUrl() == null) {
-//            viewHolder.messengerImageView.setImageDrawable(ContextCompat.getDrawable(mContext,R.drawable.ic_account_circle));
-//        } else {
-//            Glide.with(mContext)
-//                    .load(friendlyMessage.getMessageURL())
-//                    .into(viewHolder.messengerImageView);
-//        }
+        viewHolder.getMessengerTextView().setText(friendlyMessage.getDisplayName());
+        //viewHolder.messengerImageView.setImageDrawable(ContextCompat.getDrawable(mContext,R.drawable.ic_account_circle));
+        if (friendlyMessage.getUserImage() == null) {
+            viewHolder.messengerImageView.setImageDrawable(ContextCompat.getDrawable(mContext,R.drawable.ic_account_circle));
+        } else {
+            Glide.with(mContext)
+                    .load(friendlyMessage.getUserImage())
+                    .into(viewHolder.messengerImageView);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return messages.size();
+        return mmessages.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        MMessage msg = messages.get(position);
+        MMessage msg = mmessages.get(position);
 
         if(msg.getSenderUid().equals(currentUser.getDisplayName())){
             return 0;
@@ -95,9 +95,9 @@ public class MMessageRecyclerAdapter extends RecyclerView.Adapter<MMessageViewHo
 
     //load past messages
     public void showMMessages(List<MMessage> messages){
-        this.messages.clear();
-        this.messages = messages;
-        notifyDataSetChanged();
+        //this.mmessages.clear();
+        this.mmessages.addAll(messages);
+        this.notifyDataSetChanged();
 
     }
 
