@@ -7,9 +7,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="com.genesis.hamlet.ui.login.LoginActivity">
-
-
-
         <LinearLayout
             android:id="@+id/btSignInWithGoogle"
             android:layout_width="match_parent"
@@ -29,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/signInGoogle"
-                android:layout_marginLeft="8dp"
+                android:layout_marginLeft="4dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:textSize="20sp"
@@ -62,8 +59,10 @@
             android:layout_marginTop="32dp"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
-            android:textSize="20sp"
-            android:textStyle="normal" />
+            android:paddingLeft="64dp"
+            android:paddingRight="64dp"
+            android:textStyle="normal"
+            style="@style/FacebookLoginButton"/>
 
         <TextView
             android:id="@+id/tvSigninStatus"

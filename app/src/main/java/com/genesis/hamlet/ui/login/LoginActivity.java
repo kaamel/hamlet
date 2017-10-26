@@ -110,10 +110,9 @@ public class LoginActivity extends AppCompatActivity implements DataSource.OnUse
         mCallbackManager = CallbackManager.Factory.create();
         btnFacebookLogIn = (LoginButton) findViewById(R.id.btnFaceBookLogin);
         btnFacebookLogIn.setReadPermissions("email", "public_profile");
-        btnFacebookLogIn.setBackgroundResource(R.drawable.facebook_background);
-        btnFacebookLogIn.setText(getResources().getString(R.string.signInFacebook));
-        Drawable drawable = getDrawable(R.drawable.com_facebook_button_icon_white);
-        btnFacebookLogIn.setCompoundDrawablesWithIntrinsicBounds(drawable,null,null,null);
+//        btnFacebookLogIn.setText(getResources().getString(R.string.signInFacebook));
+//        btnFacebookLogIn.setBackgroundResource(R.drawable.facebook_background);
+//        btnFacebookLogIn.setCompoundDrawablesWithIntrinsicBounds(1,0,0,0);
 
 
         btnFacebookLogIn.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
