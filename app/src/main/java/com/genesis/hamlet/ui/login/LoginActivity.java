@@ -1,6 +1,7 @@
 package com.genesis.hamlet.ui.login;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -109,6 +110,12 @@ public class LoginActivity extends AppCompatActivity implements DataSource.OnUse
         mCallbackManager = CallbackManager.Factory.create();
         btnFacebookLogIn = (LoginButton) findViewById(R.id.btnFaceBookLogin);
         btnFacebookLogIn.setReadPermissions("email", "public_profile");
+        btnFacebookLogIn.setBackgroundResource(R.drawable.facebook_background);
+        btnFacebookLogIn.setText(getResources().getString(R.string.signInFacebook));
+        Drawable drawable = getDrawable(R.drawable.com_facebook_button_icon_white);
+        btnFacebookLogIn.setCompoundDrawablesWithIntrinsicBounds(drawable,null,null,null);
+
+
         btnFacebookLogIn.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
