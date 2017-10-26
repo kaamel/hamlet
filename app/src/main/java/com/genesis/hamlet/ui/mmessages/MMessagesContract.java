@@ -1,14 +1,11 @@
 package com.genesis.hamlet.ui.mmessages;
 
-import android.content.Context;
-
-import com.genesis.hamlet.data.models.mmessage.MMessage;
+import com.genesis.hamlet.data.DataSource;
 import com.genesis.hamlet.data.models.mmessage.MMessage;
 import com.genesis.hamlet.data.models.user.User;
+import com.genesis.hamlet.util.BaseFragmentInteractionListener;
 import com.genesis.hamlet.util.mvp.IBasePresenter;
 import com.genesis.hamlet.util.mvp.IBaseView;
-
-import java.util.List;
 
 /**
  * Created by dipenrana on 10/24/17.
@@ -17,13 +14,11 @@ import java.util.List;
 public class MMessagesContract {
 
     interface View extends IBaseView {
-        void onMessageReceived(List<MMessage> messages, User user, String ChatRoom);
     }
 
     interface Presenter extends IBasePresenter<View> {
-        boolean isConnected();
-        void connect(Context context);
-        void sendMessage(String message);
+        void connectChatroom(BaseFragmentInteractionListener fragmentInteractionListener, DataSource.OnMMessagesCallback onMMessageCallback, String chatroom, int page);
+        void sendMMessage(BaseFragmentInteractionListener fragmentInteractionListener, MMessage message, User user, String chatRoom);
 
     }
 }

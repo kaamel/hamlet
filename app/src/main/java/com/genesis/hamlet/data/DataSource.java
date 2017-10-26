@@ -59,7 +59,7 @@ public abstract class DataSource {
 
     public interface OnMMessagesCallback {
 
-        void onSuccess(List<MMessage> mMessages, String senderId);
+        void onSuccess(List<MMessage> mMessages, String chatRoom, String senderId);
 
         void onFailure(Throwable throwable);
 

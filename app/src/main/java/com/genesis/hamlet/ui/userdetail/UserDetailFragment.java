@@ -17,8 +17,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.genesis.hamlet.R;
 import com.genesis.hamlet.data.models.interests.Interests;
-import com.genesis.hamlet.ui.mmessages.MMessagesFragment;
-import com.genesis.hamlet.ui.mmessages.MessagesActivity;
 import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.ui.mmessages.MMessagesFragment;
 import com.genesis.hamlet.ui.users.UsersFragment;

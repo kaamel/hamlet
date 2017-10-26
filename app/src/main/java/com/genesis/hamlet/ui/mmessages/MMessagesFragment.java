@@ -1,4 +1,5 @@
 package com.genesis.hamlet.ui.mmessages;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,14 +17,12 @@ import android.widget.ImageButton;
 
 import com.genesis.hamlet.R;
 import com.genesis.hamlet.data.DataRepository;
-import com.genesis.hamlet.data.models.mmessage.MMessage;
+import com.genesis.hamlet.data.DataSource;
 import com.genesis.hamlet.data.models.mmessage.MMessage;
 import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.util.BaseFragmentInteractionListener;
 import com.genesis.hamlet.util.EndlessRecyclerViewScrollListener;
 import com.genesis.hamlet.util.mvp.BaseView;
-import com.genesis.hamlet.util.threading.MainUiThread;
-import com.genesis.hamlet.util.threading.ThreadExecutor;
 
 import java.util.List;
 
@@ -46,10 +45,13 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
     ImageButton btnSend;
     EditText mMessageEditText;
 
+    //// TODO: 10/26/17 I have added these two item that are need to be loaded in when the fragment is created - look at the UserDetailFragment to see how they are loaded as an example
+    String chatRoom;
+    User user;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setupRepository();
         setHasOptionsMenu(true);
         setRetainInstance(true);
     }
@@ -62,6 +64,26 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.messagesSwipeRefreshLayout);
         btnSend = (ImageButton) view.findViewById(R.id.sendButton);
         mMessageEditText = (EditText) view.findViewById(R.id.messageEditText);
+
+        //// TODO: 10/26/17 after picking up the chatRoom and user here, setup a callback
+
+        presenter.connectChatroom(fragmentInteractionListener, new DataSource.OnMMessagesCallback() {
+            @Override
+            public void onSuccess(List<MMessage> mMessages, String chatRoom, String senderId) {
+                //// TODO: 10/26/17 deal with incoming messages
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+
+            }
+
+            @Override
+            public void onNetworkFailure() {
+
+            }
+        }, chatRoom, 0);
+
         return view;
     }
 
@@ -114,6 +136,13 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
 
     }
 
+    private void sendMMessage(String s) {
+        //// TODO: 10/26/17 create a new MMessage object The line bellow is just a dummy so the rest of the code can work
+        MMessage msg = new MMessage();
+
+        presenter.sendMMessage(fragmentInteractionListener, msg, user, chatRoom);
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -128,7 +157,6 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
     @Override
     public void onResume() {
         super.onResume();
-        presenter.connect(getContext());
     }
 
     @Override
@@ -138,7 +166,6 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
 
     @Override
     public void onDestroy() {
-        dataRepository.disconnect(getContext());
         super.onDestroy();
     }
 
@@ -152,22 +179,4 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
     }
-
-    private void setupRepository() {
-        ThreadExecutor threadExecutor = ThreadExecutor.getInstance();
-        MainUiThread mainUiThread = MainUiThread.getInstance();
-        dataRepository = fragmentInteractionListener.getDataRepository();
-        presenter = new MMessagesPresenter(this, dataRepository, threadExecutor, mainUiThread);
-    }
-
-    @Override
-    public void onMessageReceived(List<MMessage> messages, User user, String ChatRoom) {
-        mMessageRecyclerAdapter.showMMessages(messages);
-    }
-
-    public void sendMMessage(String messageText){
-        presenter.sendMessage(messageText);
-    }
-
-
 }

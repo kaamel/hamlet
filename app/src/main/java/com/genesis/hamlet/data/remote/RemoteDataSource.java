@@ -181,7 +181,7 @@ public class RemoteDataSource extends DataSource {
     }
 
     @Override
-    public void connectChatroom(Context context, final OnMMessagesCallback onMMessageCallback, String chatroom, int page) {
+    public void connectChatroom(Context context, final OnMMessagesCallback onMMessageCallback, final String chatroom, int page) {
         FirebaseHelper.deleteFirebaseNode("/messages/", chatroom);
         Query messagesQuery = messagesRef.child(chatroom)
                 .limitToFirst(20);
@@ -197,7 +197,7 @@ public class RemoteDataSource extends DataSource {
                     msg = iter.next().getValue(MMessage.class);
                     nmsgs = new ArrayList<>();
                     nmsgs.add(msg);
-                    onMMessageCallback.onSuccess(nmsgs, msg.getSenderUid());
+                    onMMessageCallback.onSuccess(nmsgs, chatroom, msg.getSenderUid());
                 }
             }
 

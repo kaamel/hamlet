@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.genesis.hamlet.R;
 import com.genesis.hamlet.data.models.mmessage.MMessage;
-import com.genesis.hamlet.data.models.mmessage.MMessage;
 import com.genesis.hamlet.data.models.user.User;
 
 import java.util.ArrayList;
@@ -56,7 +55,7 @@ public class MMessageRecyclerAdapter extends RecyclerView.Adapter<MMessageViewHo
             viewHolder.getMessageImageView().setVisibility(ImageView.GONE);
         }
         else {
-            String messageImageUrl = friendlyMessage.getMessageURL();
+            String messageImageUrl = friendlyMessage.getImageUrl();
             Glide.with(viewHolder.getMessageImageView().getContext())
                     .load(messageImageUrl)
                     .into(viewHolder.getMessageImageView());
@@ -67,11 +66,11 @@ public class MMessageRecyclerAdapter extends RecyclerView.Adapter<MMessageViewHo
 
         // add messenger name and image
         viewHolder.getMessengerTextView().setText(friendlyMessage.getSenderUid());
-        if (friendlyMessage.getMessengerUrl() == null) {
+        if (friendlyMessage.getImageUrl() == null) {
             viewHolder.messengerImageView.setImageDrawable(ContextCompat.getDrawable(mContext,R.drawable.ic_account_circle));
         } else {
             Glide.with(mContext)
-                    .load(friendlyMessage.getMessageURL())
+                    .load(friendlyMessage.getImageUrl())
                     .into(viewHolder.messengerImageView);
         }
     }
