@@ -1,294 +1,167 @@
 package com.genesis.hamlet.ui.mmessages;
 
-
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
+import android.content.Context;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.InputFilter;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.firebase.ui.database.SnapshotParser;
 import com.genesis.hamlet.R;
-import com.genesis.hamlet.data.models.mmessage.ChatMessage;
+import com.genesis.hamlet.data.DataRepository;
+import com.genesis.hamlet.data.DataSource;
+import com.genesis.hamlet.data.models.mmessage.MMessage;
 import com.genesis.hamlet.data.models.user.User;
-import com.genesis.hamlet.util.Properties;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
+import com.genesis.hamlet.util.BaseFragmentInteractionListener;
+import com.genesis.hamlet.util.EndlessRecyclerViewScrollListener;
+import com.genesis.hamlet.util.mvp.BaseView;
 
-import org.parceler.Parcels;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static android.app.Activity.RESULT_OK;
+import java.util.List;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Created by dipenrana on 10/24/17.
  */
-public class MMessagesFragment extends Fragment {
 
-    private static final String TAG = "MainActivity";
-    public static final String MESSAGES_CHILD = "messages";
-    public static final String MESSAGES_SESSION = "Session1";
-    private static final int REQUEST_IMAGE = 2;
-    public static final int DEFAULT_MSG_LENGTH_LIMIT = 140;
-    public static final String ANONYMOUS = "anonymous";
-    private static final String MESSAGE_SENT_EVENT = "message_sent";
-    private static final String MESSAGE_URL = "http://friendlychat.firebase.google.com/message/";
-    private static final String LOADING_IMAGE_URL = "https://www.google.com/images/spin-32.gif";
+public class MMessagesFragment extends BaseView implements MMessagesContract.View,View.OnClickListener {
 
-    private String mUsername;
-    private String mPhotoUrl;
-    private SharedPreferences mSharedPreferences;
+    private EndlessRecyclerViewScrollListener endlessScrollListener;
+    private MMessagesContract.Presenter presenter;
+    private BaseFragmentInteractionListener fragmentInteractionListener;
+    private boolean shouldRefreshUsers;
 
-    private ImageButton mSendButton;
-    private RecyclerView mMessageRecyclerView;
+    private DataRepository dataRepository;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private RecyclerView rvMMessages;
+    private MMessageRecyclerAdapter mMessageRecyclerAdapter;
     private LinearLayoutManager mLinearLayoutManager;
-    private FirebaseRecyclerAdapter<ChatMessage, MMessageViewHolder> mFirebaseAdapter;
-    private ProgressBar mProgressBar;
-    private DatabaseReference mFirebaseDatabaseReference;
-    private FirebaseAuth mFirebaseAuth;
-    private FirebaseUser mFirebaseUser;
-    private FirebaseAnalytics mFirebaseAnalytics;
-    private EditText mMessageEditText;
-    private ImageView mAddMessageImageView;
+    ImageButton btnSend;
+    EditText mMessageEditText;
 
-    public MMessagesFragment() {
-        // Required empty public constructor
-    }
-
+    //// TODO: 10/26/17 I have added these two item that are need to be loaded in when the fragment is created - look at the UserDetailFragment to see how they are loaded as an example
+    String chatRoom;
+    User user;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        setRetainInstance(true);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mmessages, container, false);
-        Parcelable parcelable = getArguments().getParcelable(Properties.BUNDLE_KEY_USER);
-        final User user = Parcels.unwrap(parcelable);
-
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        mUsername = ANONYMOUS;
-
-        // Initialize Firebase Auth
-        mFirebaseAuth = FirebaseAuth.getInstance();
-        mFirebaseUser = mFirebaseAuth.getCurrentUser();
-        //current user
-        if (mFirebaseUser != null) {
-            mUsername = mFirebaseUser.getDisplayName();
-            if (mFirebaseUser.getPhotoUrl() != null) {
-                mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
-            }
-        }
-
-        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-        mMessageRecyclerView = (RecyclerView) view.findViewById(R.id.messageRecyclerView);
-        mLinearLayoutManager = new LinearLayoutManager(getContext());
-        mLinearLayoutManager.setStackFromEnd(true);
-
-        //get root reference.
-        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference(MESSAGES_CHILD);
-
-        //load previous messages
-        SnapshotParser<ChatMessage> parser = new SnapshotParser<ChatMessage>() {
-            @Override
-            public ChatMessage parseSnapshot(DataSnapshot dataSnapshot) {
-                ChatMessage friendlyMessage = dataSnapshot.getValue(ChatMessage.class);
-                if (friendlyMessage != null) {
-                    friendlyMessage.setId(dataSnapshot.getKey());
-                }
-                return friendlyMessage;
-            }
-        };
-
-        DatabaseReference messagesRef = mFirebaseDatabaseReference.child(MESSAGES_SESSION);
-
-        final FirebaseRecyclerOptions<ChatMessage> options =
-                new FirebaseRecyclerOptions.Builder<ChatMessage>()
-                .setQuery(messagesRef, parser)
-                .build();
-
-        //bind data to view
-        mFirebaseAdapter = new FirebaseRecyclerAdapter<ChatMessage, MMessageViewHolder>(options) {
-
-            @Override
-            public int getItemViewType(int position) {
-                ChatMessage msg = mFirebaseAdapter.getItem(position);
-                if(msg.getName().equals(mFirebaseUser.getDisplayName())){
-                    return 0;
-                }
-                else
-                    return 1;
-                //return super.getItemViewType(position);
-            }
-
-            @Override
-            public MMessageViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-                LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-                if(i == 0){
-                    return new MMessageViewHolder(inflater.inflate(R.layout.mmessage_friend, viewGroup, false));
-                }
-                else {
-                    return new MMessageViewHolder(inflater.inflate(R.layout.mmessage_user, viewGroup, false));
-                }
-            }
-
-            @Override
-            protected void onBindViewHolder(final MMessageViewHolder viewHolder,int position,ChatMessage friendlyMessage) {
-
-                mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-                if (friendlyMessage.getText() != null) {
-                    viewHolder.getMessageTextView().setText(friendlyMessage.getText());
-                    viewHolder.getMessageTextView().setVisibility(TextView.VISIBLE);
-                    viewHolder.getMessageImageView().setVisibility(ImageView.GONE);
-                } else {
-                    String imageUrl = friendlyMessage.getImageUrl();
-                    if (imageUrl.startsWith("gs://")) {
-                        StorageReference storageReference = FirebaseStorage.getInstance()
-                                .getReferenceFromUrl(imageUrl);
-                        storageReference.getDownloadUrl().addOnCompleteListener(
-                                new OnCompleteListener<Uri>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Uri> task) {
-                                        if (task.isSuccessful()) {
-                                            String downloadUrl = task.getResult().toString();
-                                            Glide.with(viewHolder.getMessageImageView().getContext())
-                                                    .load(downloadUrl)
-                                                    .into(viewHolder.getMessageImageView());
-                                        } else {
-                                            Log.w(TAG, "Getting download url was not successful.",
-                                                    task.getException());
-                                        }
-                                    }
-                                });
-                    } else {
-                        Glide.with(viewHolder.getMessageImageView().getContext())
-                                .load(friendlyMessage.getImageUrl())
-                                .into(viewHolder.getMessageImageView());
-                    }
-
-                    viewHolder.getMessageTextView().setVisibility(ImageView.INVISIBLE);
-                    viewHolder.getMessageImageView().setVisibility(ImageView.VISIBLE);
-                }
-
-                viewHolder.getMessengerTextView().setText(friendlyMessage.getName());
-                if (friendlyMessage.getPhotoUrl() == null) {
-                    viewHolder.messengerImageView.setImageDrawable(ContextCompat.getDrawable(getContext(),R.drawable.ic_account_circle));
-                } else {
-                    Glide.with(getContext())
-                            .load(friendlyMessage.getPhotoUrl())
-                            .into(viewHolder.messengerImageView);
-                }
-            }
-        };
-
-        mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                super.onItemRangeInserted(positionStart, itemCount);
-                int friendlyMessageCount = mFirebaseAdapter.getItemCount();
-                int lastVisiblePosition = mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
-                // If the recycler view is initially being loaded or the user is at the bottom of the list, scroll
-                // to the bottom of the list to show the newly added message.
-                if (lastVisiblePosition == -1 ||
-                        (positionStart >= (friendlyMessageCount - 1) && lastVisiblePosition == (positionStart - 1))) {
-                    mMessageRecyclerView.scrollToPosition(positionStart);
-                }
-            }
-        });
-
-        mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
-        mMessageRecyclerView.setAdapter(mFirebaseAdapter);
-
-
-        // Define default config values. Defaults are used when fetched config values are not
-        // available. Eg: if an error occurred fetching values from the server.
-        Map<String, Object> defaultConfigMap = new HashMap<>();
-        defaultConfigMap.put("friendly_msg_length", 140L);
-
-        // Fetch remote config.
+        rvMMessages = (RecyclerView) view.findViewById(R.id.messageRecyclerView );
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.messagesSwipeRefreshLayout);
+        btnSend = (ImageButton) view.findViewById(R.id.sendButton);
         mMessageEditText = (EditText) view.findViewById(R.id.messageEditText);
-        mMessageEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(mSharedPreferences.getInt("friendly_msg_length", DEFAULT_MSG_LENGTH_LIMIT))});
 
-        mMessageEditText.addTextChangedListener(new TextWatcher() {
+        //// TODO: 10/26/17 after picking up the chatRoom and user here, setup a callback
+
+        presenter.connectChatroom(fragmentInteractionListener, new DataSource.OnMMessagesCallback() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void onSuccess(List<MMessage> mMessages, String chatRoom, String senderId) {
+                //// TODO: 10/26/17 deal with incoming messages
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (charSequence.toString().trim().length() > 0) {
-                    mSendButton.setEnabled(true);
-                } else {
-                    mSendButton.setEnabled(false);
-                }
+            public void onFailure(Throwable throwable) {
+
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
+            public void onNetworkFailure() {
 
-
-        mAddMessageImageView = (ImageView) view.findViewById(R.id.addMessageImageView);
-        mAddMessageImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("image/*");
-                startActivityForResult(intent, REQUEST_IMAGE);
             }
-        });
-
-        mSendButton = (ImageButton) view.findViewById(R.id.sendButton);
-        mSendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ChatMessage friendlyMessage = new ChatMessage(mMessageEditText.getText().toString(), mUsername, mPhotoUrl, null);
-                mFirebaseDatabaseReference.child(MESSAGES_SESSION).push().setValue(friendlyMessage);
-                mMessageEditText.setText("");
-                //mFirebaseAnalytics.logEvent(MESSAGE_SENT_EVENT, null);
-            }
-        });
+        }, chatRoom, 0);
 
         return view;
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        mMessageRecyclerAdapter = new MMessageRecyclerAdapter();
+        rvMMessages.setAdapter(mMessageRecyclerAdapter);
+
+        mLinearLayoutManager = new LinearLayoutManager(getContext());
+        mLinearLayoutManager.setStackFromEnd(true);
+
+
+        btnSend.setOnClickListener(this);
+
+        endlessScrollListener = new EndlessRecyclerViewScrollListener(mLinearLayoutManager,
+                0) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                //presenter.loadMoreUsers(getContext(), page);
+            }
+        };
+
+        rvMMessages.addOnScrollListener(endlessScrollListener);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //refreshUsers();
+            }
+        });
+
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark, R.color.colorPrimary);
+
+
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            //send text message
+            case R.id.sendButton:
+                sendMMessage(mMessageEditText.getText().toString());
+                break;
+            //send images
+            case R.id.addMessageImageView:
+                break;
+        }
+
+    }
+
+    private void sendMMessage(String s) {
+        //// TODO: 10/26/17 create a new MMessage object The line bellow is just a dummy so the rest of the code can work
+        MMessage msg = new MMessage();
+
+        presenter.sendMMessage(fragmentInteractionListener, msg, user, chatRoom);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        fragmentInteractionListener = (BaseFragmentInteractionListener) getActivity();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 
     @Override
@@ -297,73 +170,13 @@ public class MMessagesFragment extends Fragment {
     }
 
     @Override
-    public void onPause() {
-        mFirebaseAdapter.stopListening();
-        super.onPause();
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_main,menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        mFirebaseAdapter.startListening();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
-
-    private void putImageInStorage(StorageReference storageReference, Uri uri, final String key) {
-        storageReference.putFile(uri).addOnCompleteListener(getActivity(),
-                new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            ChatMessage friendlyMessage =
-                                    new ChatMessage(null, mUsername, mPhotoUrl,
-                                            task.getResult().getDownloadUrl()
-                                                    .toString());
-                            mFirebaseDatabaseReference.child(MESSAGES_SESSION).child(key)
-                                    .setValue(friendlyMessage);
-                        } else {
-                            Log.w(TAG, "Image upload task was not successful.",
-                                    task.getException());
-                        }
-                    }
-                });
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
-
-        if (requestCode == REQUEST_IMAGE) {
-            if (resultCode == RESULT_OK) {
-                if (data != null) {
-                    final Uri uri = data.getData();
-                    Log.d(TAG, "Uri: " + uri.toString());
-
-                    ChatMessage tempMessage = new ChatMessage(null, mUsername, mPhotoUrl,
-                            LOADING_IMAGE_URL);
-                    mFirebaseDatabaseReference.child(MESSAGES_SESSION).push()
-                            .setValue(tempMessage, new DatabaseReference.CompletionListener() {
-                                @Override
-                                public void onComplete(DatabaseError databaseError,
-                                                       DatabaseReference databaseReference) {
-                                    if (databaseError == null) {
-                                        String key = databaseReference.getKey();
-                                        StorageReference storageReference =
-                                                FirebaseStorage.getInstance()
-                                                        .getReference(mFirebaseUser.getUid())
-                                                        .child(key)
-                                                        .child(uri.getLastPathSegment());
-
-                                        putImageInStorage(storageReference, uri, key);
-                                    } else {
-                                        Log.w(TAG, "Unable to write message to database.",
-                                                databaseError.toException());
-                                    }
-                                }
-                            });
-                }
-            }
-        }
-    }
-
 }

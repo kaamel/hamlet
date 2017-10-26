@@ -50,10 +50,17 @@ public class Interests {
     }
 
     @Exclude
-    public boolean isIncomplete() {
+    public boolean isComplete() {
+
+        boolean interest = false;
+        for (Boolean b: interestCats) {
+            if (b) {
+                interest = true;
+                break;
+            }
+        }
         return (nickName != null && nickName.trim().length() > 0)
-                && (interestTopics != null)
-                && (interestTopics.length > 0)
+                && (interest)
                 && (introTitle != null && introTitle.trim().length() > 0);
     }
 

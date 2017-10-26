@@ -136,14 +136,17 @@ public class UsersFragment extends BaseView implements UsersContract.View {
     @Override
     public void onResume() {
         super.onResume();
+        fragmentInteractionListener.setTitle("Nearby Matching Users");
         Interests interests = Interests.getInstance();
-        if (interests == null || !interests.isIncomplete()) {
+        if (interests == null || !interests.isComplete()) {
             setUpInterests();
         }
-        else if (presenter.isConnected()) {
-            if (interests.isChanged()) {
-                interests.setChanged(false);
+        else if (interests.isChanged()) {
+            interests.setChanged(false);
+            if (presenter.isConnected()) {
                 refreshUsers();
+            } else {
+                presenter.connect(getContext());
             }
         }
         else {

@@ -29,10 +29,6 @@ public class MMessageViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
         ButterKnife.bind(this,itemView);
 
-//        messageTextView = (TextView) itemView.findViewById(R.id.messageTextView);
-//        messageImageView = (ImageView) itemView.findViewById(R.id.messageImageView);
-//        messengerTextView = (TextView) itemView.findViewById(R.id.messengerTextView);
-//        messengerImageView = (CircleImageView) itemView.findViewById(R.id.messengerImageView);
     }
 
     public TextView getMessageTextView() {

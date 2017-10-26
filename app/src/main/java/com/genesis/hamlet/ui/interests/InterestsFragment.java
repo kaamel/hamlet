@@ -1,13 +1,16 @@
 package com.genesis.hamlet.ui.interests;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -16,6 +19,7 @@ import com.genesis.hamlet.R;
 import com.genesis.hamlet.data.models.interests.Interests;
 import com.genesis.hamlet.util.BaseFragmentInteractionListener;
 import com.genesis.hamlet.util.mvp.BaseView;
+import com.google.firebase.auth.FirebaseAuth;
 
 
 /**
@@ -31,6 +35,10 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
     EditText etNickName;
     EditText etDescription;
     LinearLayout llCheckboxesList;
+    CheckBox cbUseProfile;
+
+    Button done;
+    Button exit;
 
     public InterestsFragment() {
         // Required empty public constructor
@@ -51,6 +59,24 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_interests, container, false);
+
+        cbUseProfile = (CheckBox) view.findViewById(R.id.cbUserProfile);
+
+        done = (Button) view.findViewById(R.id.btnSave);
+        done.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
+
+        exit = (Button) view.findViewById(R.id.btnExit);
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
+            }
+        });
 
         llCheckboxesList = (LinearLayout) view.findViewById(R.id.checkboxList);
         etTitle = (EditText) view.findViewById(R.id.etTitle);
@@ -89,6 +115,15 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
 
             }
         });
+
+        setNickName();
+        cbUseProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setNickName();
+            }
+        });
+
         etDescription = (EditText) view.findViewById(R.id.etDescription);
         etDescription.addTextChangedListener(new TextWatcher() {
             @Override
@@ -138,10 +173,17 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
         int m = Interests.getInterestTopics().length;
         CheckBox checkBox;
         for (int i= 0; i<m; i++) {
-            checkBox = (CheckBox) llCheckboxesList.getChildAt(i);
+            checkBox = getCheckBox(i); //(CheckBox) llCheckboxesList.getChildAt(i);
             boolean isSelected = getInterests().getInterest(i);
             checkBox.setChecked(isSelected);
         }
+    }
+
+    private CheckBox getCheckBox(int n) {
+        int q = ((LinearLayout) llCheckboxesList.getChildAt(0)).getChildCount();
+        int i = n/q;
+        int j = n%q;
+        return (CheckBox) ((LinearLayout) llCheckboxesList.getChildAt(i)).getChildAt(j);
     }
 
     void onBoxClicked (boolean interested, int position) {
@@ -150,15 +192,18 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
 
     void initializeCheckBoxes() {
         int m = Interests.getInterestTopics().length;
-        int n = llCheckboxesList.getChildCount();
+        int p = llCheckboxesList.getChildCount();
+        int q = ((LinearLayout) llCheckboxesList.getChildAt(0)).getChildCount();
         CheckBox checkBox;
-        for (int i= 0; i<n; i++) {
-            checkBox = (CheckBox) llCheckboxesList.getChildAt(i);
-            if (i<m) {
-                checkBox.setText(Interests.getInterestTopics()[i]);
+        for (int i= 0; i<p; i++)
+            for (int j = 0; j< q; j ++) {
+                int n = i * q + j;
+                checkBox = getCheckBox(n); //CheckBox) ((LinearLayout) llCheckboxesList.getChildAt(i)).getChildAt(j);
+            if (n < m) {
+                checkBox.setText(Interests.getInterestTopics()[n]);
                 checkBox.setVisibility(View.VISIBLE);
                 checkBox.setChecked(false);
-                final int position = i;
+                final int position = n;
                 checkBox.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -173,8 +218,32 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
         }
     }
 
+    private void setNickName() {
+        etNickName.setEnabled(!cbUseProfile.isChecked());
+        if (cbUseProfile.isChecked()) {
+            etNickName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+            Interests.getInstance().setNickName(etNickName.getText().toString());
+        }
+        else {
+            etNickName.setInputType(InputType.TYPE_CLASS_TEXT);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        fragmentInteractionListener.setTitle("Set Up Interests");
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        fragmentInteractionListener = (BaseFragmentInteractionListener) context;
+    }
+
     @Override
     public void onDetach() {
+        fragmentInteractionListener = null;
         Interests.getInstance().setChanged(true);
         super.onDetach();
     }

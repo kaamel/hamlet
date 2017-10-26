@@ -13,6 +13,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -155,6 +156,13 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
     @Override
     public DataRepository getDataRepository() {
         return dataRepository;
+    }
+
+    @Override
+    public void setTitle(String s) {
+        ActionBar stb = getSupportActionBar();
+        if (stb != null)
+            stb.setTitle(s);
     }
 
     public boolean checkLocationPermission() {

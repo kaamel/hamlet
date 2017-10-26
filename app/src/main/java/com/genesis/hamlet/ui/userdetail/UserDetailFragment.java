@@ -48,6 +48,10 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
     static LinearLayout normalLL;
     static LinearLayout remoteLL;
 
+    User user;
+
+    private static boolean setButtonsToNormal = false;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,7 +67,7 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
         final String chatRoom = getArguments().getString("chatRoom");
         String myId = getArguments().getString("myId");
 
-        final User user = Parcels.unwrap(parcelable);
+        user = Parcels.unwrap(parcelable);
 
         userProfile = (ImageView) view.findViewById(R.id.ivPhoto);
 
@@ -138,6 +142,11 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
     public void onAttach(Context context) {
         super.onAttach(context);
         fragmentInteractionListener = (BaseFragmentInteractionListener) getActivity();
+        if (setButtonsToNormal) {
+            setButtonsToNormal = false;
+            connectButton.setClickable(false);
+            endtButton.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -149,6 +158,7 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
     @Override
     public void onResume() {
         super.onResume();
+        fragmentInteractionListener.setTitle("User Details");
     }
 
     @Override
@@ -177,8 +187,10 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
     }
 
     public static void onConnectAccepted(String chatRoom, User otherUser) {
-        switchToChatView(chatRoom, otherUser);
         setViewNormal(otherUser);
+        setButtonsToNormal = true;
+
+        switchToChatView(chatRoom, otherUser);
     }
 
     private static void switchToChatView(String chatRoom, User otherUser) {

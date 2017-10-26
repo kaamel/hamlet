@@ -27,5 +27,6 @@
     <string name="ignore">Ignore</string>
     <string name="signInGoogle">Continue with Google</string>
     <string name="signInFacebook">Continue with Facebook</string>
-
+    <string name="cancel">Cancel</string>
+    <string name="exit">Exit</string>
 </resources>

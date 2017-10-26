@@ -3,6 +3,7 @@ package com.genesis.hamlet.data;
 import android.content.Context;
 
 import com.genesis.hamlet.data.local.LocalDataSource;
+import com.genesis.hamlet.data.models.mmessage.MMessage;
 import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.data.remote.RemoteDataSource;
 import com.genesis.hamlet.util.mvp.BasePresenter;
@@ -63,6 +64,14 @@ public class DataRepository {
 
     private void startUsersStream(Context context, DataSource.OnUsersCallback onUsersCallback) {
         remoteDataSource.goOnline(context, onUsersCallback, 0);
+    }
+
+    public void connectChatroom(Context context, DataSource.OnMMessagesCallback onMMessageCallback, String chatroom, int page) {
+        remoteDataSource.connectChatroom(context, onMMessageCallback, chatroom, page);
+    }
+
+    public void sendMMessage(MMessage message, User user, String chatRoom) {
+        remoteDataSource.sendMMessage(message, user, chatRoom);
     }
 
     public void disconnect(Context context) {
