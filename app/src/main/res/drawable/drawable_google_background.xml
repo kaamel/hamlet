@@ -3,10 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android" >
     <solid android:color="@color/googleRed"/>
     <corners
-        android:topLeftRadius="4dp"
-        android:topRightRadius="4dp"
-        android:bottomLeftRadius="4dp"
-        android:bottomRightRadius="4dp"
+        android:topLeftRadius="3dp"
+        android:topRightRadius="3dp"
+        android:bottomLeftRadius="3dp"
+        android:bottomRightRadius="3dp"
 
         />
 
