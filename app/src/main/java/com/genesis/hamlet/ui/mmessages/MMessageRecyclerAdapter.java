@@ -27,7 +27,8 @@ public class MMessageRecyclerAdapter extends RecyclerView.Adapter<MMessageViewHo
     private Context mContext;
 
 //(Context context, ArrayList<ChatMessage> messages, User user) {
-    public MMessageRecyclerAdapter(){
+    public MMessageRecyclerAdapter(Context context){
+        mContext = context;
 
     }
 

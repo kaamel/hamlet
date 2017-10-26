@@ -81,11 +81,12 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mMessageRecyclerAdapter = new MMessageRecyclerAdapter();
+        mMessageRecyclerAdapter = new MMessageRecyclerAdapter(getContext());
         rvMMessages.setAdapter(mMessageRecyclerAdapter);
 
         mLinearLayoutManager = new LinearLayoutManager(getContext());
         mLinearLayoutManager.setStackFromEnd(true);
+        rvMMessages.setLayoutManager(mLinearLayoutManager);
 
 
         btnSend.setOnClickListener(this);
@@ -98,7 +99,7 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
             }
         };
 
-        rvMMessages.addOnScrollListener(endlessScrollListener);
+       // rvMMessages.addOnScrollListener(endlessScrollListener);
 
 //        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 //            @Override
