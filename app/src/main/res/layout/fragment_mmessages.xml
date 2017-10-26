@@ -5,7 +5,12 @@
     android:layout_height="match_parent"
     tools:context="com.genesis.hamlet.ui.mmessages.MMessagesFragment">
 
-    <android.support.v7.widget.RecyclerView
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/messagesSwipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
         android:id="@+id/messageRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -14,6 +19,8 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
         android:layout_above="@+id/linearLayout"/>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <LinearLayout
         android:orientation="horizontal"
