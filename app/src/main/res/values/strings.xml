@@ -25,5 +25,7 @@
     <string name="end">End</string>
     <string name="accept">Accept</string>
     <string name="ignore">Ignore</string>
+    <string name="cancel">Cancel</string>
+    <string name="exit">Exit</string>
 
 </resources>
