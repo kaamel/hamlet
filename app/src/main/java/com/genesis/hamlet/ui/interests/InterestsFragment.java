@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 
 import com.genesis.hamlet.R;
 import com.genesis.hamlet.data.models.interests.Interests;
+import com.genesis.hamlet.data.models.interests.MyInterests;
 import com.genesis.hamlet.util.BaseFragmentInteractionListener;
 import com.genesis.hamlet.util.mvp.BaseView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -66,6 +67,12 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (cbUseProfile.isChecked())
+                    MyInterests.getInstance().setProfileUrl(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString());
+                else {
+                    //// TODO: 10/26/17 add a preset profile image - null for now
+                    MyInterests.getInstance().setProfileUrl(null);
+                }
                 getActivity().onBackPressed();
             }
         });
@@ -89,7 +96,7 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String text = s.toString();
-                Interests.getInstance().setIntroTitle(text);
+                MyInterests.getInstance().setIntroTitle(text);
             }
 
             @Override
@@ -107,7 +114,7 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String text = s.toString();
-                Interests.getInstance().setNickName(text);
+                MyInterests.getInstance().setNickName(text);
             }
 
             @Override
@@ -134,7 +141,7 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String text = s.toString();
-                Interests.getInstance().setIntroDetail(text);
+                MyInterests.getInstance().setIntroDetail(text);
             }
 
             @Override
@@ -150,7 +157,7 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
 
     @Override
     public Interests getInterests() {
-        return Interests.getInstance();
+        return MyInterests.getInstance();
     }
 
     @Override
@@ -187,7 +194,7 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
     }
 
     void onBoxClicked (boolean interested, int position) {
-        Interests.getInstance().setInterest(interested, position);
+        MyInterests.getInstance().setInterest(interested, position);
     }
 
     void initializeCheckBoxes() {
@@ -222,7 +229,7 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
         etNickName.setEnabled(!cbUseProfile.isChecked());
         if (cbUseProfile.isChecked()) {
             etNickName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
-            Interests.getInstance().setNickName(etNickName.getText().toString());
+            MyInterests.getInstance().setNickName(etNickName.getText().toString());
         }
         else {
             etNickName.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -244,7 +251,7 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
     @Override
     public void onDetach() {
         fragmentInteractionListener = null;
-        Interests.getInstance().setChanged(true);
+        MyInterests.getInstance().setChanged(true);
         super.onDetach();
     }
 }

@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 
 import com.genesis.hamlet.data.DataSource;
-import com.genesis.hamlet.data.models.interests.Interests;
+import com.genesis.hamlet.data.models.interests.MyInterests;
 import com.genesis.hamlet.data.models.mmessage.MMessage;
 import com.genesis.hamlet.data.models.user.RemoteUser;
 import com.genesis.hamlet.data.models.user.User;
@@ -163,14 +163,14 @@ public class RemoteDataSource extends DataSource {
     public void sendNotification(String senduerUid, String receiverUid, String chatRoom, String action, String title, String message) {
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/notifications/" + receiverUid + "/" + senduerUid,
-                new NotificationMessage(senduerUid, receiverUid, chatRoom, Interests.getInstance().getNickName(), action, title, message));
+                new NotificationMessage(senduerUid, receiverUid, chatRoom, MyInterests.getInstance().getNickName(), action, title, message));
         database.getReference().updateChildren(childUpdates);
     }
 
     @Override
     public void updateUser() {
         String key = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        RemoteUser remoteUser = new RemoteUser(Interests.getInstance(), 0, 0, System.currentTimeMillis());
+        RemoteUser remoteUser = new RemoteUser(MyInterests.getInstance(), 0, 0, System.currentTimeMillis());
         Map<String, Object> postValues = remoteUser.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
@@ -181,7 +181,7 @@ public class RemoteDataSource extends DataSource {
     }
 
     @Override
-    public void connectChatroom(Context context, final OnMMessagesCallback onMMessageCallback, final String chatroom, int page) {
+    public void connectChatroom(final OnMMessagesCallback onMMessageCallback, final String chatroom, int page) {
         FirebaseHelper.deleteFirebaseNode("/messages/", chatroom);
         Query messagesQuery = messagesRef.child(chatroom)
                 .limitToFirst(20);
@@ -210,7 +210,9 @@ public class RemoteDataSource extends DataSource {
 
     @Override
     public void sendMMessage(MMessage message, User user, String chatRoom) {
-        message.setSenderUid(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        message.setSenderUid(MyInterests.getInstance().getMyUid());
+        message.setDisplayName(MyInterests.getInstance().getNickName());
+        message.setProfileUrl(MyInterests.getInstance().getProfileUrl());
         messagesRef.child(chatRoom).push().setValue(message);
     }
 

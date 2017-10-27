@@ -73,7 +73,7 @@ public class LocalDataSource extends DataSource implements DataSource.OnUsersCal
     }
 
     @Override
-    public void connectChatroom(Context context, OnMMessagesCallback onMMessageCallback, String Chatroom, int page) {
+    public void connectChatroom(OnMMessagesCallback onMMessageCallback, String Chatroom, int page) {
 
     }
 

@@ -17,9 +17,27 @@ public class MMessage {
     long createTime;
 
     String senderUid;
+    String profileUrl;
+    String displayName;
 
     public MMessage() {
 
+    }
+
+    public String getProfileUrl() {
+        return profileUrl;
+    }
+
+    public void setProfileUrl(String profileUrl) {
+        this.profileUrl = profileUrl;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public void setId(String id) {

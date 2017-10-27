@@ -13,7 +13,7 @@ import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
 import com.firebase.geofire.GeoQueryEventListener;
-import com.genesis.hamlet.data.models.interests.Interests;
+import com.genesis.hamlet.data.models.interests.MyInterests;
 import com.genesis.hamlet.data.models.user.RemoteUser;
 import com.genesis.hamlet.data.models.user.User;
 import com.google.android.gms.common.ConnectionResult;
@@ -285,7 +285,7 @@ public class HamletConnectionService extends Service implements
 
     private boolean isInteresting(User user) {
         boolean[] interests = user.getInterests();
-        boolean[] myInterests = Interests.getInstance().getInterests();
+        boolean[] myInterests = MyInterests.getInstance().getInterests();
         for (int i=0; i< interests.length; i++ )
             if (interests[i] && myInterests[i])
                 return true;

@@ -58,6 +58,7 @@ public class RemoteUser {
         user.setDisplayName((String) interests.get("nickName"));
         user.setIntroTitle((String) interests.get("introTitle"));
         user.setIntroDetail((String) interests.get("introDetail"));
+        user.setPhotoUrl((String) interests.get("profileUrl"));
 
         return user;
     }

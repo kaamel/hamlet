@@ -19,6 +19,7 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.genesis.hamlet.R;
 import com.genesis.hamlet.data.DataSource;
+import com.genesis.hamlet.data.models.interests.MyInterests;
 import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.ui.MainActivity;
 import com.genesis.hamlet.util.threading.FirebaseHelper;
@@ -190,6 +191,7 @@ public class LoginActivity extends AppCompatActivity implements DataSource.OnUse
         if (action != null) {
             MainActivity.setRemoteAction(action, myUid, otherUser, chatRoom);
         }
+        MyInterests.getInstance().setMyUid(myUid);
         startActivity(intent);
         finish();
     }

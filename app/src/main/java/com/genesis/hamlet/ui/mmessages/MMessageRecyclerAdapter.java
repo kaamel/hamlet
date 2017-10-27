@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.genesis.hamlet.R;
+import com.genesis.hamlet.data.models.interests.MyInterests;
 import com.genesis.hamlet.data.models.mmessage.MMessage;
-import com.genesis.hamlet.data.models.user.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,13 +22,13 @@ import java.util.List;
 
 public class MMessageRecyclerAdapter extends RecyclerView.Adapter<MMessageViewHolder>{
 
-    private static List<MMessage> messages = new ArrayList<>();
-    private static User currentUser = new User();
+    private static List<MMessage> mMessages = new ArrayList<>();
     private Context mContext;
+    //private User user;
 
-//(Context context, ArrayList<ChatMessage> messages, User user) {
-    public MMessageRecyclerAdapter(){
-
+    //(Context context, ArrayList<ChatMessage> messages, User user) {
+    public MMessageRecyclerAdapter(Context context){
+        mContext = context;
     }
 
     @Override
@@ -46,16 +46,15 @@ public class MMessageRecyclerAdapter extends RecyclerView.Adapter<MMessageViewHo
     @Override
     public void onBindViewHolder(MMessageViewHolder viewHolder, int position) {
 
-        MMessage friendlyMessage = messages.get(position);
-
+        MMessage mMessage = mMessages.get(position);
         // if message is text then add text else if message is image use glide to load image
-        if (friendlyMessage.getText() != null) {
-            viewHolder.getMessageTextView().setText(friendlyMessage.getText());
+        if (mMessage.getText() != null) {
+            viewHolder.getMessageTextView().setText(mMessage.getText());
             viewHolder.getMessageTextView().setVisibility(TextView.VISIBLE);
             viewHolder.getMessageImageView().setVisibility(ImageView.GONE);
         }
         else {
-            String messageImageUrl = friendlyMessage.getImageUrl();
+            String messageImageUrl = mMessage.getImageUrl();
             Glide.with(viewHolder.getMessageImageView().getContext())
                     .load(messageImageUrl)
                     .into(viewHolder.getMessageImageView());
@@ -65,26 +64,27 @@ public class MMessageRecyclerAdapter extends RecyclerView.Adapter<MMessageViewHo
         }
 
         // add messenger name and image
-        viewHolder.getMessengerTextView().setText(friendlyMessage.getSenderUid());
-        if (friendlyMessage.getImageUrl() == null) {
+        viewHolder.getMessengerTextView().setText(mMessage.getDisplayName());
+        //viewHolder.messengerImageView.setImageDrawable(ContextCompat.getDrawable(mContext,R.drawable.ic_account_circle));
+        if (mMessage.getProfileUrl() == null) {
             viewHolder.messengerImageView.setImageDrawable(ContextCompat.getDrawable(mContext,R.drawable.ic_account_circle));
         } else {
             Glide.with(mContext)
-                    .load(friendlyMessage.getImageUrl())
+                    .load(mMessage.getProfileUrl())
                     .into(viewHolder.messengerImageView);
         }
     }
 
     @Override
     public int getItemCount() {
-        return messages.size();
+        return mMessages.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        MMessage msg = messages.get(position);
+        MMessage mMsg = mMessages.get(position);
 
-        if(msg.getSenderUid().equals(currentUser.getDisplayName())){
+        if(mMsg.getSenderUid().equals(MyInterests.getInstance().getMyUid())){
             return 0;
         }
         else
@@ -92,12 +92,10 @@ public class MMessageRecyclerAdapter extends RecyclerView.Adapter<MMessageViewHo
 
     }
 
-    //load past messages
-    public void showMMessages(List<MMessage> messages){
-        this.messages.clear();
-        this.messages = messages;
-        notifyDataSetChanged();
-
+    public void addMmessage(MMessage mMessage){
+        mMessages.add(mMessage);
+        this.notifyItemInserted(mMessages.size()-1);
     }
+
 
 }

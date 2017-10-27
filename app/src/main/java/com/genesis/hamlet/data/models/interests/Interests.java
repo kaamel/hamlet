@@ -32,11 +32,21 @@ public class Interests {
     private String introTitle = "";
     private String introDetail = "";
 
+    public String getProfileUrl() {
+        return profileUrl;
+    }
+
+    public void setProfileUrl(String profileUrl) {
+        this.profileUrl = profileUrl;
+    }
+
+    private String profileUrl;
+
     private static final List<Boolean> interestCats = new ArrayList<>();// boolean[interestTopics.length];
 
     @Exclude
     private boolean changed = false;
-
+/*
     public static synchronized Interests getInstance() {
         if (instance == null) {
             instance = new Interests();
@@ -44,8 +54,8 @@ public class Interests {
 
         return instance;
     }
-
-    private Interests() {
+*/
+    public Interests() {
         clearInterests();
     }
 

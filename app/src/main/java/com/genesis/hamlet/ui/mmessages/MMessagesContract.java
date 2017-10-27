@@ -3,7 +3,6 @@ package com.genesis.hamlet.ui.mmessages;
 import com.genesis.hamlet.data.DataSource;
 import com.genesis.hamlet.data.models.mmessage.MMessage;
 import com.genesis.hamlet.data.models.user.User;
-import com.genesis.hamlet.util.BaseFragmentInteractionListener;
 import com.genesis.hamlet.util.mvp.IBasePresenter;
 import com.genesis.hamlet.util.mvp.IBaseView;
 
@@ -17,8 +16,8 @@ public class MMessagesContract {
     }
 
     interface Presenter extends IBasePresenter<View> {
-        void connectChatroom(BaseFragmentInteractionListener fragmentInteractionListener, DataSource.OnMMessagesCallback onMMessageCallback, String chatroom, int page);
-        void sendMMessage(BaseFragmentInteractionListener fragmentInteractionListener, MMessage message, User user, String chatRoom);
+        void connectChatroom(DataSource.OnMMessagesCallback onMMessageCallback, String chatroom, int page);
+        void sendMMessage(MMessage message, User user, String chatRoom);
 
     }
 }

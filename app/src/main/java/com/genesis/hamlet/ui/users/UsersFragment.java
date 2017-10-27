@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import com.genesis.hamlet.R;
 import com.genesis.hamlet.data.DataRepository;
 import com.genesis.hamlet.data.models.interests.Interests;
+import com.genesis.hamlet.data.models.interests.MyInterests;
 import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.ui.interests.InterestsFragment;
 import com.genesis.hamlet.ui.login.LoginActivity;
@@ -137,7 +138,7 @@ public class UsersFragment extends BaseView implements UsersContract.View {
     public void onResume() {
         super.onResume();
         fragmentInteractionListener.setTitle("Nearby Matching Users");
-        Interests interests = Interests.getInstance();
+        Interests interests = MyInterests.getInstance();
         if (interests == null || !interests.isComplete()) {
             setUpInterests();
         }

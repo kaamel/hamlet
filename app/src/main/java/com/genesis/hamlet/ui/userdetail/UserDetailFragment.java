@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.genesis.hamlet.R;
-import com.genesis.hamlet.data.models.interests.Interests;
+import com.genesis.hamlet.data.models.interests.MyInterests;
 import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.ui.mmessages.MMessagesFragment;
 import com.genesis.hamlet.ui.users.UsersFragment;
@@ -121,8 +121,8 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
                 fragmentInteractionListener.getDataRepository().
                         sendNotification(user,
                                 "request_to_connect_accepted",
-                                Interests.getInstance().getIntroTitle(),
-                                Interests.getInstance().getIntroDetail());
+                                MyInterests.getInstance().getIntroTitle(),
+                                MyInterests.getInstance().getIntroDetail());
             }
         });
 
@@ -180,8 +180,8 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
         fragmentInteractionListener.getDataRepository().
                 sendNotification(user,
                         "request_to_connect",
-                        Interests.getInstance().getIntroTitle(),
-                        Interests.getInstance().getIntroDetail());
+                        MyInterests.getInstance().getIntroTitle(),
+                        MyInterests.getInstance().getIntroDetail());
 
     }
 
