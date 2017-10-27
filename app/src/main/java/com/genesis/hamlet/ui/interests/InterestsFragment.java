@@ -67,12 +67,6 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (cbUseProfile.isChecked())
-                    MyInterests.getInstance().setProfileUrl(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString());
-                else {
-                    //// TODO: 10/26/17 add a preset profile image - null for now
-                    MyInterests.getInstance().setProfileUrl(null);
-                }
                 getActivity().onBackPressed();
             }
         });
@@ -230,9 +224,12 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
         if (cbUseProfile.isChecked()) {
             etNickName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
             MyInterests.getInstance().setNickName(etNickName.getText().toString());
+            MyInterests.getInstance().setProfileUrl(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString());
         }
         else {
             etNickName.setInputType(InputType.TYPE_CLASS_TEXT);
+            //// TODO: 10/26/17 add a preset profile image - null for now
+            MyInterests.getInstance().setProfileUrl(null);
         }
     }
 

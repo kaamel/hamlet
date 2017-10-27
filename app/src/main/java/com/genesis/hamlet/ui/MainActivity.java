@@ -24,6 +24,7 @@ import com.genesis.hamlet.R;
 import com.genesis.hamlet.data.DataRepository;
 import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.di.Injection;
+import com.genesis.hamlet.ui.mmessages.MMessagesFragment;
 import com.genesis.hamlet.ui.userdetail.UserDetailFragment;
 import com.genesis.hamlet.ui.users.UsersFragment;
 import com.genesis.hamlet.util.BaseFragmentInteractionListener;
@@ -279,6 +280,16 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
 
         IntentFilter filter = new IntentFilter(Properties.FCN_RECEIVED_NOTIFICATION);
         registerReceiver(br, filter);
+    }
+
+    //// TODO: 10/27/17 I have move this here from Detail User Fragment - for now just a placeholder
+    private void switchToChatView(String chatRoom, User otherUser) {
+        Parcelable parcelable = Parcels.wrap(otherUser);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Properties.BUNDLE_KEY_USER, parcelable);
+        bundle.putString("chatRoom", chatRoom);
+        showFragment(MMessagesFragment.class, bundle,
+                true);
     }
 
     private void showTheFragment() {

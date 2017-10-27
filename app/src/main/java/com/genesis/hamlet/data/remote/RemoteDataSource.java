@@ -161,6 +161,13 @@ public class RemoteDataSource extends DataSource {
     }
     @Override
     public void sendNotification(String senduerUid, String receiverUid, String chatRoom, String action, String title, String message) {
+        if (chatRoom == null) {
+            DatabaseReference ref = notificationsRef.push();
+            chatRoom = ref.getKey();
+        }
+        //DatabaseReference ref = notificationsRef.child(chatRoom).child(senduerUid);
+
+
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/notifications/" + receiverUid + "/" + senduerUid,
                 new NotificationMessage(senduerUid, receiverUid, chatRoom, MyInterests.getInstance().getNickName(), action, title, message));
@@ -183,9 +190,9 @@ public class RemoteDataSource extends DataSource {
     @Override
     public void connectChatroom(final OnMMessagesCallback onMMessageCallback, final String chatroom, int page) {
         FirebaseHelper.deleteFirebaseNode("/messages/", chatroom);
-        Query messagesQuery = messagesRef.child(chatroom)
-                .limitToFirst(20);
-        messagesQuery.addValueEventListener(new ValueEventListener() {
+        Query messagesQuery = messagesRef.child(chatroom);
+                //.limitToFirst(20);
+        messagesQuery.limitToLast(1).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() == null)

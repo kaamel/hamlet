@@ -48,10 +48,10 @@ public class DataRepository {
         startUsersStream(context, onUsersCallback);
     }
 
-    public void sendNotification(User user, String action, String title, String message) {
+    public void sendNotification(User user, String action, String chatRoom, String title, String message) {
         FirebaseUser me = FirebaseAuth.getInstance().getCurrentUser();
         if (me != null)
-            remoteDataSource.sendNotification(user, me.getUid(), action, title, message);
+            remoteDataSource.sendNotification(user, chatRoom, action, title, message);
     }
 
     public void sendNotification(String senduerUid, String receiverUid, String chatRoom, String action, String title, String message) {

@@ -250,13 +250,17 @@ public class HamletConnectionService extends Service implements
 
                             }
                         };
-                        FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).addValueEventListener(eventListener);
+                        if (user.getUid() != null && listenerMap.get(user.getUid()) != null) {
+                            FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).addValueEventListener(eventListener);
+                        }
                         listenerMap.put(user.getUid(), eventListener);
                         if (isInteresting(user)) {
                             broadcast(user, what);
                         }
                     } else if (what == -1) {
-                        FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).removeEventListener(listenerMap.get(user.getUid()));
+                        if (user.getUid() != null && listenerMap.get(user.getUid()) != null) {
+                            FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).removeEventListener(listenerMap.get(user.getUid()));
+                        }
                         listenerMap.remove(user.getUid());
                         broadcast(user, what);
                     }

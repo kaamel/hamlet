@@ -98,7 +98,7 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
         connectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requestToConnet(user);
+                requestToConnet(user, null);
                 connectButton.setClickable(false);
                 endtButton.setVisibility(View.VISIBLE);
             }
@@ -121,6 +121,7 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
                 fragmentInteractionListener.getDataRepository().
                         sendNotification(user,
                                 "request_to_connect_accepted",
+                                chatRoom,
                                 MyInterests.getInstance().getIntroTitle(),
                                 MyInterests.getInstance().getIntroDetail());
             }
@@ -141,11 +142,6 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
     public void onAttach(Context context) {
         super.onAttach(context);
         fragmentInteractionListener = (BaseFragmentInteractionListener) getActivity();
-        if (setButtonsToNormal) {
-            setButtonsToNormal = false;
-            connectButton.setClickable(false);
-            endtButton.setVisibility(View.VISIBLE);
-        }
     }
 
     @Override
@@ -158,6 +154,11 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
     public void onResume() {
         super.onResume();
         fragmentInteractionListener.setTitle("User Details");
+        if (setButtonsToNormal) {
+            setButtonsToNormal = false;
+            connectButton.setClickable(false);
+            endtButton.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -176,10 +177,11 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
         tvIntroDetail.setText(user.getIntroDetail());
     }
 
-    private void requestToConnet(User user) {
+    private void requestToConnet(User user, String chatRoom) {
         fragmentInteractionListener.getDataRepository().
                 sendNotification(user,
                         "request_to_connect",
+                        chatRoom,
                         MyInterests.getInstance().getIntroTitle(),
                         MyInterests.getInstance().getIntroDetail());
 

@@ -79,7 +79,7 @@ public class LoginActivity extends AppCompatActivity implements DataSource.OnUse
                 this.action = action;
                 this.otherUser = user;
                 this.chatRoom = chatRoom;
-                this.myUid = receiverUid;
+                //this.myUid = receiverUid;
 
                 FirebaseHelper.deleteFirebaseNode("/notifications/" +receiverUid, senderUid);
             }
@@ -187,6 +187,7 @@ public class LoginActivity extends AppCompatActivity implements DataSource.OnUse
     }
 
     private void continueToUsersList() {
+        myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         if (action != null) {
             MainActivity.setRemoteAction(action, myUid, otherUser, chatRoom);

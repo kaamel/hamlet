@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -42,7 +41,7 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
     private boolean shouldRefreshUsers;
 
     private DataRepository dataRepository;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    //private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView rvMMessages;
     private MMessageRecyclerAdapter mMessageRecyclerAdapter;
     private LinearLayoutManager mLinearLayoutManager;
