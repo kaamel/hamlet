@@ -5,8 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.genesis.hamlet.R;
 import com.genesis.hamlet.data.models.user.User;
 
@@ -20,8 +22,10 @@ import java.util.List;
 public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdapter.ViewHolder> {
 
     private static final List<User> users = new ArrayList<>();
+    private Context context;
 
-    public UsersRecyclerAdapter() {
+    public UsersRecyclerAdapter(Context context) {
+        this.context = context;
     }
 
     public void add(User user) {
@@ -64,10 +68,12 @@ public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdap
 
         TextView tvDisplayName;
         TextView tvIntroTitle;
+        ImageView ivProfile;
         public ViewHolder(View itemView) {
             super(itemView);
             tvDisplayName = (TextView) itemView.findViewById(R.id.tvDisplayName);
             tvIntroTitle = (TextView) itemView.findViewById(R.id.tvIntroTitle);
+            ivProfile = (ImageView) itemView.findViewById(R.id.ivProfile);
         }
     }
 
@@ -88,8 +94,8 @@ public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdap
         viewHolder.tvDisplayName.setText(user.getDisplayName());
         viewHolder.tvIntroTitle.setText(user.getIntroTitle());
 
-        /*Glide.with(fragment).load(user.getPhotoUrl()).placeholder(R.drawable.drawable_placeholder).error(
-                R.drawable.drawable_placeholder).into(viewHolder.ivUserUrl);*/
+        Glide.with(context).load(user.getPhotoUrl()).placeholder(R.mipmap.ic_launcher_round).error(
+                R.mipmap.ic_launcher_round).into(viewHolder.ivProfile);
     }
 
     @Override

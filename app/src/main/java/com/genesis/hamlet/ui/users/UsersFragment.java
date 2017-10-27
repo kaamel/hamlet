@@ -84,7 +84,7 @@ public class UsersFragment extends BaseView implements UsersContract.View {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-        recyclerAdapter = new UsersRecyclerAdapter();
+        recyclerAdapter = new UsersRecyclerAdapter(getContext());
         rvUsers.setAdapter(recyclerAdapter);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
