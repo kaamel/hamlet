@@ -193,12 +193,13 @@ public class RemoteDataSource extends DataSource {
                 List<MMessage> nmsgs;
                 Iterator<DataSnapshot> iter = dataSnapshot.getChildren().iterator();
                 MMessage msg;
+                nmsgs = new ArrayList<>();
                 while (iter.hasNext()) {
                     msg = iter.next().getValue(MMessage.class);
-                    nmsgs = new ArrayList<>();
                     nmsgs.add(msg);
-                    onMMessageCallback.onSuccess(nmsgs, chatroom, msg.getSenderUid());
+                    //onMMessageCallback.onSuccess(nmsgs, chatroom, msg.getSenderUid());
                 }
+                onMMessageCallback.onSuccess(nmsgs, chatroom);
             }
 
             @Override

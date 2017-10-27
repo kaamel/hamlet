@@ -2,6 +2,7 @@ package com.genesis.hamlet.ui.mmessages;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,7 +23,10 @@ import com.genesis.hamlet.data.models.mmessage.MMessage;
 import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.util.BaseFragmentInteractionListener;
 import com.genesis.hamlet.util.EndlessRecyclerViewScrollListener;
+import com.genesis.hamlet.util.Properties;
 import com.genesis.hamlet.util.mvp.BaseView;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -44,7 +48,7 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
     private LinearLayoutManager mLinearLayoutManager;
     ImageButton btnSend;
     EditText mMessageEditText;
-
+    Parcelable parcelable;
     //// TODO: 10/26/17 I have added these two item that are need to be loaded in when the fragment is created - look at the UserDetailFragment to see how they are loaded as an example
     String chatRoom;
     User user;
@@ -60,17 +64,21 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mmessages, container, false);
-        rvMMessages = (RecyclerView) view.findViewById(R.id.messageRecyclerView );
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.messagesSwipeRefreshLayout);
-        btnSend = (ImageButton) view.findViewById(R.id.sendButton);
-        mMessageEditText = (EditText) view.findViewById(R.id.messageEditText);
+        rvMMessages = (RecyclerView) view.findViewById(R.id.rvMMChatMessages );
+        //swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.messagesSwipeRefreshLayout);
+        btnSend = (ImageButton) view.findViewById(R.id.ibSendMessage);
+        mMessageEditText = (EditText) view.findViewById(R.id.etMessage);
+
+        parcelable = getArguments().getParcelable(Properties.BUNDLE_KEY_USER);
+        chatRoom = getArguments().getString("chatRoom");
 
         //// TODO: 10/26/17 after picking up the chatRoom and user here, setup a callback
-
+        presenter = new MMessagesPresenter(getContext());
         presenter.connectChatroom(fragmentInteractionListener, new DataSource.OnMMessagesCallback() {
             @Override
-            public void onSuccess(List<MMessage> mMessages, String chatRoom, String senderId) {
+            public void onSuccess(List<MMessage> mMessages, String chatRoom) {
                 //// TODO: 10/26/17 deal with incoming messages
+                mMessageRecyclerAdapter.showMMessages(mMessages);
             }
 
             @Override
@@ -91,11 +99,12 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mMessageRecyclerAdapter = new MMessageRecyclerAdapter();
+        mMessageRecyclerAdapter = new MMessageRecyclerAdapter(getContext());
         rvMMessages.setAdapter(mMessageRecyclerAdapter);
 
         mLinearLayoutManager = new LinearLayoutManager(getContext());
         mLinearLayoutManager.setStackFromEnd(true);
+        rvMMessages.setLayoutManager(mLinearLayoutManager);
 
 
         btnSend.setOnClickListener(this);
@@ -110,14 +119,14 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
 
         rvMMessages.addOnScrollListener(endlessScrollListener);
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                //refreshUsers();
-            }
-        });
-
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark, R.color.colorPrimary);
+//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                //refreshUsers();
+//            }
+//        });
+//
+//        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark, R.color.colorPrimary);
 
 
     }
@@ -126,20 +135,23 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
     public void onClick(View view) {
         switch (view.getId()){
             //send text message
-            case R.id.sendButton:
+            case R.id.ibSendMessage:
                 sendMMessage(mMessageEditText.getText().toString());
+                mMessageEditText.setText("");
                 break;
             //send images
-            case R.id.addMessageImageView:
+            case R.id.ibSendImage:
                 break;
         }
 
     }
 
-    private void sendMMessage(String s) {
+    private void sendMMessage(String newMessage) {
         //// TODO: 10/26/17 create a new MMessage object The line bellow is just a dummy so the rest of the code can work
+        user = Parcels.unwrap(parcelable);
         MMessage msg = new MMessage();
-
+        msg.setText(newMessage);
+        msg.setSenderUid(user.getUid());
         presenter.sendMMessage(fragmentInteractionListener, msg, user, chatRoom);
     }
 
@@ -147,6 +159,8 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
     public void onAttach(Context context) {
         super.onAttach(context);
         fragmentInteractionListener = (BaseFragmentInteractionListener) getActivity();
+        dataRepository = fragmentInteractionListener.getDataRepository();
+        user = dataRepository.getLoggedInUser();
     }
 
     @Override

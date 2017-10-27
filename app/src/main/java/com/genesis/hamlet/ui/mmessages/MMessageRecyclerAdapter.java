@@ -27,7 +27,8 @@ public class MMessageRecyclerAdapter extends RecyclerView.Adapter<MMessageViewHo
     private Context mContext;
 
 //(Context context, ArrayList<ChatMessage> messages, User user) {
-    public MMessageRecyclerAdapter(){
+    public MMessageRecyclerAdapter(Context context){
+        mContext = context;
 
     }
 
@@ -36,10 +37,10 @@ public class MMessageRecyclerAdapter extends RecyclerView.Adapter<MMessageViewHo
 
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         if(viewType == 0){
-            return new MMessageViewHolder(inflater.inflate(R.layout.mmessage_friend, parent, false));
+            return new MMessageViewHolder(inflater.inflate(R.layout.mmessage_user, parent, false));
         }
         else {
-            return new MMessageViewHolder(inflater.inflate(R.layout.mmessage_user, parent, false));
+            return new MMessageViewHolder(inflater.inflate(R.layout.mmessage_me, parent, false));
         }
     }
 
@@ -95,7 +96,8 @@ public class MMessageRecyclerAdapter extends RecyclerView.Adapter<MMessageViewHo
     //load past messages
     public void showMMessages(List<MMessage> messages){
         this.messages.clear();
-        this.messages = messages;
+        //this.messages.addAll(messages);
+        this.messages.addAll(messages);
         notifyDataSetChanged();
 
     }

@@ -50,8 +50,14 @@ public class DataRepository {
 
     public void sendNotification(User user, String action, String title, String message) {
         FirebaseUser me = FirebaseAuth.getInstance().getCurrentUser();
+        String chatRoomID="Session1";
+        if(action.equals("request_to_connect_accepted")){
+             chatRoomID = me.getUid()+user.getUid();
+        }else if(action.equals("request_to_connect")){
+            chatRoomID = user.getUid()+me.getUid();
+        }
         if (me != null)
-            remoteDataSource.sendNotification(user, me.getUid(), action, title, message);
+            remoteDataSource.sendNotification(user, chatRoomID, action, title, message);
     }
 
     public void sendNotification(String senduerUid, String receiverUid, String chatRoom, String action, String title, String message) {
@@ -78,6 +84,10 @@ public class DataRepository {
         remoteDataSource.disconnect(context);
         dataRepository = null;
         //remoteDataSource = null;
+    }
+
+    public User getLoggedInUser(){
+        return remoteDataSource.getLoggedInUser();
     }
 
     public boolean isConnected() {
