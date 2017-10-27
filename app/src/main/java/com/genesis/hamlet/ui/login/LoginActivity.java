@@ -1,11 +1,14 @@
 package com.genesis.hamlet.ui.login;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -97,7 +100,7 @@ public class LoginActivity extends AppCompatActivity implements DataSource.OnUse
         pbLogin = (ProgressBar) findViewById(R.id.pbLogin);
         pbLogin.setVisibility(View.GONE);
 
-        SignInButton google = (SignInButton) findViewById(R.id.btSignInWithGoogle);
+        LinearLayout google = (LinearLayout) findViewById(R.id.btSignInWithGoogle);
         google.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,6 +111,11 @@ public class LoginActivity extends AppCompatActivity implements DataSource.OnUse
         mCallbackManager = CallbackManager.Factory.create();
         btnFacebookLogIn = (LoginButton) findViewById(R.id.btnFaceBookLogin);
         btnFacebookLogIn.setReadPermissions("email", "public_profile");
+//        btnFacebookLogIn.setText(getResources().getString(R.string.signInFacebook));
+//        btnFacebookLogIn.setBackgroundResource(R.drawable.facebook_background);
+//        btnFacebookLogIn.setCompoundDrawablesWithIntrinsicBounds(1,0,0,0);
+
+
         btnFacebookLogIn.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {

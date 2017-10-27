@@ -101,6 +101,7 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
                 requestToConnet(user, null);
                 connectButton.setClickable(false);
                 endtButton.setVisibility(View.VISIBLE);
+                connectButton.setVisibility(View.GONE);
             }
         });
 

@@ -3,6 +3,8 @@
     <color name="colorPrimary">#5566D2</color>
     <color name="colorPrimaryDark">#3A4AAD</color>
     <color name="colorAccent">#3A4AAD</color>
-    <color name="colorBlue">#2196f3</color>
+    <color name="colorBlue">#2196F3</color>
+    <color name="FBBlue">#0D47A1</color>
     <color name="colorRed">#F32621</color>
+    <color name="googleRed">#F44336</color>
 </resources>
