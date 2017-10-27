@@ -7,7 +7,7 @@ import com.genesis.hamlet.util.threading.MainUiThread;
 import com.genesis.hamlet.util.threading.ThreadExecutor;
 
 public class Injection {
-    
+
     public static DataRepository provideDataRepository() {
         MainUiThread mainUiThread = MainUiThread.getInstance();
         ThreadExecutor threadExecutor = ThreadExecutor.getInstance();
