@@ -174,11 +174,8 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
         }
 
         tvUserName.setText(user.getDisplayName());
-//        tvIntroTitle.setText(user.getIntroTitle());
-//        tvIntroDetail.setText(user.getIntroDetail());
-        tvIntroTitle.setText("Any one around to play tennis");
-        tvIntroDetail.setText("I am looking for someone who could play tennis with me in the park");
-
+        tvIntroTitle.setText(user.getIntroTitle());
+        tvIntroDetail.setText(user.getIntroDetail());
     }
 
     private void requestToConnet(User user, String chatRoom) {
