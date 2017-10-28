@@ -60,7 +60,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="16dp"
                 android:textColor="@android:color/black"
-                android:textSize="18sp"
+                android:textSize="24sp"
                 android:visibility="visible"
                 tools:text="Keep Walking!" />
 
@@ -73,7 +73,7 @@
                 android:layout_below="@+id/tvIntroTitleDetail"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="4dp"
-                android:textSize="14sp"
+                android:textSize="18sp"
                 android:textColor="@android:color/black"
                 android:visibility="visible"
                 tools:text="I love beer. Anyone wants to join me?" />
@@ -83,6 +83,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
+                android:layout_marginTop="16dp"
                 android:layout_alignParentBottom="true"
                 android:layout_below="@+id/tvDetailMessage">
 
