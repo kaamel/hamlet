@@ -14,8 +14,10 @@
 
             <ImageView
                 android:id="@+id/ivPhoto"
-                android:layout_width="72dp"
-                android:layout_height="72dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="11dp"
                 android:adjustViewBounds="true"
@@ -27,11 +29,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/ivPhoto"
+                android:layout_alignBottom="@+id/ivPhoto"
                 android:layout_alignStart="@+id/ivPhoto"
-                android:layout_below="@+id/ivPhoto"
-                android:layout_marginTop="16dp"
+                android:layout_margin="8dp"
                 android:fontFamily="sans-serif-black"
-                android:textSize="@dimen/title_textSize"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
                 tools:text="Brad" />
 
             <TextView

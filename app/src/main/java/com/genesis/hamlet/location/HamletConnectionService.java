@@ -172,7 +172,7 @@ public class HamletConnectionService extends Service implements
         if (fu != null) {
 
             geoFire.setLocation(FirebaseAuth.getInstance().getCurrentUser().getUid(), new GeoLocation(location.latitude, location.longitude));
-            geoQuery = geoFire.queryAtLocation(location, 0.5);
+            geoQuery = geoFire.queryAtLocation(location, 20);
 
             geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
                 @Override
