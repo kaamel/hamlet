@@ -36,15 +36,17 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/white"
+                android:backgroundTint="@android:color/transparent"
                 tools:text="Brad" />
 
             <TextView
                 android:id="@+id/tvIntroTitleDetail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/tvUserName"
-                android:layout_alignStart="@+id/tvUserName"
-                android:layout_below="@+id/tvUserName"
+                android:layout_alignLeft="@+id/ivPhoto"
+                android:layout_alignStart="@+id/ivPhoto"
+                android:layout_below="@+id/ivPhoto"
+                android:layout_marginTop="16dp"
                 android:fontFamily="sans-serif-black"
                 android:textSize="14sp"
                 tools:text="Keep Walking!" />
