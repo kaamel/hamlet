@@ -5,6 +5,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.genesis.hamlet.data.models.user.User;
+
 
 /**
  * Abstract base class to be extended by any MVP View such as {@link Fragment} and
@@ -19,6 +21,10 @@ public abstract class BaseView extends Fragment implements IBaseView {
     @Override
     public void showToastMessage(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    public void onConnectionAccepted(User user, String chatView) {
+
     }
 
     @Override

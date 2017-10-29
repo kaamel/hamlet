@@ -47,6 +47,11 @@ public class LocalDataSource extends DataSource implements DataSource.OnUsersCal
         return LocalDatabase.getLoggedInUser();
     }
 
+    @Override
+    public void findUserById(String uId, OnUserCallback userCallback) {
+
+    }
+
     public static synchronized LocalDataSource getInstance(MainUiThread mainUiThread, ThreadExecutor threadExecutor) {
         if (localDataSource == null) {
             localDataSource = new LocalDataSource(mainUiThread, threadExecutor);
@@ -74,6 +79,11 @@ public class LocalDataSource extends DataSource implements DataSource.OnUsersCal
 
     @Override
     public void connectChatroom(OnMMessagesCallback onMMessageCallback, String Chatroom, int page) {
+
+    }
+
+    @Override
+    public void closeChatroom(String chatroom) {
 
     }
 
