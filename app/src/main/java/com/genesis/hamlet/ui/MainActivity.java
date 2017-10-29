@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import com.genesis.hamlet.R;
 import com.genesis.hamlet.data.DataRepository;
+import com.genesis.hamlet.data.DataSource;
 import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.di.Injection;
 import com.genesis.hamlet.ui.mmessages.MMessagesFragment;
@@ -31,12 +33,17 @@ import com.genesis.hamlet.util.BaseFragmentInteractionListener;
 import com.genesis.hamlet.util.FoaBaseActivity;
 import com.genesis.hamlet.util.NetworkHelper;
 import com.genesis.hamlet.util.Properties;
+import com.genesis.hamlet.util.UserHelper;
+import com.genesis.hamlet.util.mvp.BaseView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import org.parceler.Parcels;
 
 import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 
 import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
@@ -59,12 +66,8 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private DataRepository dataRepository;
 
-    static String action = null;
-    static User otherUser = null;
-    private static String myUid = null;
-    private static String chatRoom = null;
-
     BroadcastReceiver br;
+    Intent remoteIntent = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,12 +78,73 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
         setSupportActionBar(toolbar);
 
         dataRepository = Injection.provideDataRepository();
-        setUpNotificationReceiver();
+        remoteIntent = getIntent();
+        //MainActivityPermissionsDispatcher.setUpNotificationReceiverWithCheck(this);
     }
 
+    boolean isNotificationSetup = false;
+
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
-    public void checkPermision() {
-        showFragment(UsersFragment.class);
+    protected void continueIfPermitted() {
+        if (isNotificationSetup)
+            return;
+        isNotificationSetup = true;
+        setUpNotificationReceiver();
+        if (remoteIntent != null) {
+            String action = remoteIntent.getStringExtra("action");
+            String senderUid = remoteIntent.getStringExtra("senderUid");
+            if (action != null && action.equals("request_to_connect")) {
+                final Bundle bundle = UserHelper.bundleNotification(remoteIntent);
+
+                dataRepository.findUserById(senderUid, new DataSource.OnUserCallback() {
+
+                    @Override
+                    public void onSuccess(User user) {
+                        if (user != null) {
+                            bundle.putParcelable(Properties.BUNDLE_KEY_USER, Parcels.wrap(user));
+                            showFragment(MMessagesFragment.class, bundle, true);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Throwable throwable) {
+                        showFragment(MMessagesFragment.class, bundle, true);
+                    }
+
+                    @Override
+                    public void onNetworkFailure() {
+                        showFragment(MMessagesFragment.class, bundle, true);
+                    }
+                });
+
+            }
+            else if (action != null && action.equals("request_to_connect_accepted")) {
+                final Bundle bundle = UserHelper.bundleNotification(remoteIntent);
+                dataRepository.findUserById(senderUid, new DataSource.OnUserCallback() {
+
+                    @Override
+                    public void onSuccess(User user) {
+                        if (user != null) {
+                            bundle.putParcelable(Properties.BUNDLE_KEY_USER, Parcels.wrap(user));
+                            showFragment(MMessagesFragment.class, bundle, true);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Throwable throwable) {
+                        showFragment(MMessagesFragment.class, bundle, true);
+                    }
+
+                    @Override
+                    public void onNetworkFailure() {
+                        showFragment(MMessagesFragment.class, bundle, true);
+                    }
+                });
+            }
+            showFragment(UsersFragment.class, null, true);
+        }
+        else
+            showFragment(UsersFragment.class, null, true);
     }
 
 
@@ -88,22 +152,8 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
     protected void onResume() {
         super.onResume();
         registerReceiver(connectivityBroadcastReceiver, new IntentFilter(CONNECTIVITY_ACTION));
-        if (checkLocationPermission()) {
-            if (ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
-
-                if (action != null && action.equals("request_to_connect")) {
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelable(Properties.BUNDLE_KEY_USER, Parcels.wrap(otherUser));
-                    showFragment(UserDetailFragment.class, bundle, true);
-                    otherUser = null;
-                    action = null;
-                }
-                else
-                    showFragment(UsersFragment.class);
-            }
-        }
+        MainActivityPermissionsDispatcher.setUpNotificationReceiverWithCheck(this);
+        MainActivityPermissionsDispatcher.continueIfPermittedWithCheck(this);
     }
 
     @Override
@@ -114,6 +164,7 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
 
     @Override
     protected void onDestroy() {
+        //dataRepository.disconnect(this);
         unregisterReceiver(br);
         super.onDestroy();
     }
@@ -166,49 +217,44 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
             stb.setTitle(s);
     }
 
-    public boolean checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
+    /*
+    @Override
+    public void onBackPressed() {
+        dataRepository.disconnect(this);
+        MyInterests.getInstance().clearInterests();
+        super.onBackPressed();
+    }
+    */
 
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-                new AlertDialog.Builder(this)
-                        .setTitle(R.string.title_location_permission)
-                        .setMessage(R.string.text_location_permission)
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                //Prompt the user once explanation has been shown
-                                ActivityCompat.requestPermissions(MainActivity.this,
-                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                                        MY_PERMISSIONS_REQUEST_LOCATION);
-                            }
-                        })
-                        .create()
-                        .show();
-
-
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_LOCATION);
-            }
-            return false;
-        } else {
-            return true;
-        }
+    @OnShowRationale({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
+    void showRationaleForCamera(final PermissionRequest request) {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.title_location_permission)
+                .setMessage(R.string.text_location_permission)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //Prompt the user once explanation has been shown
+                        ActivityCompat.requestPermissions(MainActivity.this,
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                MY_PERMISSIONS_REQUEST_LOCATION);
+                    }
+                })
+                .create()
+                .show();
     }
 
+    @OnNeverAskAgain({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
+    void showNeverAskForLocation() {
+        Toast.makeText(this, "You will need to manually grant location permission", Toast.LENGTH_SHORT).show();
+    }
+
+
+
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull
+                                           String permissions[], @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         MainActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_LOCATION: {
@@ -218,11 +264,14 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
 
                     // permission was granted, yay! Do the
                     // location-related task you need to do.
-                    if (ContextCompat.checkSelfPermission(this,
+                    if ((ContextCompat.checkSelfPermission(this,
                             Manifest.permission.ACCESS_FINE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED) {
+                            == PackageManager.PERMISSION_GRANTED) ||
+                            (ContextCompat.checkSelfPermission(this,
+                                    Manifest.permission.ACCESS_COARSE_LOCATION)
+                                    == PackageManager.PERMISSION_GRANTED)) {
 
-                        showTheFragment();
+                        //showTheFragment();
                         //showFragment(UsersFragment.class);
 
                     }
@@ -237,6 +286,7 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
         }
     }
 
+    @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     void setUpNotificationReceiver() {
         br = new BroadcastReceiver() {
             @Override
@@ -250,30 +300,43 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
                     return;
                 }
                 */
-                String chatRoom = intent.getStringExtra("chatRoom");
-                String name = intent.getStringExtra("name");
-                String action = intent.getStringExtra("action");
-                String title = intent.getStringExtra("title");
-                String message = intent.getStringExtra("message");
-                User user = new User();
-                user.setUid(senderUid);
-                user.setDisplayName(name);
-                user.setIntroTitle(title);
-                user.setIntroDetail(message);
+                final String action = intent.getStringExtra("action");
+                final String chatRoom = intent.getStringExtra("chatRoom");
+                final Bundle bundle = UserHelper.bundleNotification(intent);
                 //FirebaseHelper.deleteFirebaseNode("/notifications/" +myUid, senderUid);
-                if (action.equals("request_to_connect_accepted")) {
-                    UserDetailFragment.onConnectAccepted(chatRoom, user);
+                if (action.equals("request_to_connect") || action.equals("request_to_connect_accepted")) {
+                    dataRepository.findUserById(senderUid, new DataSource.OnUserCallback() {
+                        @Override
+                        public void onSuccess(User user) {
+                            if (user != null) {
+                                if (action.equals("request_to_connect_accepted")) {
+                                    Fragment fragment = ((BaseView) getFragment(UserDetailFragment.class, chatRoom));
+                                    if (fragment == null) {
+                                        fragment = ((BaseView) getFragment(UserDetailFragment.class, null));
+                                    }
+                                    ((BaseView) fragment).onConnectionAccepted(user, chatRoom);
+                                    showFragment(MMessagesFragment.class, chatRoom, bundle, true);
+                                }
+                                else {
+                                    bundle.putParcelable(Properties.BUNDLE_KEY_USER, Parcels.wrap(user));
+                                    showFragment(UserDetailFragment.class, chatRoom, bundle, true);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Throwable throwable) {
+                            showFragment(UserDetailFragment.class, chatRoom, bundle, true);
+                        }
+
+                        @Override
+                        public void onNetworkFailure() {
+                            showFragment(UserDetailFragment.class, chatRoom, bundle, true);
+                        }
+                    });
                 }
                 else {
-
-                    Parcelable parcelable = Parcels.wrap(user);
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelable(Properties.BUNDLE_KEY_USER, parcelable);
-
-                    bundle.putString("chatRoom", chatRoom);
-                    bundle.putString("myUid", myUid);
-
-                    showFragment(UserDetailFragment.class, bundle, true);
+                    //other actions
                 }
             }
         };
@@ -282,16 +345,17 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
         registerReceiver(br, filter);
     }
 
-    //// TODO: 10/27/17 I have move this here from Detail User Fragment - for now just a placeholder
+    //// TODO: 10/27/17 I have moved this here from Detail User Fragment - for now just a placeholder
     private void switchToChatView(String chatRoom, User otherUser) {
         Parcelable parcelable = Parcels.wrap(otherUser);
         Bundle bundle = new Bundle();
         bundle.putParcelable(Properties.BUNDLE_KEY_USER, parcelable);
         bundle.putString("chatRoom", chatRoom);
-        showFragment(MMessagesFragment.class, bundle,
+        showFragment(MMessagesFragment.class, chatRoom, bundle,
                 true);
     }
 
+    /*
     private void showTheFragment() {
         if (action != null && (action.equals("request_to_connect") || action.equals("request_to_connect_accepted"))) {
             Bundle bundle = new Bundle();
@@ -306,6 +370,7 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
             FirebaseUser me = FirebaseAuth.getInstance().getCurrentUser();
             if (me != null
                     && me.getUid().equals(myUid)) {
+                //// TODO: 10/28/17 this section needs to be reviewed and modified
                 if (action.equals("request_to_connect_accepted")) {
                     UserDetailFragment.onConnectAccepted(chatRoom, otherUser);
                 }
@@ -318,13 +383,7 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
             }
         }
         else
-            showFragment(UsersFragment.class);
+            showFragment(UsersFragment.class, null, true);
     }
-
-    public static void setRemoteAction(String action, String myUid, User user, String chatRoom) {
-        MainActivity.otherUser = user;
-        MainActivity.action = action;
-        MainActivity.myUid = myUid;
-        MainActivity.chatRoom = chatRoom;
-    }
+    */
 }

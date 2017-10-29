@@ -198,7 +198,7 @@ public class UsersFragment extends BaseView implements UsersContract.View {
     }
 
     private void setUpInterests() {
-        fragmentInteractionListener.showFragment(InterestsFragment.class, new Bundle(), true);
+        fragmentInteractionListener.showFragment(InterestsFragment.class, null, new Bundle(), false);
     }
 
     @Override
@@ -265,7 +265,7 @@ public class UsersFragment extends BaseView implements UsersContract.View {
         Parcelable parcelable = Parcels.wrap(user);
         Bundle bundle = new Bundle();
         bundle.putParcelable(Properties.BUNDLE_KEY_USER, parcelable);
-        fragmentInteractionListener.showFragment(UserDetailFragment.class, bundle,
+        fragmentInteractionListener.showFragment(UserDetailFragment.class, null, bundle,
                 true);
     }
 

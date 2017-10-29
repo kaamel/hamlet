@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import com.genesis.hamlet.R;
 import com.genesis.hamlet.data.models.interests.Interests;
 import com.genesis.hamlet.data.models.interests.MyInterests;
+import com.genesis.hamlet.ui.users.UsersFragment;
 import com.genesis.hamlet.util.BaseFragmentInteractionListener;
 import com.genesis.hamlet.util.mvp.BaseView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -67,7 +68,8 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().onBackPressed();
+                //getActivity().onBackPressed();
+                fragmentInteractionListener.showFragment(UsersFragment.class, null, new Bundle(), false);
             }
         });
 

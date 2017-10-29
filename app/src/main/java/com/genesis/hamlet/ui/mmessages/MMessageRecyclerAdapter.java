@@ -23,7 +23,7 @@ import java.util.List;
 
 public class MMessageRecyclerAdapter extends RecyclerView.Adapter<MMessageViewHolder>{
 
-    private static List<MMessage> mMessages = new ArrayList<>();
+    private List<MMessage> mMessages = new ArrayList<>();
     private Context mContext;
     //private User user;
 

@@ -45,12 +45,13 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
     Button endtButton;
     Button acceptButton;
     Button ignoreButton;
-    static LinearLayout normalLL;
-    static LinearLayout remoteLL;
+    LinearLayout normalLL;
+    LinearLayout remoteLL;
 
     User user;
+    String chatRoom, myId;
 
-    private static boolean setButtonsToNormal = false;
+    private boolean setButtonsToNormal = false;
 
 
     @Override
@@ -64,8 +65,8 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
         View view = inflater.inflate(R.layout.fragment_user_detail, container, false);
 
         Parcelable parcelable = getArguments().getParcelable(Properties.BUNDLE_KEY_USER);
-        final String chatRoom = getArguments().getString("chatRoom");
-        String myId = getArguments().getString("myId");
+        chatRoom = getArguments().getString("chatRoom");
+        myId = getArguments().getString("myId");
 
         user = Parcels.unwrap(parcelable);
 
@@ -81,18 +82,21 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
         connectButton = (Button) view.findViewById(R.id.btnConnected);
         endtButton = (Button) view.findViewById(R.id.btnEnd);
         acceptButton = (Button) view.findViewById(R.id.btnAccept);
+        acceptButton.setClickable(true);
         ignoreButton = (Button) view.findViewById(R.id.btnIgnore);
 
         normalLL = (LinearLayout) view.findViewById(R.id.normalDetail);
         remoteLL = (LinearLayout) view.findViewById(R.id.remoteDetail);
 
         if (chatRoom != null) {
-            //show remote user
-            setViewRemote(user);
+            //set up the view for start a chat
+            remoteLL.setVisibility(View.VISIBLE);
+            normalLL.setVisibility(View.GONE);
         }
         else {
             //normal details
-            setViewNormal(user);
+            remoteLL.setVisibility(View.GONE);
+            normalLL.setVisibility(View.VISIBLE);
         }
 
         connectButton.setOnClickListener(new View.OnClickListener() {
@@ -100,8 +104,9 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
             public void onClick(View v) {
                 requestToConnet(user, null);
                 connectButton.setClickable(false);
+                connectButton.setText("Waiting ...");
                 endtButton.setVisibility(View.VISIBLE);
-                connectButton.setVisibility(View.GONE);
+                //connectButton.setVisibility(View.GONE);
             }
         });
 
@@ -109,28 +114,49 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
             @Override
             public void onClick(View v) {
                 connectButton.setClickable(true);
+                connectButton.setText("Connect");
                 endtButton.setVisibility(View.GONE);
+                fragmentInteractionListener.getDataRepository().closeChatroom(chatRoom);
             }
         });
 
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switchToChatView(chatRoom, user);
-                connectButton.setClickable(true);
-                endtButton.setVisibility(View.GONE);
+                //connectButton.setClickable(true);
+                //endtButton.setVisibility(View.GONE);
+                acceptButton.setClickable(false);
+                ignoreButton.setVisibility(View.INVISIBLE);
+                getActivity().onBackPressed();
                 fragmentInteractionListener.getDataRepository().
                         sendNotification(user,
                                 "request_to_connect_accepted",
                                 chatRoom,
                                 MyInterests.getInstance().getIntroTitle(),
                                 MyInterests.getInstance().getIntroDetail());
+                switchToChatView(chatRoom, user);
+            }
+        });
+
+        ignoreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
             }
         });
 
         displayUserInfo(user);
 
         return view;
+    }
+
+    @Override
+    public void onConnectionAccepted(User user, String chatRoom) {
+        if (this.chatRoom != null && chatRoom != null & this.chatRoom.equals(chatRoom)) {
+            connectButton.setClickable(true);
+            endtButton.setVisibility(View.GONE);
+            //switchToChatView(chatRoom, user);
+        }
     }
 
     @Override
@@ -168,14 +194,14 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
     }
 
     private void displayUserInfo(@Nullable User user) {
-
-        if (!TextUtils.isEmpty(user.getPhotoUrl())) {
-            Glide.with(getActivity()).load(user.getPhotoUrl()).into(userProfile);
+        if (user != null) {
+            if (!TextUtils.isEmpty(user.getPhotoUrl())) {
+                Glide.with(getActivity()).load(user.getPhotoUrl()).into(userProfile);
+            }
+            tvUserName.setText(user.getDisplayName());
+            tvIntroTitle.setText(user.getIntroTitle());
+            tvIntroDetail.setText(user.getIntroDetail());
         }
-
-        tvUserName.setText(user.getDisplayName());
-        tvIntroTitle.setText(user.getIntroTitle());
-        tvIntroDetail.setText(user.getIntroDetail());
     }
 
     private void requestToConnet(User user, String chatRoom) {
@@ -188,29 +214,12 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
 
     }
 
-    public static void onConnectAccepted(String chatRoom, User otherUser) {
-        setViewNormal(otherUser);
-        setButtonsToNormal = true;
-
-        switchToChatView(chatRoom, otherUser);
-    }
-
-    private static void switchToChatView(String chatRoom, User otherUser) {
+    private void switchToChatView(String chatRoom, User otherUser) {
         Parcelable parcelable = Parcels.wrap(otherUser);
         Bundle bundle = new Bundle();
         bundle.putParcelable(Properties.BUNDLE_KEY_USER, parcelable);
         bundle.putString("chatRoom", chatRoom);
-        fragmentInteractionListener.showFragment(MMessagesFragment.class, bundle,
+        fragmentInteractionListener.showFragment(MMessagesFragment.class, chatRoom, bundle,
                 true);
-    }
-
-    private static void setViewNormal(User user) {
-        remoteLL.setVisibility(View.GONE);
-        normalLL.setVisibility(View.VISIBLE);
-    }
-
-    private static void setViewRemote(User user) {
-        remoteLL.setVisibility(View.VISIBLE);
-        normalLL.setVisibility(View.GONE);
     }
 }

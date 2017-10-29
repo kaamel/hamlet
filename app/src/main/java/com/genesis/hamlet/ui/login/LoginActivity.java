@@ -1,13 +1,11 @@
 package com.genesis.hamlet.ui.login;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -25,11 +23,9 @@ import com.genesis.hamlet.data.DataSource;
 import com.genesis.hamlet.data.models.interests.MyInterests;
 import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.ui.MainActivity;
-import com.genesis.hamlet.util.threading.FirebaseHelper;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -51,10 +47,8 @@ public class LoginActivity extends AppCompatActivity implements DataSource.OnUse
     TextView tvSignInStatus;
     ProgressBar pbLogin;
 
-    String action = null;
-    User otherUser = null;
-    String chatRoom = null;
     String myUid = null;
+    Intent remoteIntent = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,24 +61,18 @@ public class LoginActivity extends AppCompatActivity implements DataSource.OnUse
             String senderUid = getIntent().getStringExtra("senderUid");
             if (senderUid != null) {
                 //this is a notification
-
+                remoteIntent = getIntent();
+                /*
                 String receiverUid = getIntent().getStringExtra("receiverUid");
                 String chatRoom = getIntent().getStringExtra("chatRoom");
                 String title = getIntent().getStringExtra("title");
                 String action = getIntent().getStringExtra("action");
                 String name = getIntent().getStringExtra("name");
                 String message = getIntent().getStringExtra("message");
-                User user = new User();
-                user.setUid(senderUid);
-                user.setDisplayName(name);
-                user.setIntroTitle(title);
-                user.setIntroDetail(message);
-                this.action = action;
-                this.otherUser = user;
-                this.chatRoom = chatRoom;
+                */
                 //this.myUid = receiverUid;
 
-                FirebaseHelper.deleteFirebaseNode("/notifications/" +receiverUid, senderUid);
+                //FirebaseHelper.deleteFirebaseNode("/notifications/" +receiverUid, senderUid);
             }
         }
 
@@ -197,8 +185,10 @@ public class LoginActivity extends AppCompatActivity implements DataSource.OnUse
     private void continueToUsersList() {
         myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        if (action != null) {
-            MainActivity.setRemoteAction(action, myUid, otherUser, chatRoom);
+        if (remoteIntent != null) {
+            //app is starting through a notification
+            intent.putExtras(remoteIntent);
+            //MainActivity.setRemoteAction(action, myUid, otherUser, chatRoom);
         }
         MyInterests.getInstance().setMyUid(myUid);
         startActivity(intent);

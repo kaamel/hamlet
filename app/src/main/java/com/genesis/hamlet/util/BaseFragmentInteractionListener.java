@@ -22,11 +22,12 @@ public interface BaseFragmentInteractionListener {
      * Used by a {@link Fragment} to show another Fragment.
      *
      * @param fragmentClass a {@link Fragment} class
-     * @param bundle a {@link Bundle}
+     * @param variant is used to create uniquely tagged instances. Could be null
+     * @param bundle a {@link Bundle} to pass arguments, Could be null
      * @param addToBackStack a boolean to add transaction to fragment back stack
      * @param <T> a generic type to indicate type/subclass of {@link Fragment}
      */
-    <T extends Fragment> void showFragment(Class<T> fragmentClass, Bundle bundle,
+    <T extends Fragment> void showFragment(Class<T> fragmentClass, String variant, Bundle bundle,
             boolean addToBackStack);
 
     DataRepository getDataRepository();

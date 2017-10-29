@@ -129,7 +129,8 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
             }
 
             @Override
-            public void onSuccess(MMessage mMessage, User user, String chatRoom, String senderId) {
+            public void onSuccess(MMessage mMessage, String chatRoom, String senderId) {
+                mMessageRecyclerAdapter.addMmessage(mMessage);
             }
 
             @Override

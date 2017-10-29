@@ -10,7 +10,10 @@ import com.google.firebase.database.FirebaseDatabase;
 public class FirebaseHelper {
 
     public static Task deleteFirebaseNode(String ref, String node) {
-        return FirebaseDatabase.getInstance()
-                .getReference(ref).child(node).setValue(null);
+        if (ref != null && node != null && FirebaseDatabase.getInstance().getReference(ref) != null && FirebaseDatabase.getInstance().getReference(ref).child(node) != null) {
+            return FirebaseDatabase.getInstance()
+                    .getReference(ref).child(node).setValue(null);
+        }
+        return null;
     }
 }
