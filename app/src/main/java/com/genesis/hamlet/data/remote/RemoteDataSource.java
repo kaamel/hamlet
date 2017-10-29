@@ -274,7 +274,7 @@ public class RemoteDataSource extends DataSource {
         message.setProfileUrl(MyInterests.getInstance().getProfileUrl());
         DatabaseReference ref = messagesRef.child(chatRoom).push();
         message.setId(ref.getKey());
-        message.setCreateTime(System.currentTimeMillis());
+        message.setCreateTime(String.valueOf(System.currentTimeMillis()));
         messagesRef.child(chatRoom).push().setValue(message);
     }
 
