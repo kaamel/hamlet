@@ -1,0 +1,14 @@
+Please report all bugs here
+[ ] The messages seem to appear twice, at least under certain conditions - Reported by Manoj and Kaamel
+[ ] The user object doesn't seem to always have the the url to the profile image, or is not always displayed in the detail fragment
+
+
+
+
+
+
+Please enter any feature/enhancement requests here
+[ ] There is no need to "go back" and the up arrow should be eliminated. We need to have buttons to follow through screens - Kaamel
+[ ] The login activity should either say "You need to login" or simply say nothing with the buttons themselves start with "Continue with "
+[ ] The chat fragment should have a terminate button (the Android back button should trigger a dialog asking if the user really wants to termainte
+[ ] The image capturing, sending and dispaly needs to be added back into the chat fragment
