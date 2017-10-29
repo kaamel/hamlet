@@ -14,7 +14,7 @@ public class MMessage {
     long locationLon;
     long locationTime;
 
-    long createTime;
+    String createTime;
 
     String senderUid;
     String profileUrl;
@@ -100,11 +100,11 @@ public class MMessage {
         this.locationTime = locationTime;
     }
 
-    public long getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(long createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 

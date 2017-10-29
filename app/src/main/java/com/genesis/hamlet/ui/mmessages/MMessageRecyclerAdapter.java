@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.genesis.hamlet.R;
 import com.genesis.hamlet.data.models.interests.MyInterests;
 import com.genesis.hamlet.data.models.mmessage.MMessage;
+import com.genesis.hamlet.util.CommonUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +36,11 @@ public class MMessageRecyclerAdapter extends RecyclerView.Adapter<MMessageViewHo
     public MMessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        if(viewType == 0){
+        if(viewType == 1){
             return new MMessageViewHolder(inflater.inflate(R.layout.mmessage_friend, parent, false));
         }
         else {
-            return new MMessageViewHolder(inflater.inflate(R.layout.mmessage_user, parent, false));
+            return new MMessageViewHolder(inflater.inflate(R.layout.mmessage_me, parent, false));
         }
     }
 
@@ -63,8 +64,10 @@ public class MMessageRecyclerAdapter extends RecyclerView.Adapter<MMessageViewHo
             viewHolder.getMessageImageView().setVisibility(ImageView.VISIBLE);
         }
 
-        // add messenger name and image
-        viewHolder.getMessengerTextView().setText(mMessage.getDisplayName());
+        // add message time and messenger image
+        String relativeTime = CommonUtils.getRelativeTimeAgo(mMessage.getCreateTime());
+        viewHolder.getTvMessageTime().setText(relativeTime);
+
         //viewHolder.messengerImageView.setImageDrawable(ContextCompat.getDrawable(mContext,R.drawable.ic_account_circle));
         if (mMessage.getProfileUrl() == null) {
             viewHolder.messengerImageView.setImageDrawable(ContextCompat.getDrawable(mContext,R.drawable.ic_account_circle));

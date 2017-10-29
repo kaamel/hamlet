@@ -5,32 +5,33 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="10dp">
+    android:layout_margin="5dp">
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_vertical">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/messengerImageView"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            app:srcCompat="@drawable/ic_account_circle"/>
+        android:gravity="end">
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:layout_marginLeft="10dp">
+            android:background="@drawable/message_item_me"
+            android:layout_gravity="right"
+            android:layout_marginRight="2dp">
 
             <TextView
                 android:id="@+id/messageTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
+                android:textSize="15sp"
+                android:layout_gravity="end"
+                android:text="Hi"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                android:textColor="@android:color/white"
                 android:textAppearance="?android:attr/textAppearanceLarge"/>
 
             <ImageView
@@ -42,12 +43,23 @@
                 android:scaleType="fitCenter"/>
 
             <TextView
-                android:id="@+id/messengerTextView"
+                android:id="@+id/tvMessageTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
+                android:layout_gravity="end"
+                android:layout_marginTop="3dp"
+                android:layout_marginRight="5dp"
+                android:text="10:30pm"
+                android:textSize="9sp"
                 android:textAppearance="?android:attr/textAppearanceSmall"/>
         </LinearLayout>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/messengerImageView"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            app:srcCompat="@drawable/ic_account_circle"
+            />
 
     </LinearLayout>
 

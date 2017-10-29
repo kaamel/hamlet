@@ -1,11 +1,15 @@
 package com.genesis.hamlet.ui.mmessages;
 
 import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,13 +25,18 @@ import com.genesis.hamlet.data.DataSource;
 import com.genesis.hamlet.data.models.mmessage.MMessage;
 import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.util.BaseFragmentInteractionListener;
+import com.genesis.hamlet.util.CommonUtils;
 import com.genesis.hamlet.util.EndlessRecyclerViewScrollListener;
 import com.genesis.hamlet.util.Properties;
 import com.genesis.hamlet.util.mvp.BaseView;
 
 import org.parceler.Parcels;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by dipenrana on 10/24/17.
@@ -68,7 +77,7 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
         rvMMessages = (RecyclerView) view.findViewById(R.id.messageRecyclerView );
 
         btnSend = (ImageButton) view.findViewById(R.id.sendButton);
-        mMessageEditText = (EditText) view.findViewById(R.id.messageEditText);
+        mMessageEditText = (EditText) view.findViewById(R.id.etMMessage);
 
         Parcelable parcelable = getArguments().getParcelable(Properties.BUNDLE_KEY_USER);
         user = Parcels.unwrap(parcelable);
@@ -114,6 +123,7 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
             @Override
             public void onSuccess(List<MMessage> mMessages, String chatRoom, String senderId) {
                 for (MMessage msg: mMessages) {
+                    Log.d("Received Message:  ", msg.getCreateTime());
                     mMessageRecyclerAdapter.addMmessage(msg);
                 }
             }
@@ -145,7 +155,7 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
                 mMessageEditText.setText("");
                 break;
             //send images
-            case R.id.addMessageImageView:
+            case R.id.ibSendImage:
                 break;
         }
 
@@ -165,6 +175,8 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
     @Override
     public void onResume() {
         super.onResume();
+
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(user.getDisplayName());
     }
 
     @Override
@@ -189,8 +201,14 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
     }
 
     public void sendMMessage(MMessage mMsg){
+        Date currentTime = Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String formattedDate = df.format(currentTime);
+        mMsg.setCreateTime(formattedDate);
+        Log.d("Send Message: ", formattedDate);
         presenter.sendMMessage(mMsg,user,chatRoom);
     }
+
 
 
 }

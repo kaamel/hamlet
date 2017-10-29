@@ -7,4 +7,12 @@
     <color name="FBBlue">#0D47A1</color>
     <color name="colorRed">#F32621</color>
     <color name="googleRed">#F44336</color>
+    <color name="color1">#FAFBFD</color>
+    <color name="color2">#4F5775</color>
+    <color name="color3">#717CA3</color>
+    <color name="color4">#A8CAF0</color>
+    <color name="color5">#76A6DB</color>
+    <color name="color6">#CFD7E1</color>
+
+
 </resources>
