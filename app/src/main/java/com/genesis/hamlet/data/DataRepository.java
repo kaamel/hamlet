@@ -66,8 +66,16 @@ public class DataRepository {
         remoteDataSource.goOnline(context, onUsersCallback, 0);
     }
 
+    public void findUserById(String uId, DataSource.OnUserCallback onUserCallback) {
+        remoteDataSource.findUserById(uId, onUserCallback);
+    }
+
     public void connectChatroom(DataSource.OnMMessagesCallback onMMessageCallback, String chatroom, int page) {
         remoteDataSource.connectChatroom(onMMessageCallback, chatroom, page);
+    }
+
+    public void closeChatroom(String chatroom) {
+        remoteDataSource.closeChatroom(chatroom);
     }
 
     public void sendMMessage(MMessage message, User user, String chatRoom) {

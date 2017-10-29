@@ -12,7 +12,6 @@ import android.util.Log;
 import com.genesis.hamlet.R;
 import com.genesis.hamlet.ui.login.LoginActivity;
 import com.genesis.hamlet.util.Properties;
-import com.genesis.hamlet.util.threading.FirebaseHelper;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -40,7 +39,7 @@ public class FCMService extends FirebaseMessagingService {
             String message = remoteMessage.getData().get("message");
 
             broadcast(senderUid, receiverUid, chatRoom, name, action,title, message);
-            FirebaseHelper.deleteFirebaseNode("/notifications/" +receiverUid,senderUid);
+            //FirebaseHelper.deleteFirebaseNode("/notifications/" +receiverUid,senderUid);
         }
 
         // Check if message contains a notification payload.

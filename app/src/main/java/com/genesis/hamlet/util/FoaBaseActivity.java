@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 
 import com.genesis.hamlet.R;
 
@@ -28,10 +29,16 @@ public abstract class FoaBaseActivity extends AppCompatActivity implements
     }
 
     public <T extends Fragment> void showFragment(Class<T> fragmentClass, Bundle bundle,
+                                                  boolean addToBackStack) {
+
+        showFragment(fragmentClass, null, bundle, false);
+    }
+
+    public <T extends Fragment> void showFragment(Class<T> fragmentClass, String variant, Bundle bundle,
             boolean addToBackStack) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(
-                fragmentClass.getSimpleName());
+                fragmentClass.getSimpleName() + "__" + variant);
         if (fragment == null) {
             try {
                 fragment = fragmentClass.newInstance();
@@ -48,15 +55,30 @@ public abstract class FoaBaseActivity extends AppCompatActivity implements
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right,
                 R.anim.slide_out_left, android.R.anim.slide_in_left,
                 android.R.anim.slide_out_right);
+        if (variant != null)
         fragmentTransaction.replace(R.id.fragmentPlaceHolder, fragment,
-                fragmentClass.getSimpleName());
-
+                fragmentClass.getSimpleName() + "__" + variant);
+        else
+            fragmentTransaction.replace(R.id.fragmentPlaceHolder, fragment,
+                    fragmentClass.getSimpleName());
 
         if (addToBackStack) {
             fragmentTransaction.addToBackStack(null);
         }
-
+        FrameLayout container = (FrameLayout) findViewById(R.id.fragmentPlaceHolder);
+        if (container != null) {
+            container.removeAllViews();
+        }
         fragmentTransaction.commit();
+    }
+
+    public <T extends Fragment> Fragment getFragment(Class<T> fragmentClass, String variant) {
+        if (variant != null)
+            return getSupportFragmentManager().findFragmentByTag(
+                    fragmentClass.getSimpleName() + "__" + variant);
+        else
+            return getSupportFragmentManager().findFragmentByTag(
+                    fragmentClass.getSimpleName());
     }
 
     public <T extends Fragment> void showFragment(Class<T> fragmentClass) {

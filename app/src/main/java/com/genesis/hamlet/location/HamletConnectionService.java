@@ -63,6 +63,7 @@ public class HamletConnectionService extends Service implements
     FirebaseUser me;
 
     protected com.google.android.gms.common.api.GoogleApiClient mGoogleApiClient;
+    private LocationCallback locationCallback;
 
     public HamletConnectionService() {
     }
@@ -77,9 +78,14 @@ public class HamletConnectionService extends Service implements
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        if (intent != null && intent.getStringExtra("command") != null) {
+        Bundle extras = intent.getExtras();
+        if (extras != null && extras.getString("command") != null) {
             if ("refresh".equals(intent.getStringExtra("command"))) {
                 referesh();
+            }
+            else if ("stop".equals(intent.getStringExtra("command"))) {
+                stopSelf();
+                return START_NOT_STICKY;
             }
             return START_STICKY;
         }
@@ -92,6 +98,16 @@ public class HamletConnectionService extends Service implements
         }
         return START_STICKY;
     }
+
+    /*
+    @Override
+    public boolean stopService(Intent name) {
+        mFusedLocationClient.removeLocationUpdates(locationCallback);
+        mFusedLocationClient = null;
+        geoFire = null;
+        return super.stopService(name);
+    }
+    */
 
     @Override
     public boolean onUnbind(Intent intent) {
@@ -158,7 +174,7 @@ public class HamletConnectionService extends Service implements
 
     private void updateLocation() {
         FirebaseUser fu = FirebaseAuth.getInstance().getCurrentUser();
-        if (fu != null) {
+        if (fu != null && geoFire != null) {
             geoFire.setLocation(FirebaseAuth.getInstance().getCurrentUser().getUid(), location);
             if (geoQuery == null)
                 setUpLocationUpdates();
@@ -167,12 +183,20 @@ public class HamletConnectionService extends Service implements
         }
     }
 
+    private void removeUser() {
+        FirebaseUser fu = FirebaseAuth.getInstance().getCurrentUser();
+        if (fu != null && geoFire != null) {
+            geoFire.removeLocation(fu.getUid());
+        }
+    }
+
     private void setUpLocationUpdates() {
         FirebaseUser fu = FirebaseAuth.getInstance().getCurrentUser();
         if (fu != null) {
 
             geoFire.setLocation(FirebaseAuth.getInstance().getCurrentUser().getUid(), new GeoLocation(location.latitude, location.longitude));
-            geoQuery = geoFire.queryAtLocation(location, 0.5);
+            //// TODO: 10/27/17 make sure to return it to 0.5 mile! For testing only, it is changed to 20
+            geoQuery = geoFire.queryAtLocation(location, 20.0);
 
             geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
                 @Override
@@ -229,6 +253,8 @@ public class HamletConnectionService extends Service implements
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 synchronized (listenerMap) {
+                    if (dataSnapshot.getValue() == null)
+                        return;
                     User user = RemoteUser.getUser((HashMap) dataSnapshot.getValue());
                     user.setUid(key);
 
@@ -236,6 +262,8 @@ public class HamletConnectionService extends Service implements
                         ValueEventListener eventListener = new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.getValue() == null)
+                                    return;
                                 User user = RemoteUser.getUser((HashMap) dataSnapshot.getValue());
                                 user.setUid(dataSnapshot.getKey());
                                 if (isInteresting(user))
@@ -302,24 +330,28 @@ public class HamletConnectionService extends Service implements
         builder.addLocationRequest(mLocationRequest);
         LocationSettingsRequest locationSettingsRequest = builder.build();
 
-        //noinspection MissingPermission
-        getFusedLocationProviderClient(getApplicationContext()).requestLocationUpdates(mLocationRequest, new LocationCallback() {
-                    @Override
-                    public void onLocationResult(LocationResult locationResult) {
-                        onLocationChanged(locationResult.getLastLocation());
-                    }
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                onLocationChanged(locationResult.getLastLocation());
+            }
 
-                    @Override
-                    public void onLocationAvailability(LocationAvailability locationAvailability) {
-                        super.onLocationAvailability(locationAvailability);
-                    }
-                },
+            @Override
+            public void onLocationAvailability(LocationAvailability locationAvailability) {
+                super.onLocationAvailability(locationAvailability);
+            }
+        };
+        //noinspection MissingPermission
+        getFusedLocationProviderClient(getApplicationContext()).requestLocationUpdates(mLocationRequest, locationCallback,
                 Looper.myLooper());
 
     }
 
     @Override
     public void onDestroy() {
+        if (mFusedLocationClient != null )
+            mFusedLocationClient.removeLocationUpdates(locationCallback);
+        removeUser();
         super.onDestroy();
         Log.d("Firebase Service", "Leaving the service");
     }

@@ -60,7 +60,7 @@ public abstract class DataSource {
     public interface OnMMessagesCallback {
 
         void onSuccess(List<MMessage> mMessages, String chatRoom, String senderId);
-        void onSuccess(MMessage mMessage, User user, String chatRoom, String senderId);
+        void onSuccess(MMessage mMessage, String chatRoom, String senderId);
 
         void onFailure(Throwable throwable);
 
@@ -71,11 +71,13 @@ public abstract class DataSource {
     public abstract void sendNotification(User user, String chatRoom, String action, String title, String message);
     public abstract void sendNotification(String senduerUid, String receiverUid, String chatRoom, String action, String title, String message);
     public abstract User getLoggedInUser();
+    public abstract void findUserById(String uId, OnUserCallback userCallback);
     public abstract void goOnline(Context context, OnUsersCallback onUsersCallback, long maxJoinTime);
     public abstract void refereshUsers(Context context);
     public abstract void updateUser();
 
-    public abstract void connectChatroom(OnMMessagesCallback onMMessageCallback, String Chatroom, int page);
+    public abstract void connectChatroom(OnMMessagesCallback onMMessageCallback, String chatroom, int page);
+    public abstract void closeChatroom(String chatroom);
     public abstract void sendMMessage(MMessage message, User user, String chatRoom);
 
 }

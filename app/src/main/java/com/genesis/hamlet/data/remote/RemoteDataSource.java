@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 
 import com.genesis.hamlet.data.DataSource;
+import com.genesis.hamlet.data.models.interests.Interests;
 import com.genesis.hamlet.data.models.interests.MyInterests;
 import com.genesis.hamlet.data.models.mmessage.MMessage;
 import com.genesis.hamlet.data.models.user.RemoteUser;
@@ -49,6 +50,7 @@ public class RemoteDataSource extends DataSource {
     public static DatabaseReference notificationsRef;
     public static DatabaseReference messagesRef;
     BroadcastReceiver br;
+    private Intent serviceIntent;
 
     private RemoteDataSource(MainUiThread mainUiThread, ThreadExecutor threadExecutor) {
         super(mainUiThread, threadExecutor);
@@ -67,9 +69,9 @@ public class RemoteDataSource extends DataSource {
         if (!connected)
             return;
         connected = false;
-        Intent intent = new Intent(context.getApplicationContext(), HamletConnectionService.class);
         //context.startService(intent);
-        context.getApplicationContext().stopService(intent);
+        //serviceIntent.putExtra("caommand", "stop");
+        context.getApplicationContext().startService(serviceIntent);
         context.getApplicationContext().unregisterReceiver(br);
     }
 
@@ -88,6 +90,45 @@ public class RemoteDataSource extends DataSource {
     @Override
     public User getLoggedInUser() {
         return UserHelper.extractUser(FirebaseAuth.getInstance().getCurrentUser());
+    }
+
+    @Override
+    public void findUserById(final String uId, final OnUserCallback userCallback) {
+
+        //// TODO: 10/28/17 return here later
+        usersRef.child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() == null)
+                    return;
+
+                Iterator<DataSnapshot> iter = dataSnapshot.getChildren().iterator();
+                while (iter.hasNext()) {
+                    DataSnapshot next = iter.next();
+                    if (next.getKey().equals("interests")) {
+                        User user = new User();
+                        Interests interests = next.getValue(Interests.class);
+                        if (interests != null) {
+                            user.setUid(uId);
+                            user.setDisplayName(interests.getNickName());
+                            user.setIntroTitle(interests.getIntroTitle());
+                            user.setIntroDetail(interests.getIntroDetail());
+                            user.setPhotoUrl(interests.getProfileUrl());
+
+                            userCallback.onSuccess(user);
+                        }
+                        userCallback.onSuccess(null);
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                userCallback.onFailure(databaseError.toException());
+            }
+        });
+        //return null;
     }
 
     //protected static final Map<String, ValueEventListener> listenerMap = new HashMap<>();
@@ -148,9 +189,9 @@ public class RemoteDataSource extends DataSource {
 
     @Override
     public void refereshUsers(Context context) {
-        Intent intent = new Intent(context.getApplicationContext(), HamletConnectionService.class);
-        intent.putExtra("command", "referesh");
-        context.getApplicationContext().startService(intent);
+        //Intent intent = new Intent(context.getApplicationContext(), HamletConnectionService.class);
+        serviceIntent.putExtra("command", "refresh");
+        context.getApplicationContext().startService(serviceIntent);
     }
 
     @Override
@@ -159,6 +200,8 @@ public class RemoteDataSource extends DataSource {
         String receiverUid = user.getUid();
         sendNotification(senderUid, receiverUid, chatRoom, action, title, message);
     }
+
+    //// TODO: 10/28/17 need to add the sender profileUrl as well
     @Override
     public void sendNotification(String senduerUid, String receiverUid, String chatRoom, String action, String title, String message) {
         if (chatRoom == null) {
@@ -189,23 +232,27 @@ public class RemoteDataSource extends DataSource {
 
     @Override
     public void connectChatroom(final OnMMessagesCallback onMMessageCallback, final String chatroom, int page) {
-        FirebaseHelper.deleteFirebaseNode("/messages/", chatroom);
-        Query messagesQuery = messagesRef.child(chatroom);
-                //.limitToFirst(20);
-        messagesQuery.limitToLast(1).addValueEventListener(new ValueEventListener() {
+        //FirebaseHelper.deleteFirebaseNode("/messages/", chatroom);
+        Query messagesQuery = messagesRef.child(chatroom)
+                .limitToLast(1);
+        messagesQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
                 if (dataSnapshot.getValue() == null)
                     return;
+
                 List<MMessage> nmsgs;
                 Iterator<DataSnapshot> iter = dataSnapshot.getChildren().iterator();
                 MMessage msg;
+                nmsgs = new ArrayList<>();
                 while (iter.hasNext()) {
                     msg = iter.next().getValue(MMessage.class);
-                    nmsgs = new ArrayList<>();
                     nmsgs.add(msg);
-                    onMMessageCallback.onSuccess(nmsgs, chatroom, msg.getSenderUid());
+                    //onMMessageCallback.onSuccess(msg, chatroom, msg.getSenderUid());
                 }
+
+                onMMessageCallback.onSuccess(nmsgs.get(0), chatroom, nmsgs.get(0).getSenderUid());
             }
 
             @Override
@@ -216,17 +263,26 @@ public class RemoteDataSource extends DataSource {
     }
 
     @Override
+    public void closeChatroom(String chatroom) {
+        FirebaseHelper.deleteFirebaseNode("/messages/", chatroom);
+    }
+
+    @Override
     public void sendMMessage(MMessage message, User user, String chatRoom) {
         message.setSenderUid(MyInterests.getInstance().getMyUid());
         message.setDisplayName(MyInterests.getInstance().getNickName());
         message.setProfileUrl(MyInterests.getInstance().getProfileUrl());
+        DatabaseReference ref = messagesRef.child(chatRoom).push();
+        message.setId(ref.getKey());
+        message.setCreateTime(System.currentTimeMillis());
         messagesRef.child(chatRoom).push().setValue(message);
     }
 
     private void initializeNewConnection(final Context context) {
         updateUser();
         FirebaseMessaging.getInstance().subscribeToTopic(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        Intent intent = new Intent(context.getApplicationContext(), HamletConnectionService.class);
-        context.getApplicationContext().startService(intent);
+        serviceIntent = new Intent(context.getApplicationContext(), HamletConnectionService.class);
+        //serviceIntent.putExtra("command", "start");
+        context.getApplicationContext().startService(serviceIntent);
     }
 }
