@@ -19,6 +19,7 @@ public class MMessage {
     String senderUid;
     String profileUrl;
     String displayName;
+    int type;
 
     public MMessage() {
 
@@ -98,6 +99,14 @@ public class MMessage {
 
     public void setLocationTime(long locationTime) {
         this.locationTime = locationTime;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public String getCreateTime() {

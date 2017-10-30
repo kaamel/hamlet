@@ -1,5 +1,7 @@
 package com.genesis.hamlet.ui.mmessages;
 
+import android.net.Uri;
+
 import com.genesis.hamlet.data.DataRepository;
 import com.genesis.hamlet.data.DataSource.OnMMessagesCallback;
 import com.genesis.hamlet.data.models.mmessage.MMessage;
@@ -25,4 +27,9 @@ public class MMessagesPresenter extends BasePresenter<MMessagesContract.View> im
     public void sendMMessage(MMessage message, User user, String chatRoom) {
         dataRepository.sendMMessage(message, user, chatRoom);
     }
+
+    public void sendImages(Uri mmessage, User user, String chatRoom) {
+        dataRepository.sendImages(mmessage, user, chatRoom);
+    }
+
 }

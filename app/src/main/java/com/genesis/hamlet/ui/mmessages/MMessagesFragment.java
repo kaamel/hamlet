@@ -1,10 +1,15 @@
 package com.genesis.hamlet.ui.mmessages;
 
+import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -36,10 +41,12 @@ import com.genesis.hamlet.util.mvp.BaseView;
 
 import org.parceler.Parcels;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by dipenrana on 10/24/17.
@@ -47,6 +54,7 @@ import java.util.List;
 
 public class MMessagesFragment extends BaseView implements MMessagesContract.View,View.OnClickListener {
 
+    private static final String TAG = "MMessagesFragment ";
     private EndlessRecyclerViewScrollListener endlessScrollListener;
     private MMessagesContract.Presenter presenter;
     private BaseFragmentInteractionListener fragmentInteractionListener;
@@ -177,7 +185,7 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.setType("image/*");
-                startActivityForResult(intent, REQUEST_IMAGE);
+                startActivityForResult(Intent.createChooser(intent, "Please Select an Image"), REQUEST_IMAGE);
                 break;
 
         }
@@ -237,6 +245,20 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
+
+            Uri imageUri = data.getData();
+
+            try{
+                //Bitmap bitmap = MediaStore.Images.Media.getBitmap( getActivity().getApplicationContext().getContentResolver(), imageUri);
+                //mMessageEditText.setCompoundDrawables(null,null,getResources().getDrawable(bitmap), null);
+                presenter.sendImages(imageUri, user, chatRoom);
+            }
+            catch (Exception e) {
+
+                e.printStackTrace();
+            }
+        }
     }
 
     private void closeChatRoom() {

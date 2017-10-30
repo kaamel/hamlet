@@ -56,9 +56,35 @@ public class MMessageRecyclerAdapter extends RecyclerView.Adapter<MMessageViewHo
         }
         else {
             String messageImageUrl = mMessage.getImageUrl();
-            Glide.with(viewHolder.getMessageImageView().getContext())
-                    .load(messageImageUrl)
-                    .into(viewHolder.getMessageImageView());
+            if(messageImageUrl.contains("hamlet-ea998.appspot.com")){
+                Glide.with(viewHolder.getMessageImageView().getContext())
+                        .load(messageImageUrl)
+                        .into(viewHolder.getMessageImageView());
+
+//                StorageReference storageReference = FirebaseStorage.getInstance()
+//                        .getReferenceFromUrl(imageUrl);
+//                storageReference.getDownloadUrl().addOnCompleteListener(
+//                        new OnCompleteListener<Uri>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<Uri> task) {
+//                                if (task.isSuccessful()) {
+//                                    String downloadUrl = task.getResult().toString();
+//                                    Glide.with(viewHolder.getMessageImageView().getContext())
+//                                            .load(downloadUrl)
+//                                            .into(viewHolder.getMessageImageView());
+//                                } else {
+//                                    Log.w(TAG, "Getting download url was not successful.",
+//                                            task.getException());
+//                                }
+//                            }
+//                        });
+            }
+            else{
+                Glide.with(viewHolder.getMessageImageView().getContext())
+                        .load(messageImageUrl)
+                        .into(viewHolder.getMessageImageView());
+            }
+
 
             viewHolder.getMessageTextView().setVisibility(ImageView.INVISIBLE);
             viewHolder.getMessageImageView().setVisibility(ImageView.VISIBLE);
