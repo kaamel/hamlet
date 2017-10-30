@@ -1,6 +1,7 @@
 package com.genesis.hamlet.data;
 
 import android.content.Context;
+import android.net.Uri;
 
 import com.genesis.hamlet.data.local.LocalDataSource;
 import com.genesis.hamlet.data.models.mmessage.MMessage;
@@ -80,6 +81,10 @@ public class DataRepository {
 
     public void sendMMessage(MMessage message, User user, String chatRoom) {
         remoteDataSource.sendMMessage(message, user, chatRoom);
+    }
+
+    public void sendImages(Uri mmessage, User user, String chatRoom) {
+        remoteDataSource.sendImages(mmessage, user, chatRoom);
     }
 
     public void disconnect(Context context) {
