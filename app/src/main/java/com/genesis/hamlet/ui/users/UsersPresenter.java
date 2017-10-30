@@ -44,8 +44,8 @@ public class UsersPresenter extends BasePresenter<UsersContract.View> implements
 
     @Override
     public void connect(Context context) {
-        if (dataRepository.isConnected())
-            return;
+        //if (dataRepository.isConnected())
+        //    return;
         view.setProgressBar(true);
 
         dataRepository.connectRemote(context, new DataSource.OnUsersCallback() {

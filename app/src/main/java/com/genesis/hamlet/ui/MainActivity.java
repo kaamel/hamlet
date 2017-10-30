@@ -86,13 +86,10 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
 
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     protected void continueIfPermitted() {
-        if (isNotificationSetup)
-            return;
-        isNotificationSetup = true;
-        setUpNotificationReceiver();
         if (remoteIntent != null) {
-            String action = remoteIntent.getStringExtra("action");
             String senderUid = remoteIntent.getStringExtra("senderUid");
+            final String action = remoteIntent.getStringExtra("action");
+            final String chatRoom = remoteIntent.getStringExtra("chatRoom");
             if (action != null && action.equals("request_to_connect")) {
                 final Bundle bundle = UserHelper.bundleNotification(remoteIntent);
 
@@ -101,19 +98,31 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
                     @Override
                     public void onSuccess(User user) {
                         if (user != null) {
-                            bundle.putParcelable(Properties.BUNDLE_KEY_USER, Parcels.wrap(user));
-                            showFragment(MMessagesFragment.class, bundle, true);
+                            if (action.equals("request_to_connect_accepted")) {
+                                Fragment fragment = ((BaseView) getFragment(UserDetailFragment.class, chatRoom));
+                                if (fragment == null) {
+                                    fragment = ((BaseView) getFragment(UserDetailFragment.class, null));
+                                }
+                                ((BaseView) fragment).onConnectionAccepted(user, chatRoom);
+                                showFragment(MMessagesFragment.class, chatRoom, bundle, true);
+                            }
+                            else {
+                                bundle.putParcelable(Properties.BUNDLE_KEY_USER, Parcels.wrap(user));
+                                showFragment(UserDetailFragment.class, chatRoom, bundle, true);
+                            }
                         }
                     }
 
                     @Override
                     public void onFailure(Throwable throwable) {
-                        showFragment(MMessagesFragment.class, bundle, true);
+                        //showFragment(MMessagesFragment.class, bundle, true);
+                        Toast.makeText(MainActivity.this, "Could not find the user. Maybe they left?", Toast.LENGTH_LONG).show();
                     }
 
                     @Override
                     public void onNetworkFailure() {
-                        showFragment(MMessagesFragment.class, bundle, true);
+                        //showFragment(MMessagesFragment.class, bundle, true);
+                        Toast.makeText(MainActivity.this, "Network failure ...", Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -165,7 +174,8 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
     @Override
     protected void onDestroy() {
         //dataRepository.disconnect(this);
-        unregisterReceiver(br);
+        if (br != null)
+            unregisterReceiver(br);
         super.onDestroy();
     }
 
@@ -288,61 +298,62 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
 
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     void setUpNotificationReceiver() {
-        br = new BroadcastReceiver() {
-            @Override
-            public void onReceive(final Context context, final Intent intent) {
-                String myUid = intent.getStringExtra("receiverUid");
-                String senderUid = intent.getStringExtra("senderUid");
-                FirebaseUser me = FirebaseAuth.getInstance().getCurrentUser();
-                /*
-                if (myUid == null ||  me == null || !(myUid.equals(me.getUid()))) {
-                    FirebaseHelper.deleteFirebaseNode(myUid, senderUid);
-                    return;
-                }
-                */
-                final String action = intent.getStringExtra("action");
-                final String chatRoom = intent.getStringExtra("chatRoom");
-                final Bundle bundle = UserHelper.bundleNotification(intent);
-                //FirebaseHelper.deleteFirebaseNode("/notifications/" +myUid, senderUid);
-                if (action.equals("request_to_connect") || action.equals("request_to_connect_accepted")) {
-                    dataRepository.findUserById(senderUid, new DataSource.OnUserCallback() {
-                        @Override
-                        public void onSuccess(User user) {
-                            if (user != null) {
-                                if (action.equals("request_to_connect_accepted")) {
-                                    Fragment fragment = ((BaseView) getFragment(UserDetailFragment.class, chatRoom));
-                                    if (fragment == null) {
-                                        fragment = ((BaseView) getFragment(UserDetailFragment.class, null));
+        if (br == null || !isNotificationSetup) {
+            br = new BroadcastReceiver() {
+                @Override
+                public void onReceive(final Context context, final Intent intent) {
+                    String myUid = intent.getStringExtra("receiverUid");
+                    String senderUid = intent.getStringExtra("senderUid");
+                    FirebaseUser me = FirebaseAuth.getInstance().getCurrentUser();
+                    /*
+                    if (myUid == null ||  me == null || !(myUid.equals(me.getUid()))) {
+                        FirebaseHelper.deleteFirebaseNode(myUid, senderUid);
+                        return;
+                    }
+                    */
+                    final String action = intent.getStringExtra("action");
+                    final String chatRoom = intent.getStringExtra("chatRoom");
+                    final Bundle bundle = UserHelper.bundleNotification(intent);
+                    //FirebaseHelper.deleteFirebaseNode("/notifications/" +myUid, senderUid);
+                    if (action.equals("request_to_connect") || action.equals("request_to_connect_accepted")) {
+                        dataRepository.findUserById(senderUid, new DataSource.OnUserCallback() {
+                            @Override
+                            public void onSuccess(User user) {
+                                if (user != null) {
+                                    if (action.equals("request_to_connect_accepted")) {
+                                        Fragment fragment = ((BaseView) getFragment(UserDetailFragment.class, chatRoom));
+                                        if (fragment == null) {
+                                            fragment = ((BaseView) getFragment(UserDetailFragment.class, null));
+                                        }
+                                        ((BaseView) fragment).onConnectionAccepted(user, chatRoom);
+                                        showFragment(MMessagesFragment.class, chatRoom, bundle, true);
+                                    } else {
+                                        bundle.putParcelable(Properties.BUNDLE_KEY_USER, Parcels.wrap(user));
+                                        showFragment(UserDetailFragment.class, chatRoom, bundle, true);
                                     }
-                                    ((BaseView) fragment).onConnectionAccepted(user, chatRoom);
-                                    showFragment(MMessagesFragment.class, chatRoom, bundle, true);
-                                }
-                                else {
-                                    bundle.putParcelable(Properties.BUNDLE_KEY_USER, Parcels.wrap(user));
-                                    showFragment(UserDetailFragment.class, chatRoom, bundle, true);
                                 }
                             }
-                        }
 
-                        @Override
-                        public void onFailure(Throwable throwable) {
-                            showFragment(UserDetailFragment.class, chatRoom, bundle, true);
-                        }
+                            @Override
+                            public void onFailure(Throwable throwable) {
+                                showFragment(UserDetailFragment.class, chatRoom, bundle, true);
+                            }
 
-                        @Override
-                        public void onNetworkFailure() {
-                            showFragment(UserDetailFragment.class, chatRoom, bundle, true);
-                        }
-                    });
+                            @Override
+                            public void onNetworkFailure() {
+                                showFragment(UserDetailFragment.class, chatRoom, bundle, true);
+                            }
+                        });
+                    } else {
+                        //other actions
+                    }
                 }
-                else {
-                    //other actions
-                }
-            }
-        };
+            };
 
-        IntentFilter filter = new IntentFilter(Properties.FCN_RECEIVED_NOTIFICATION);
-        registerReceiver(br, filter);
+            IntentFilter filter = new IntentFilter(Properties.FCN_RECEIVED_NOTIFICATION);
+            registerReceiver(br, filter);
+            isNotificationSetup = true;
+        }
     }
 
     //// TODO: 10/27/17 I have moved this here from Detail User Fragment - for now just a placeholder

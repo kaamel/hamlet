@@ -36,8 +36,8 @@ public class DataRepository {
         return dataRepository;
     }
 
-    public void refereshUsers() {
-        dataRepository.refereshUsers();
+    public void refereshUsers(Context context) {
+        remoteDataSource.refereshUsers(context.getApplicationContext());
     }
 
     public void destroyInstance(Context context) {

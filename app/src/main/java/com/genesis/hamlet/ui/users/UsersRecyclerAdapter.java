@@ -57,7 +57,7 @@ public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdap
             }
         }
         users.add(user);
-        notifyItemChanged(users.size()-1);
+        notifyItemInserted(users.size()-1);
     }
 
     public User getItem(int position) {
@@ -106,7 +106,7 @@ public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdap
     public void clear() {
         int size = getItemCount();
         users.clear();
-        notifyItemRangeRemoved(0, size);
+        notifyDataSetChanged();
     }
 
     public void addAll(List<User> users) {

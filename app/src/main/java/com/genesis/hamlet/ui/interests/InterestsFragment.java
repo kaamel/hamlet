@@ -69,6 +69,7 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
             @Override
             public void onClick(View v) {
                 //getActivity().onBackPressed();
+                MyInterests.getInstance().setChanged(true);
                 fragmentInteractionListener.showFragment(UsersFragment.class, null, new Bundle(), false);
             }
         });
@@ -250,7 +251,6 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
     @Override
     public void onDetach() {
         fragmentInteractionListener = null;
-        MyInterests.getInstance().setChanged(true);
         super.onDetach();
     }
 }

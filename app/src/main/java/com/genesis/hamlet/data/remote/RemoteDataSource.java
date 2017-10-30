@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.util.Log;
 
 import com.genesis.hamlet.data.DataSource;
 import com.genesis.hamlet.data.models.interests.Interests;
@@ -50,7 +51,6 @@ public class RemoteDataSource extends DataSource {
     public static DatabaseReference notificationsRef;
     public static DatabaseReference messagesRef;
     BroadcastReceiver br;
-    private Intent serviceIntent;
 
     private RemoteDataSource(MainUiThread mainUiThread, ThreadExecutor threadExecutor) {
         super(mainUiThread, threadExecutor);
@@ -66,12 +66,12 @@ public class RemoteDataSource extends DataSource {
 
     @Override
     public void disconnect(Context context) {
+        Log.d("RemoteDataSource", "disconnecting");
         if (!connected)
             return;
         connected = false;
-        //context.startService(intent);
-        //serviceIntent.putExtra("caommand", "stop");
-        context.getApplicationContext().startService(serviceIntent);
+        Intent intent = new Intent(context.getApplicationContext(), HamletConnectionService.class);
+        context.getApplicationContext().stopService(intent);
         context.getApplicationContext().unregisterReceiver(br);
     }
 
@@ -133,11 +133,15 @@ public class RemoteDataSource extends DataSource {
 
     //protected static final Map<String, ValueEventListener> listenerMap = new HashMap<>();
 
-    @Override
-    public void goOnline(Context context, final OnUsersCallback onUsersCallback, long maxJoinTime) {
+    private static final OnUsersCallback[] onUsersCallback = new OnUsersCallback[1];
 
-        if (connected)
+    @Override
+    public void goOnline(Context context, final OnUsersCallback usc, long maxJoinTime) {
+
+        onUsersCallback[0] = usc;
+        if (connected) {
             return;
+        }
         initializeNewConnection(context.getApplicationContext());
 
         br = new BroadcastReceiver() {
@@ -164,17 +168,17 @@ public class RemoteDataSource extends DataSource {
                         usersRef.child(user.getSenderUid()).addValueEventListener(eventListener);
                         listenerMap.put(user.getSenderUid(), eventListener);
                         */
-                        onUsersCallback.onNewUserJoined(user);
+                        onUsersCallback[0].onNewUserJoined(user);
                         break;
                     case -1:
-                        onUsersCallback.onUserLeft(user);
+                        onUsersCallback[0].onUserLeft(user);
                         /*
                         usersRef.child(user.getSenderUid()).removeEventListener(listenerMap.get(user.getSenderUid()));
                         listenerMap.remove(user.getSenderUid());
                         */
                         break;
                     default:
-                        onUsersCallback.onUserUpdate(user);
+                        onUsersCallback[0].onUserUpdate(user);
                 }
             }
         };
@@ -189,9 +193,9 @@ public class RemoteDataSource extends DataSource {
 
     @Override
     public void refereshUsers(Context context) {
-        //Intent intent = new Intent(context.getApplicationContext(), HamletConnectionService.class);
-        serviceIntent.putExtra("command", "refresh");
-        context.getApplicationContext().startService(serviceIntent);
+        Intent intent = new Intent(context.getApplicationContext(), HamletConnectionService.class);
+        intent.putExtra("command", "refresh");
+        context.getApplicationContext().startService(intent);
     }
 
     @Override
@@ -281,8 +285,7 @@ public class RemoteDataSource extends DataSource {
     private void initializeNewConnection(final Context context) {
         updateUser();
         FirebaseMessaging.getInstance().subscribeToTopic(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        serviceIntent = new Intent(context.getApplicationContext(), HamletConnectionService.class);
-        //serviceIntent.putExtra("command", "start");
-        context.getApplicationContext().startService(serviceIntent);
+        Intent intent = new Intent(context.getApplicationContext(), HamletConnectionService.class);
+        context.getApplicationContext().startService(intent);
     }
 }

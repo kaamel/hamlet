@@ -78,16 +78,20 @@ public class HamletConnectionService extends Service implements
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        Bundle extras = intent.getExtras();
-        if (extras != null && extras.getString("command") != null) {
-            if ("refresh".equals(intent.getStringExtra("command"))) {
-                referesh();
+        Log.d("HamletService", "onStartCommand");
+        if (intent != null) {
+            Bundle extras = intent.getExtras();
+            if (extras != null && extras.getString("command") != null) {
+                Log.d("HamletService", "onStartCommand had " + extras.getString("command") + " command");
+                if ("refresh".equals(intent.getStringExtra("command"))) {
+                    Log.d("Hamlet Service", "refreshing");
+                    referesh();
+                } else if ("stop".equals(intent.getStringExtra("command"))) {
+                    stopSelf();
+                    return START_NOT_STICKY;
+                }
+                //return START_STICKY;
             }
-            else if ("stop".equals(intent.getStringExtra("command"))) {
-                stopSelf();
-                return START_NOT_STICKY;
-            }
-            return START_STICKY;
         }
         database = FirebaseDatabase.getInstance();
         geoFire = new GeoFire(database.getReference("/geofire/"));
@@ -99,15 +103,18 @@ public class HamletConnectionService extends Service implements
         return START_STICKY;
     }
 
+
     /*
     @Override
     public boolean stopService(Intent name) {
+        Log.d("HamletService", "stoped");
         mFusedLocationClient.removeLocationUpdates(locationCallback);
         mFusedLocationClient = null;
         geoFire = null;
         return super.stopService(name);
     }
     */
+
 
     @Override
     public boolean onUnbind(Intent intent) {
@@ -122,7 +129,7 @@ public class HamletConnectionService extends Service implements
 
     @Override
     public void onCreate() {
-        Log.d("Firebase Service", "Creating the service");
+        Log.d("HamletService", "Creating the service");
         me = FirebaseAuth.getInstance().getCurrentUser();
         //initializeLocationManager();
         GoogleApiClient.Builder build = new GoogleApiClient.Builder(this);
@@ -349,11 +356,13 @@ public class HamletConnectionService extends Service implements
 
     @Override
     public void onDestroy() {
-        if (mFusedLocationClient != null )
+        if (mFusedLocationClient != null ) {
             mFusedLocationClient.removeLocationUpdates(locationCallback);
+            geoFire.removeLocation(me.getUid());
+        }
         removeUser();
         super.onDestroy();
-        Log.d("Firebase Service", "Leaving the service");
+        Log.d("Hamlet Service", "Leaving the service");
     }
 
     @Override

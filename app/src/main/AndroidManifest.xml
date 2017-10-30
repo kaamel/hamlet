@@ -53,7 +53,6 @@
         <activity
             android:name=".ui.MainActivity"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".ui.mmessages.MessagesActivity" />
 
         <service
             android:name=".location.HamletConnectionService"

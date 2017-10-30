@@ -45,7 +45,7 @@ import java.util.List;
  */
 public class UsersFragment extends BaseView implements UsersContract.View {
 
-    private UsersRecyclerAdapter recyclerAdapter;
+    private static UsersRecyclerAdapter recyclerAdapter;
     private EndlessRecyclerViewScrollListener endlessScrollListener;
     private UsersContract.Presenter presenter;
     private BaseFragmentInteractionListener fragmentInteractionListener;
@@ -84,7 +84,8 @@ public class UsersFragment extends BaseView implements UsersContract.View {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-        recyclerAdapter = new UsersRecyclerAdapter(getContext());
+        if (recyclerAdapter == null)
+            recyclerAdapter = new UsersRecyclerAdapter(getContext());
         rvUsers.setAdapter(recyclerAdapter);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -152,6 +153,7 @@ public class UsersFragment extends BaseView implements UsersContract.View {
         }
         else {
             presenter.connect(getContext());
+            refreshUsers();
         }
     }
 
@@ -214,7 +216,7 @@ public class UsersFragment extends BaseView implements UsersContract.View {
     @Override
     public void addUser(User user) {
         if (shouldRefreshUsers) {
-            recyclerAdapter.clear();
+            //recyclerAdapter.clear();
             endlessScrollListener.resetState();
             shouldRefreshUsers = false;
         }
@@ -225,7 +227,7 @@ public class UsersFragment extends BaseView implements UsersContract.View {
     @Override
     public void updateUser(User user) {
         if (shouldRefreshUsers) {
-            recyclerAdapter.clear();
+            //recyclerAdapter.clear();
             endlessScrollListener.resetState();
             shouldRefreshUsers = false;
         }
@@ -241,7 +243,7 @@ public class UsersFragment extends BaseView implements UsersContract.View {
     @Override
     public void remove(User user) {
         if (shouldRefreshUsers) {
-            recyclerAdapter.clear();
+            //recyclerAdapter.clear();
             endlessScrollListener.resetState();
             shouldRefreshUsers = false;
         }
@@ -249,11 +251,18 @@ public class UsersFragment extends BaseView implements UsersContract.View {
     }
 
     private void refreshUsers() {
+        //// TODO: 10/30/17 testing this new code. Go back if it doesn't work
+        recyclerAdapter.clear();
+        shouldRefreshUsers = true;
+        dataRepository.refereshUsers(getContext());
+        //// TODO: 10/30/17 working code before testing the new code;
+        /*
         shouldRefreshUsers = false;
         recyclerAdapter.clear();
         dataRepository.destroyInstance(getContext());
         setupRepository();
         presenter.connect(getContext());
+        */
     }
 
     @Override
