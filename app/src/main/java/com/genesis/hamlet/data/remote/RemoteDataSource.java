@@ -155,7 +155,7 @@ public class RemoteDataSource extends DataSource {
             @Override
             public void onReceive(final Context context, final Intent intent) {
                 User user = Parcels.unwrap(intent.getParcelableExtra("user"));
-
+                String provider = intent.getStringExtra("ProviderInfo");
                 int what = intent.getIntExtra("what", 0);
                 switch (what) {
                     case 1:
