@@ -102,7 +102,7 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
         connectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requestToConnet(user, null);
+                requestToConnet(user, chatRoom);
                 connectButton.setClickable(false);
                 connectButton.setText("Waiting ...");
                 endtButton.setVisibility(View.VISIBLE);
@@ -204,14 +204,13 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
         }
     }
 
-    private void requestToConnet(User user, String chatRoom) {
+    private void requestToConnet(User user, String mChatRoom) {
         fragmentInteractionListener.getDataRepository().
                 sendNotification(user,
                         "request_to_connect",
-                        chatRoom,
+                        null,
                         MyInterests.getInstance().getIntroTitle(),
                         MyInterests.getInstance().getIntroDetail());
-
     }
 
     private void switchToChatView(String chatRoom, User otherUser) {

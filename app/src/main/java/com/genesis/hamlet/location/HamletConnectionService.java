@@ -78,6 +78,7 @@ public class HamletConnectionService extends Service implements
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
+        /*
         Bundle extras = intent.getExtras();
         if (extras != null && extras.getString("command") != null) {
             if ("refresh".equals(intent.getStringExtra("command"))) {
@@ -89,6 +90,7 @@ public class HamletConnectionService extends Service implements
             }
             return START_STICKY;
         }
+        */
         database = FirebaseDatabase.getInstance();
         geoFire = new GeoFire(database.getReference("/geofire/"));
 

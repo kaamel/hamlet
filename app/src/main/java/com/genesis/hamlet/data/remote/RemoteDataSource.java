@@ -195,15 +195,15 @@ public class RemoteDataSource extends DataSource {
     }
 
     @Override
-    public void sendNotification(User user, String chatRoom, String action, String title, String message) {
+    public String sendNotification(User user, String chatRoom, String action, String title, String message) {
         String senderUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         String receiverUid = user.getUid();
-        sendNotification(senderUid, receiverUid, chatRoom, action, title, message);
+        return sendNotification(senderUid, receiverUid, chatRoom, action, title, message);
     }
 
     //// TODO: 10/28/17 need to add the sender profileUrl as well
     @Override
-    public void sendNotification(String senduerUid, String receiverUid, String chatRoom, String action, String title, String message) {
+    public String sendNotification(String senduerUid, String receiverUid, String chatRoom, String action, String title, String message) {
         if (chatRoom == null) {
             DatabaseReference ref = notificationsRef.push();
             chatRoom = ref.getKey();
@@ -215,6 +215,7 @@ public class RemoteDataSource extends DataSource {
         childUpdates.put("/notifications/" + receiverUid + "/" + senduerUid,
                 new NotificationMessage(senduerUid, receiverUid, chatRoom, MyInterests.getInstance().getNickName(), action, title, message));
         database.getReference().updateChildren(childUpdates);
+        return chatRoom;
     }
 
     @Override

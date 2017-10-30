@@ -48,14 +48,15 @@ public class DataRepository {
         startUsersStream(context, onUsersCallback);
     }
 
-    public void sendNotification(User user, String action, String chatRoom, String title, String message) {
+    public String sendNotification(User user, String action, String chatRoom, String title, String message) {
         FirebaseUser me = FirebaseAuth.getInstance().getCurrentUser();
         if (me != null)
-            remoteDataSource.sendNotification(user, chatRoom, action, title, message);
+            return remoteDataSource.sendNotification(user, chatRoom, action, title, message);
+        return null;
     }
 
-    public void sendNotification(String senduerUid, String receiverUid, String chatRoom, String action, String title, String message) {
-        remoteDataSource.sendNotification(senduerUid, receiverUid, chatRoom, action, title, message);
+    public String sendNotification(String senduerUid, String receiverUid, String chatRoom, String action, String title, String message) {
+        return remoteDataSource.sendNotification(senduerUid, receiverUid, chatRoom, action, title, message);
     }
 
     public void updateUserInterests() {
