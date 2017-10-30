@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp">
+    android:layout_margin="5dp"
+    android:gravity="end">
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="end">
+
 
         <LinearLayout
+            android:id="@+id/llMsgBox"
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/message_item_me"
             android:layout_gravity="right"
-            android:layout_marginRight="2dp">
+            android:layout_marginRight="2dp"
+            android:padding="5dp">
 
             <TextView
                 android:id="@+id/messageTextView"
@@ -27,12 +25,11 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:textSize="15sp"
-                android:layout_gravity="end"
                 android:text="Hi"
                 android:layout_marginRight="5dp"
                 android:layout_marginLeft="5dp"
                 android:textColor="@android:color/white"
-                android:textAppearance="?android:attr/textAppearanceLarge"/>
+                />
             <ImageView
                 android:id="@+id/messageImageView"
                 android:layout_width="match_parent"
@@ -50,7 +47,7 @@
                 android:layout_marginRight="5dp"
                 android:text="10:30pm"
                 android:textSize="9sp"
-                android:textAppearance="?android:attr/textAppearanceSmall"/>
+                />
 
         </LinearLayout>
 
@@ -58,10 +55,9 @@
             android:id="@+id/messengerImageView"
             android:layout_width="36dp"
             android:layout_height="36dp"
+            android:layout_marginTop="8dp"
+            android:layout_toRightOf="@id/llMsgBox"
             app:srcCompat="@drawable/ic_account_circle"
             />
 
-    </LinearLayout>
-
-
-</LinearLayout>
+</RelativeLayout>

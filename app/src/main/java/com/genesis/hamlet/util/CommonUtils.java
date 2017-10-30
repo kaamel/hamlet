@@ -19,6 +19,11 @@ import static android.text.format.DateUtils.FORMAT_ABBREV_RELATIVE;
 
 public class CommonUtils {
 
+    public final static int CHAT_USER=0;
+    public final static int CHAT_FRIEND =1;
+    public final static int CHAT_USER_IMAGE=2;
+    public final static int CHAT_USER_NO_IMAGE=2;
+
     public static String getRelativeTimeAgo(String rawJsonDate) {
         String twitterFormat = "yyyy-MM-dd HH:mm:ss";
         SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
@@ -54,10 +59,11 @@ public class CommonUtils {
 //        String knownName = addresses.get(0).getFeatureName();
     }
 
-    public final static int CHAT_USER=0;
-    public final static int CHAT_FRIEND =1;
-    public final static int CHAT_USER_IMAGE=2;
-    public final static int CHAT_USER_NO_IMAGE=2;
+
+
+
+
+
 
 
 }

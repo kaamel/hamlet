@@ -1,58 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<LinearLayout-->
-    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:orientation="vertical"-->
-    <!--android:background="#bdbdbd"-->
-    <!--app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
-
     <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-    android:background="#bdbdbd"
+        android:background="#bdbdbd"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/llChatBox"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="@android:color/white"
             android:layout_alignParentBottom="true">
 
-            <ImageButton
-                android:id="@+id/ibSendImage"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                app:srcCompat="@drawable/ic_add"
-                android:background="@null"
-                />
-
             <EditText
                 android:id="@+id/etMMessage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
                 android:hint="Type Something..."
                 android:backgroundTint="@android:color/transparent"
-                android:layout_weight="1"/>
+                android:layout_toLeftOf="@+id/ibSendImage"
+                android:layout_toStartOf="@+id/ibSendImage" />
+
             <ImageButton
                 android:id="@+id/sendButton"
                 android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_height="match_parent"
                 android:background="@null"
+                android:layout_alignParentRight="true"
                 app:srcCompat="@drawable/ic_send"/>
-        </LinearLayout>
 
-
+            <ImageButton
+                android:id="@+id/ibSendImage"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                app:srcCompat="@drawable/ic_photo_camera"
+                android:layout_alignParentRight="true"
+                android:background="@null"
+                />
+        </RelativeLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/messageRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/llChatBox"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginBottom="5dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
