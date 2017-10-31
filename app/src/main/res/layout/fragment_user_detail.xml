@@ -116,12 +116,12 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="8dp"
-                            android:background="@color/colorBlue"
                             android:paddingBottom="2dp"
                             android:paddingTop="2dp"
                             android:text="@string/connect"
                             android:textColor="@android:color/white"
-                            android:textSize="20sp" />
+                            android:textSize="20sp"
+                            android:background="@drawable/button_connect"/>
 
                         <Button
                             android:id="@+id/btnEnd"
@@ -129,13 +129,13 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="8dp"
-                            android:background="@color/colorRed"
                             android:paddingBottom="2dp"
                             android:paddingTop="2dp"
                             android:text="@string/end"
                             android:textColor="@android:color/white"
                             android:textSize="20sp"
-                            android:visibility="visible" />
+                            android:visibility="gone"
+                            android:background="@drawable/button_end"/>
 
                     </LinearLayout>
 
