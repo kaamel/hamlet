@@ -196,12 +196,21 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
     private void displayUserInfo(@Nullable User user) {
         if (user != null) {
             if (!TextUtils.isEmpty(user.getPhotoUrl())) {
-                Glide.with(getActivity()).load(user.getPhotoUrl()).into(userProfile);
+                Glide.with(getActivity()).load(getHighResPhotoUrl(user.getPhotoUrl())).into(userProfile);
             }
             tvUserName.setText(user.getDisplayName());
             tvIntroTitle.setText(user.getIntroTitle());
             tvIntroDetail.setText(user.getIntroDetail());
         }
+    }
+
+    private String getHighResPhotoUrl(String url) {
+
+        if (url.contains("s96-c")) {
+            return url.replace("s96-c", "s600-c");
+        }
+
+        return url;
     }
 
     private void requestToConnet(User user, String chatRoom) {
