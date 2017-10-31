@@ -36,7 +36,7 @@ import com.google.firebase.auth.FirebaseAuth;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class InterestsFragment extends BaseView implements InterestsContract.View ,TextView.OnEditorActionListener{
+public class InterestsFragment extends BaseView implements InterestsContract.View {
 
     //private Interests interests;
     private InterestsContract.Presenter presenter;
@@ -93,7 +93,6 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
 
         llCheckboxesList = (LinearLayout) view.findViewById(R.id.checkboxList);
         etTitle = (EditText) view.findViewById(R.id.etTitle);
-        etTitle.setOnEditorActionListener(this);
 
         etTitle.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -134,7 +133,6 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
             }
         });
         etNickName = (EditText) view.findViewById(R.id.etNickName);
-        etNickName.setOnEditorActionListener(this);
         etNickName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
