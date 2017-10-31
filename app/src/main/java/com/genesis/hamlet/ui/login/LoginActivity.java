@@ -99,7 +99,7 @@ public class LoginActivity extends AppCompatActivity implements DataSource.OnUse
         mCallbackManager = CallbackManager.Factory.create();
         btnFacebookLogIn = (LoginButton) findViewById(R.id.btnFaceBookLogin);
         btnFacebookLogIn.setReadPermissions("email", "public_profile");
-//        btnFacebookLogIn.setText(getResources().getString(R.string.signInFacebook));
+        btnFacebookLogIn.setText(getResources().getString(R.string.signInFacebook));
 //        btnFacebookLogIn.setBackgroundResource(R.drawable.facebook_background);
 //        btnFacebookLogIn.setCompoundDrawablesWithIntrinsicBounds(1,0,0,0);
 
