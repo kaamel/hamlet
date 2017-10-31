@@ -29,6 +29,7 @@
                 android:layout_marginTop="8dp"
                 android:background="@drawable/rounded_corners"
                 android:inputType="none"
+                android:imeOptions="actionDone"
                 android:hint="Please enter your name"
                 android:padding="5dp" />
 
@@ -53,6 +54,7 @@
             android:layout_margin="8dp"
             android:background="@drawable/rounded_corners"
             android:hint="Please enter a title for your interest"
+            android:imeOptions="actionDone"
             android:padding="5dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
@@ -70,6 +72,7 @@
             android:layout_marginTop="7dp"
             android:background="@drawable/rounded_corners"
             android:hint="Please describe your interest"
+            android:imeOptions="actionDone"
             android:padding="5dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/etTitle" />

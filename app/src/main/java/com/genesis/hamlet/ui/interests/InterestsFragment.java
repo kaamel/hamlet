@@ -7,19 +7,24 @@ import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.genesis.hamlet.R;
 import com.genesis.hamlet.data.models.interests.Interests;
 import com.genesis.hamlet.data.models.interests.MyInterests;
 import com.genesis.hamlet.ui.users.UsersFragment;
 import com.genesis.hamlet.util.BaseFragmentInteractionListener;
+import com.genesis.hamlet.util.KeyboardUtil;
 import com.genesis.hamlet.util.mvp.BaseView;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -27,7 +32,7 @@ import com.google.firebase.auth.FirebaseAuth;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class InterestsFragment extends BaseView implements InterestsContract.View {
+public class InterestsFragment extends BaseView implements InterestsContract.View ,TextView.OnEditorActionListener{
 
     //private Interests interests;
     private InterestsContract.Presenter presenter;
@@ -83,6 +88,29 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
 
         llCheckboxesList = (LinearLayout) view.findViewById(R.id.checkboxList);
         etTitle = (EditText) view.findViewById(R.id.etTitle);
+        etTitle.setOnEditorActionListener(this);
+
+        etTitle.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                etDescription.setFocusableInTouchMode(false);
+                etTitle.setFocusableInTouchMode(true);
+                return false;
+            }
+        });
+
+        etTitle.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    etTitle.setFocusable(false);
+                    KeyboardUtil.hideSoftKeyboard(getActivity());
+                    return true;
+                }
+                return false;
+            }
+        });
+
         etTitle.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -101,6 +129,7 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
             }
         });
         etNickName = (EditText) view.findViewById(R.id.etNickName);
+        etNickName.setOnEditorActionListener(this);
         etNickName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -128,6 +157,27 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
         });
 
         etDescription = (EditText) view.findViewById(R.id.etDescription);
+        etDescription.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                etTitle.setFocusableInTouchMode(false);
+                etDescription.setFocusableInTouchMode(true);
+                return false;
+            }
+        });
+
+        etDescription.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    etDescription.setFocusable(false);
+                    KeyboardUtil.hideSoftKeyboard(getActivity());
+                    return true;
+                }
+
+                return false;
+            }
+        });
         etDescription.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -191,6 +241,9 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
 
     void onBoxClicked (boolean interested, int position) {
         MyInterests.getInstance().setInterest(interested, position);
+        KeyboardUtil.hideSoftKeyboard(getActivity());
+        etTitle.setFocusable(false);
+        etDescription.setFocusable(false);
     }
 
     void initializeCheckBoxes() {
@@ -252,5 +305,16 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
         fragmentInteractionListener = null;
         MyInterests.getInstance().setChanged(true);
         super.onDetach();
+    }
+
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+
+        if (EditorInfo.IME_ACTION_DONE == actionId) {
+            // Return input text back to activity through the implemented listener
+            KeyboardUtil.hideSoftKeyboard(getActivity());
+            return true;
+        }
+        return false;
     }
 }
