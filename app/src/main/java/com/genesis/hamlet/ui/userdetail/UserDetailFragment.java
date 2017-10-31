@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import com.genesis.hamlet.util.mvp.BaseView;
 
 import org.parceler.Parcels;
 
+import static com.genesis.hamlet.data.models.interests.Interests.interestTopics;
 import static java.lang.System.load;
 
 /**
@@ -41,6 +43,7 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
     private TextView tvUserName;
     private TextView tvIntroTitle;
     private TextView tvIntroDetail;
+    private TextView tvInterests;
     private ImageView userProfile;
 
     Button connectButton;
@@ -79,6 +82,8 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
         tvIntroDetail = (TextView) view.findViewById(R.id.tvDetailMessage);
 
         tvUserName = (TextView) view.findViewById(R.id.tvUserName);
+
+        tvInterests = (TextView) view.findViewById(R.id.tvInterestCategory);
 
 
         connectButton = (Button) view.findViewById(R.id.btnConnected);
@@ -206,6 +211,23 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
             tvUserName.setText(user.getDisplayName());
             tvIntroTitle.setText(user.getIntroTitle());
             tvIntroDetail.setText(user.getIntroDetail());
+
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("Interests : ");
+            boolean[] interests = user.getInterests();
+            int count = 0;
+
+            for (boolean b : interests) {
+                if (b) {
+                    if (count > 0) {
+                        stringBuilder.append(", ");
+                    }
+                    stringBuilder.append(interestTopics[count]);
+                }
+                count++;
+            }
+
+            tvInterests.setText(stringBuilder.toString());
         }
     }
 

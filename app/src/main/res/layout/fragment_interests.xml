@@ -51,7 +51,7 @@
         android:layout_marginTop="8dp"
         android:background="@drawable/rectangle_blue"
         android:foregroundTint="#fafafa"
-        android:hint="What you like to do today!"
+        android:hint="@string/title"
         android:padding="5dp" />
 
     <AutoCompleteTextView
@@ -68,7 +68,7 @@
         android:layout_marginTop="8dp"
         android:background="@drawable/rectangle_blue"
         android:foregroundTint="#fafafa"
-        android:hint="Please describe your interest"
+        android:hint="@string/interestDes"
         android:padding="5dp" />
 
     <TextView
