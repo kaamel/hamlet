@@ -2,8 +2,10 @@ package com.genesis.hamlet.ui.interests;
 
 
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -18,6 +20,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.RelativeLayout;
+
 
 import com.genesis.hamlet.R;
 import com.genesis.hamlet.data.models.interests.Interests;
@@ -70,6 +74,7 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
         cbUseProfile = (CheckBox) view.findViewById(R.id.cbUserProfile);
 
         done = (Button) view.findViewById(R.id.btnSave);
+        done.setEnabled(false);
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,13 +83,13 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
             }
         });
 
-        exit = (Button) view.findViewById(R.id.btnExit);
-        exit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().finish();
-            }
-        });
+        //exit = (Button) view.findViewById(R.id.btnExit);
+//        exit.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //getActivity().finish();
+//            }
+//        });
 
         llCheckboxesList = (LinearLayout) view.findViewById(R.id.checkboxList);
         etTitle = (EditText) view.findViewById(R.id.etTitle);
@@ -125,7 +130,7 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                checkNewItemForEmptyValues();
             }
         });
         etNickName = (EditText) view.findViewById(R.id.etNickName);
@@ -192,7 +197,7 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                checkNewItemForEmptyValues();
             }
         });
         initializeCheckBoxes();
@@ -307,14 +312,36 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
         super.onDetach();
     }
 
-    @Override
-    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 
-        if (EditorInfo.IME_ACTION_DONE == actionId) {
-            // Return input text back to activity through the implemented listener
-            KeyboardUtil.hideSoftKeyboard(getActivity());
-            return true;
+    void checkNewItemForEmptyValues(){
+
+        String newTitle= etTitle.getText().toString();
+        String newDescription = etDescription.getText().toString();
+
+        GradientDrawable gradientDrawable = (GradientDrawable) etTitle.getBackground();
+        GradientDrawable gradientDrawable1 = (GradientDrawable) etDescription.getBackground();
+
+        if(newTitle.equals("")){
+            done.setEnabled(false);
+            done.setTextColor(ContextCompat.getColor(getContext(),R.color.colorLightGrey));
+            gradientDrawable.setStroke(4, ContextCompat.getColor(getContext(),R.color.colorBlue));
+
+        } else{
+            done.setEnabled(true);
+            done.setTextColor(ContextCompat.getColor(getContext(),R.color.colorWhite));
+            gradientDrawable.setStroke(4, ContextCompat.getColor(getContext(),R.color.colorGrey));
+            //etTitle.setBackground();
         }
-        return false;
+        if(newDescription.equals("")){
+            done.setEnabled(false);
+            done.setTextColor(ContextCompat.getColor(getContext(),R.color.colorLightGrey));
+            gradientDrawable1.setStroke(4, ContextCompat.getColor(getContext(),R.color.colorBlue));
+
+        } else{
+            done.setEnabled(true);
+            done.setTextColor(ContextCompat.getColor(getContext(),R.color.colorWhite));
+            gradientDrawable1.setStroke(4, ContextCompat.getColor(getContext(),R.color.colorGrey));
+            //etTitle.setBackground();
+        }
     }
 }

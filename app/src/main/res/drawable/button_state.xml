@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"  android:color="@color/color1">
+    <item android:state_pressed="true" >
+        <shape>
+            <gradient
+                android:startColor="#1565c0"
+                android:endColor="@color/colorBlue"
+                android:angle="270" />
+            <stroke
+                android:width="1dp"
+                android:color="@color/color1" />
+            <corners
+                android:radius="3dp" />
+            <padding
+                android:left="5dp"
+                android:top="5dp"
+                android:right="5dp"
+                android:bottom="5dp" />
+
+        </shape>
+
+    </item>
+    <item android:state_enabled="true" >
+        <shape>
+            <gradient
+                android:startColor="#1565c0"
+                android:endColor="@color/colorBlue"
+                android:angle="270" />
+            <stroke
+                android:width="1dp"
+                android:color="@color/color1" />
+            <corners
+                android:radius="3dp" />
+            <padding
+                android:left="5dp"
+                android:top="5dp"
+                android:right="5dp"
+                android:bottom="5dp" />
+
+        </shape>
+
+    </item>
+    <item android:state_enabled="false" >
+        <shape>
+            <gradient
+                android:startColor="@color/colorGrey"
+                android:endColor="@color/colorGrey"
+                android:angle="270" />
+            <stroke
+                android:width="1dp"
+                android:color="@color/color1" />
+            <corners
+                android:radius="3dp" />
+            <padding
+                android:left="5dp"
+                android:top="5dp"
+                android:right="5dp"
+                android:bottom="5dp" />
+        </shape>
+
+    </item>
+    <item>
+        <shape>
+            <gradient
+                android:startColor="#9e9e9e"
+                android:endColor="#bdbdbd"
+                android:angle="270" />
+            <stroke
+                android:width="2dp"
+                android:color="@color/colorBlue" />
+            <corners
+                android:radius="4dp" />
+            <padding
+                android:left="5dp"
+                android:top="5dp"
+                android:right="5dp"
+                android:bottom="5dp" />
+
+        </shape>
+
+    </item>
+</ripple>
+
+<!--<ripple xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--android:color="@color/grey_15">-->
+<!--<item android:id="@android:id/mask">-->
+    <!--<shape android:shape="oval">-->
+        <!--<solid android:color="?android:colorPrimary"/>-->
+    <!--</shape>-->
+    <!--<color android:color="@color/white"/>-->
+<!--</item>-->
+<!--</ripple>-->
+
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<selector xmlns:android="http://schemas.android.com/apk/res/android">-->
+    <!--<item android:state_pressed="true" android:drawable="@color/colorBlue" />-->
+    <!--<item android:state_focused="true" android:drawable="@color/color1" />-->
+    <!--<item android:drawable="@color/color1" />-->
+<!--</selector>-->

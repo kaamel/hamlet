@@ -265,8 +265,8 @@ public class UsersFragment extends BaseView implements UsersContract.View {
         Parcelable parcelable = Parcels.wrap(user);
         Bundle bundle = new Bundle();
         bundle.putParcelable(Properties.BUNDLE_KEY_USER, parcelable);
-        fragmentInteractionListener.showFragment(UserDetailFragment.class, null, bundle,
-                true);
+        fragmentInteractionListener.showFragment(UserDetailFragment.class, null, bundle,true);
+        //fragmentInteractionListener.showFragment(TestFrag.class, null, bundle,true);
     }
 
 }

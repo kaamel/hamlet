@@ -21,7 +21,7 @@
 
     <string name="title_location_permission">Location Permission Needed</string>
     <string name="text_location_permission">Hamlet need your  location !</string>
-    <string name="ok">OK</string>
+    <string name="ok">Submit</string>
     <string name="end">End</string>
     <string name="accept">Accept</string>
     <string name="ignore">Ignore</string>
@@ -31,4 +31,5 @@
     <string name="exit">Exit</string>
 
     <string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
+
 </resources>

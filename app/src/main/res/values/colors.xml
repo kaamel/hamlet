@@ -4,6 +4,9 @@
     <color name="colorPrimaryDark">#3A4AAD</color>
     <color name="colorAccent">#3A4AAD</color>
     <color name="colorBlue">#2196F3</color>
+    <color name="colorGrey">#bdbdbd</color>
+    <color name="colorLightGrey">#e0e0e0</color>
+    <color name="colorWhite">#ffffff</color>
     <color name="FBBlue">#0D47A1</color>
     <color name="colorRed">#F32621</color>
     <color name="googleRed">#F44336</color>
@@ -12,7 +15,7 @@
     <color name="color3">#717CA3</color>
     <color name="color4">#A8CAF0</color>
     <color name="color5">#76A6DB</color>
-    <color name="color6">#CFD7E1</color>
+    <color name="color6">#757575</color>
 
 
 </resources>
