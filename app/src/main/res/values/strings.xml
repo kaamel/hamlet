@@ -6,7 +6,7 @@
     <string name="offline_mode_msg">No network - Offline mode</string>
     <string name="no_photos_available">No photos available currently</string>
     <string name="no_comments_available">No comments available currently</string>
-    <string name="sign_in_title">You will need a halmet account to continue</string>
+    <string name="sign_in_title">Konnect</string>
 
     <string name="permission_rationale">Location permission is needed for core functionality</string>
     <string name="permission_denied_explanation">Permission was denied, but is needed for core
