@@ -310,10 +310,8 @@ public class HamletConnectionService extends Service implements
     private void broadcast(User user, int what) {
         Intent intent = new Intent();
         intent.setAction(USER_ARRIVAL_DEPARTURE_ACTION);
-        String providerInfo = FirebaseAuth.getInstance().getCurrentUser().getProviders().toString();
         intent.putExtra("user", Parcels.wrap(user));
         intent.putExtra("what",what);
-        intent.putExtra("ProviderInfo",providerInfo);
         sendBroadcast(intent);
     }
 
