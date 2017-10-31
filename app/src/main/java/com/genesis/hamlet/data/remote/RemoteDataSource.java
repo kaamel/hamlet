@@ -5,6 +5,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.genesis.hamlet.data.DataSource;
@@ -19,6 +21,8 @@ import com.genesis.hamlet.util.UserHelper;
 import com.genesis.hamlet.util.threading.FirebaseHelper;
 import com.genesis.hamlet.util.threading.MainUiThread;
 import com.genesis.hamlet.util.threading.ThreadExecutor;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,9 +31,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.parceler.Parcels;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -47,17 +55,23 @@ import java.util.Map;
 public class RemoteDataSource extends DataSource {
     public static RemoteDataSource firebaseCloudDataSource;
     public static FirebaseDatabase database;
+    public static FirebaseStorage storage;
+
     public static DatabaseReference usersRef;
     public static DatabaseReference notificationsRef;
     public static DatabaseReference messagesRef;
+    public static StorageReference storageRef;
     BroadcastReceiver br;
 
     private RemoteDataSource(MainUiThread mainUiThread, ThreadExecutor threadExecutor) {
         super(mainUiThread, threadExecutor);
         database = FirebaseDatabase.getInstance();
+        storage = FirebaseStorage.getInstance();
+
         usersRef = database.getReference("/users/");
         messagesRef = database.getReference("/messages/");
         notificationsRef = database.getReference("notifications");
+        storageRef = storage.getReference();
 
         FirebaseMessaging.getInstance().subscribeToTopic("notifications");
     }
@@ -288,6 +302,31 @@ public class RemoteDataSource extends DataSource {
         message.setId(ref.getKey());
         message.setCreateTime(System.currentTimeMillis());
         messagesRef.child(chatRoom).push().setValue(message);
+    }
+
+    @Override
+    public void storeFileRemote(String localPath, final OnFileStored onFileStored) {
+        Uri file = Uri.fromFile(new File(localPath));
+        StorageReference riversRef = storageRef.child("images/"+file.getLastPathSegment());
+        UploadTask uploadTask = riversRef.putFile(file);
+
+        // Register observers to listen for when the download is done or if it fails
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                if (downloadUrl != null)
+                    onFileStored.onFileStored(downloadUrl.toString());
+                else
+                    onFileStored.onFileStored(null);
+            }
+        });
     }
 
     private void initializeNewConnection(final Context context) {

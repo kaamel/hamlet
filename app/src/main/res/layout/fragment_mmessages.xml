@@ -43,11 +43,11 @@
         android:layout_alignParentStart="true"
         android:id="@+id/linearLayout">
 
-        <ImageView
-            android:id="@+id/addMessageImageView"
+        <ImageButton
+            android:id="@+id/ibSendImage"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            app:srcCompat="@drawable/ic_add"/>
+            app:srcCompat="@drawable/ic_add" />
 
         <EditText
             android:layout_width="0dp"

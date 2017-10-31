@@ -92,6 +92,11 @@ public class LocalDataSource extends DataSource implements DataSource.OnUsersCal
 
     }
 
+    @Override
+    public void storeFileRemote(String localPath, OnFileStored onFileStored) {
+
+    }
+
     //@Override
     public void storeUsers(List<User> users) {
         //// TODO: 10/14/17

@@ -73,6 +73,14 @@ public class MMessageRecyclerAdapter extends RecyclerView.Adapter<MMessageViewHo
                     .load(mMessage.getProfileUrl())
                     .into(viewHolder.messengerImageView);
         }
+
+        if (mMessage.getImageUrl() == null) {
+            viewHolder.messageImageView.setImageDrawable(ContextCompat.getDrawable(mContext,R.drawable.ic_account_circle));
+        } else {
+            Glide.with(mContext)
+                    .load(mMessage.getImageUrl())
+                    .into(viewHolder.messageImageView);
+        }
     }
 
     @Override

@@ -69,7 +69,11 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
 
     boolean isNotificationSetup = false;
 
+    boolean isSetup = false;
     protected void continueSetup() {
+        if (isSetup && remoteIntent != null)
+            return;
+        isSetup = true;
         if (remoteIntent != null) {
             final String senderUid = remoteIntent.getStringExtra("senderUid");
             final String action = remoteIntent.getStringExtra("action");
@@ -163,14 +167,15 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
     protected void onDestroy() {
         final Context context = getApplicationContext();
         //kill the service after 5 minutes
+        final DataRepository dr = dataRepository;
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     Thread.sleep(300000);
-                    dataRepository.disconnect(context);
+                    dr.disconnect(context);
                 } catch (InterruptedException e) {
-                    dataRepository.disconnect(context);
+                    dr.disconnect(context);
                 }
             }
         });

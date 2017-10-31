@@ -18,6 +18,6 @@ public class MMessagesContract {
     interface Presenter extends IBasePresenter<View> {
         void connectChatroom(DataSource.OnMMessagesCallback onMMessageCallback, String chatroom, int page);
         void sendMMessage(MMessage message, User user, String chatRoom);
-
+        void storeFileRemote(String localPath, DataSource.OnFileStored onFileStored);
     }
 }

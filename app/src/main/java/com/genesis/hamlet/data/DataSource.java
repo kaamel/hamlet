@@ -57,6 +57,10 @@ public abstract class DataSource {
         void onUserUpdate(User user);
     }
 
+    public interface OnFileStored {
+        void onFileStored(String remotePath);
+    }
+
     public interface OnMMessagesCallback {
 
         void onSuccess(List<MMessage> mMessages, String chatRoom, String senderId);
@@ -79,5 +83,6 @@ public abstract class DataSource {
     public abstract void connectChatroom(OnMMessagesCallback onMMessageCallback, String chatroom, int page);
     public abstract void closeChatroom(String chatroom);
     public abstract void sendMMessage(MMessage message, User user, String chatRoom);
+    public abstract void storeFileRemote(String localPath, OnFileStored onFileStored);
 
 }

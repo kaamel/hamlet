@@ -92,4 +92,8 @@ public class DataRepository {
     public boolean isConnected() {
         return remoteDataSource.isConnected();
     }
+
+    public void storeFileRemote(String localPath, DataSource.OnFileStored onFileStored) {
+        remoteDataSource.storeFileRemote(localPath, onFileStored);
+    }
 }

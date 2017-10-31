@@ -1,6 +1,7 @@
 package com.genesis.hamlet.ui.mmessages;
 
 import com.genesis.hamlet.data.DataRepository;
+import com.genesis.hamlet.data.DataSource;
 import com.genesis.hamlet.data.DataSource.OnMMessagesCallback;
 import com.genesis.hamlet.data.models.mmessage.MMessage;
 import com.genesis.hamlet.data.models.user.User;
@@ -24,5 +25,10 @@ public class MMessagesPresenter extends BasePresenter<MMessagesContract.View> im
     }
     public void sendMMessage(MMessage message, User user, String chatRoom) {
         dataRepository.sendMMessage(message, user, chatRoom);
+    }
+
+    @Override
+    public void storeFileRemote(String localPath, DataSource.OnFileStored onFileStored) {
+        dataRepository.storeFileRemote(localPath, onFileStored);
     }
 }
