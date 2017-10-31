@@ -1,295 +1,299 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:clipToPadding="false"
-tools:context="com.genesis.hamlet.ui.interests.InterestsFragment">
-
-<EditText
-    android:id="@+id/etNickName"
-    android:layout_width="wrap_content"
-    android:layout_height="40dp"
-    android:padding="5dp"
-    android:layout_marginTop="8dp"
-    android:layout_marginLeft="15dp"
-    android:layout_marginStart="15dp"
-    android:background="@drawable/rectangle"
-    android:hint="Please enter your name"
-    android:inputType="none"
-    android:layout_alignParentTop="true"
- />
-
-<CheckBox
-    android:id="@+id/cbUserProfile"
-    android:layout_width="wrap_content"
-    android:layout_height="40dp"
-    android:checked="true"
-    android:layout_marginEnd="15dp"
-    android:layout_marginRight="15dp"
-    android:scaleX="1.2"
-    android:scaleY="1.2"
-    android:paddingEnd="8dp"
-    android:paddingRight="8dp"
-    android:text="User Profile"
-    android:buttonTint="@color/colorBlue"
-    android:layout_alignTop="@+id/etNickName"
-    android:layout_alignParentRight="true"/>
-
-<AutoCompleteTextView
-    android:id="@+id/etTitle"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="40dp"
-    android:layout_marginTop="8dp"
-    android:layout_marginRight="15dp"
-    android:layout_marginEnd="15dp"
-    android:background="@drawable/rectangle_blue"
-    android:foregroundTint="#fafafa"
-    android:hint="What you like to do today!"
-    android:padding="5dp"
-    android:layout_below="@+id/etNickName"
-    android:layout_alignLeft="@+id/etNickName"
-    android:layout_alignStart="@+id/etNickName" />
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    tools:context="com.genesis.hamlet.ui.interests.InterestsFragment">
 
-<AutoCompleteTextView
-    android:id="@+id/etDescription"
-    android:layout_width="match_parent"
-    android:layout_height="40dp"
-    android:layout_below="@id/etTitle"
-    android:layout_marginTop="8dp"
-    android:background="@drawable/rectangle_blue"
-    android:foregroundTint="#fafafa"
-    android:padding="5dp"
-    android:hint="Please describe your interest"
-    android:layout_alignLeft="@id/etNickName"
-    android:layout_alignStart="@id/etNickName"
-    android:layout_alignRight="@id/etTitle"
-    android:layout_alignEnd="@id/etTitle"/>
+    <EditText
+        android:id="@+id/etNickName"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/rectangle"
+        android:hint="Please enter your name"
+        android:imeOptions="actionDone"
+        android:inputType="none"
+        android:padding="5dp" />
 
-<TextView
+    <CheckBox
+        android:id="@+id/cbUserProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/etNickName"
+        android:layout_marginEnd="15dp"
+        android:layout_marginRight="15dp"
+        android:buttonTint="@color/colorBlue"
+        android:checked="true"
+        android:paddingEnd="8dp"
+        android:paddingRight="8dp"
+        android:scaleX="1.2"
+        android:scaleY="1.2"
+        android:text="User Profile" />
+
+    <AutoCompleteTextView
+        android:id="@+id/etTitle"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignLeft="@+id/etNickName"
+        android:layout_alignStart="@+id/etNickName"
+        android:layout_below="@+id/etNickName"
+        android:layout_marginEnd="15dp"
+        android:layout_marginRight="15dp"
+        android:imeOptions="actionDone"
+        android:maxLines="1"
+        android:inputType="textCapWords"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/rectangle_blue"
+        android:foregroundTint="#fafafa"
+        android:hint="What you like to do today!"
+        android:padding="5dp" />
+
+    <AutoCompleteTextView
+        android:id="@+id/etDescription"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignEnd="@id/etTitle"
+        android:layout_alignLeft="@id/etNickName"
+        android:layout_alignRight="@id/etTitle"
+        android:layout_alignStart="@id/etNickName"
+        android:layout_below="@id/etTitle"
+        android:imeOptions="actionDone"
+        android:inputType="text"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/rectangle_blue"
+        android:foregroundTint="#fafafa"
+        android:hint="Please describe your interest"
+        android:padding="5dp" />
+
+    <TextView
         android:id="@+id/tvCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_below="@id/etDescription"
-        android:layout_alignLeft="@id/etNickName"
-        android:layout_alignStart="@id/etNickName"
-        android:layout_alignRight="@id/etTitle"
         android:layout_alignEnd="@id/etTitle"
-        android:text="Select Categories:"/>
-
-<LinearLayout
-    android:id="@+id/checkboxList"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:columnCount="2"
-    android:rowCount="8"
-    android:layout_alignLeft="@id/etNickName"
-    android:layout_alignStart="@id/etNickName"
-    android:layout_alignRight="@id/etTitle"
-    android:layout_alignEnd="@id/etTitle"
-    android:layout_marginTop="8dp"
-    android:layout_below="@id/tvCategory">
+        android:layout_alignLeft="@id/etNickName"
+        android:layout_alignRight="@id/etTitle"
+        android:layout_alignStart="@id/etNickName"
+        android:layout_below="@id/etDescription"
+        android:layout_marginTop="8dp"
+        android:text="Select Categories:" />
 
     <LinearLayout
+        android:id="@+id/checkboxList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_alignEnd="@id/etTitle"
+        android:layout_alignLeft="@id/etNickName"
+        android:layout_alignRight="@id/etTitle"
+        android:layout_alignStart="@id/etNickName"
+        android:layout_below="@id/tvCategory"
+        android:layout_marginTop="8dp"
+        android:columnCount="2"
+        android:orientation="vertical"
+        android:rowCount="8">
 
-        <android.support.v7.widget.AppCompatCheckBox
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:buttonTint="@color/colorBlue"
-            android:text="Arts" />
+            android:orientation="horizontal">
 
-        <android.support.v7.widget.AppCompatCheckBox
+            <android.support.v7.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:buttonTint="@color/colorBlue"
+                android:text="Arts" />
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:buttonTint="@color/colorBlue"
+                android:text="Arts" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginLeft="10dp"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:buttonTint="@color/colorBlue"
+                android:text="Arts" />
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:buttonTint="@color/colorBlue"
+                android:text="Arts" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:buttonTint="@color/colorBlue"
+                android:text="Arts" />
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:buttonTint="@color/colorBlue"
+                android:text="Arts" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:buttonTint="@color/colorBlue"
+                android:text="Arts" />
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:buttonTint="@color/colorBlue"
+                android:text="Arts" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:buttonTint="@color/colorBlue"
-            android:text="Arts" />
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:buttonTint="@color/colorBlue"
+                android:text="Arts" />
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:buttonTint="@color/colorBlue"
+                android:text="Arts" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/colorBlue"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:buttonTint="@color/colorBlue"
+                android:text="Arts" />
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:buttonTint="@color/colorBlue"
+                android:text="Arts" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:buttonTint="@color/colorBlue"
+                android:text="Arts" />
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:buttonTint="@color/colorBlue"
+                android:text="Arts" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:buttonTint="@color/colorBlue"
+                android:text="Arts" />
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:buttonTint="@color/colorBlue"
+                android:text="Arts" />
+
+        </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
+    <View
+        android:id="@+id/viewEnd"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="1dp"
+        android:layout_below="@id/checkboxList"
+        android:layout_marginTop="15dp"
+        android:background="@color/color2" />
 
-        <android.support.v7.widget.AppCompatCheckBox
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:buttonTint="@color/colorBlue"
-            android:layout_weight="1"
-            android:text="Arts" />
-
-        <android.support.v7.widget.AppCompatCheckBox
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:buttonTint="@color/colorBlue"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
-            android:text="Arts" />
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <android.support.v7.widget.AppCompatCheckBox
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:buttonTint="@color/colorBlue"
-            android:layout_weight="1"
-            android:text="Arts" />
-
-        <android.support.v7.widget.AppCompatCheckBox
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:buttonTint="@color/colorBlue"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
-            android:text="Arts" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <android.support.v7.widget.AppCompatCheckBox
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:buttonTint="@color/colorBlue"
-            android:layout_weight="1"
-            android:text="Arts" />
-
-        <android.support.v7.widget.AppCompatCheckBox
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:buttonTint="@color/colorBlue"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
-            android:text="Arts" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:buttonTint="@color/colorBlue"
-        android:orientation="horizontal">
-
-        <android.support.v7.widget.AppCompatCheckBox
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:buttonTint="@color/colorBlue"
-            android:layout_weight="1"
-            android:text="Arts" />
-
-        <android.support.v7.widget.AppCompatCheckBox
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:buttonTint="@color/colorBlue"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
-            android:text="Arts" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:buttonTint="@color/colorBlue"
-        android:orientation="horizontal">
-
-        <android.support.v7.widget.AppCompatCheckBox
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:buttonTint="@color/colorBlue"
-            android:layout_weight="1"
-            android:text="Arts" />
-
-        <android.support.v7.widget.AppCompatCheckBox
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:buttonTint="@color/colorBlue"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
-            android:text="Arts" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <android.support.v7.widget.AppCompatCheckBox
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:buttonTint="@color/colorBlue"
-            android:layout_weight="1"
-            android:text="Arts" />
-
-        <android.support.v7.widget.AppCompatCheckBox
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:buttonTint="@color/colorBlue"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
-            android:text="Arts" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <android.support.v7.widget.AppCompatCheckBox
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:buttonTint="@color/colorBlue"
-            android:layout_weight="1"
-            android:text="Arts" />
-
-        <android.support.v7.widget.AppCompatCheckBox
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:buttonTint="@color/colorBlue"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
-            android:text="Arts" />
-
-    </LinearLayout>
-</LinearLayout>
-
-<View
-    android:layout_width="match_parent"
-    android:layout_height="1dp"
-    android:layout_below="@id/checkboxList"
-    android:layout_marginTop="15dp"
-    android:background="@color/color2"
-    android:id="@+id/viewEnd" />
-
-<Button
-    android:id="@+id/btnSave"
-    android:layout_width="175dp"
-    android:layout_height="60dp"
-    android:background="@drawable/button_state"
-    android:text="@string/ok"
-    android:enabled="false"
-    android:textAllCaps="false"
-    android:textColor="@android:color/white"
-    android:textSize="20sp"
-    android:layout_marginTop="40dp"
-    android:layout_below="@id/viewEnd"
-    android:layout_centerHorizontal="true"
-    android:elevation="10dp"
-    android:translationZ="10dp"
-    />
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="175dp"
+        android:layout_height="60dp"
+        android:layout_below="@id/viewEnd"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/button_state"
+        android:elevation="10dp"
+        android:enabled="false"
+        android:text="@string/ok"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:translationZ="10dp" />
 
 </RelativeLayout>

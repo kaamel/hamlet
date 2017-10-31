@@ -107,8 +107,8 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    etTitle.setFocusable(false);
                     KeyboardUtil.hideSoftKeyboard(getActivity());
+                    etTitle.setFocusable(false);
                     return true;
                 }
                 return false;
@@ -173,8 +173,8 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    etDescription.setFocusable(false);
                     KeyboardUtil.hideSoftKeyboard(getActivity());
+                    etDescription.setFocusable(false);
                     return true;
                 }
 
