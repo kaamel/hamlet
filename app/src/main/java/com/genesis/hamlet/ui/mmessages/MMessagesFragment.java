@@ -1,15 +1,12 @@
 package com.genesis.hamlet.ui.mmessages;
 
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -41,12 +38,10 @@ import com.genesis.hamlet.util.mvp.BaseView;
 
 import org.parceler.Parcels;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Created by dipenrana on 10/24/17.
@@ -313,7 +308,5 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
 
         }
     }
-
-
 
 }
