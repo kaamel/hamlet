@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.genesis.hamlet.R;
 import com.genesis.hamlet.data.models.interests.MyInterests;
 import com.genesis.hamlet.data.models.mmessage.MMessage;
+import com.genesis.hamlet.util.CommonUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +36,11 @@ public class MMessageRecyclerAdapter extends RecyclerView.Adapter<MMessageViewHo
     public MMessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        if(viewType == 0){
+        if(viewType == 1){
             return new MMessageViewHolder(inflater.inflate(R.layout.mmessage_friend, parent, false));
         }
         else {
-            return new MMessageViewHolder(inflater.inflate(R.layout.mmessage_user, parent, false));
+            return new MMessageViewHolder(inflater.inflate(R.layout.mmessage_me, parent, false));
         }
     }
 
@@ -55,16 +56,44 @@ public class MMessageRecyclerAdapter extends RecyclerView.Adapter<MMessageViewHo
         }
         else {
             String messageImageUrl = mMessage.getImageUrl();
-            Glide.with(viewHolder.getMessageImageView().getContext())
-                    .load(messageImageUrl)
-                    .into(viewHolder.getMessageImageView());
+            if(messageImageUrl.contains("hamlet-ea998.appspot.com")){
+                Glide.with(viewHolder.getMessageImageView().getContext())
+                        .load(messageImageUrl)
+                        .into(viewHolder.getMessageImageView());
+
+//                StorageReference storageReference = FirebaseStorage.getInstance()
+//                        .getReferenceFromUrl(imageUrl);
+//                storageReference.getDownloadUrl().addOnCompleteListener(
+//                        new OnCompleteListener<Uri>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<Uri> task) {
+//                                if (task.isSuccessful()) {
+//                                    String downloadUrl = task.getResult().toString();
+//                                    Glide.with(viewHolder.getMessageImageView().getContext())
+//                                            .load(downloadUrl)
+//                                            .into(viewHolder.getMessageImageView());
+//                                } else {
+//                                    Log.w(TAG, "Getting download url was not successful.",
+//                                            task.getException());
+//                                }
+//                            }
+//                        });
+            }
+            else{
+                Glide.with(viewHolder.getMessageImageView().getContext())
+                        .load(messageImageUrl)
+                        .into(viewHolder.getMessageImageView());
+            }
+
 
             viewHolder.getMessageTextView().setVisibility(ImageView.INVISIBLE);
             viewHolder.getMessageImageView().setVisibility(ImageView.VISIBLE);
         }
 
-        // add messenger name and image
-        viewHolder.getMessengerTextView().setText(mMessage.getDisplayName());
+        // add message time and messenger image
+        String relativeTime = CommonUtils.getRelativeTimeAgo(mMessage.getCreateTime());
+        viewHolder.getTvMessageTime().setText(relativeTime);
+
         //viewHolder.messengerImageView.setImageDrawable(ContextCompat.getDrawable(mContext,R.drawable.ic_account_circle));
         if (mMessage.getProfileUrl() == null) {
             viewHolder.messengerImageView.setImageDrawable(ContextCompat.getDrawable(mContext,R.drawable.ic_account_circle));

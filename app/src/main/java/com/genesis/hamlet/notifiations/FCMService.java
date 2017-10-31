@@ -74,6 +74,7 @@ public class FCMService extends FirebaseMessagingService {
         intent.putExtra("action",action);
         intent.putExtra("title",title);
         intent.putExtra("message",message);
+        intent.putExtra("name",name);
         sendBroadcast(intent);
     }
 
@@ -95,7 +96,7 @@ public class FCMService extends FirebaseMessagingService {
 
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.mipmap.ic_launcher_old)
                 .setContentTitle(notificationTitle)
                 .setContentText(notificationBody)
                 .setAutoCancel(true)

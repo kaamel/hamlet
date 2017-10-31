@@ -2,6 +2,7 @@ package com.genesis.hamlet.data;
 
 import android.content.Context;
 import android.location.Location;
+import android.net.Uri;
 
 import com.genesis.hamlet.data.local.LocalDataSource;
 import com.genesis.hamlet.data.models.mmessage.MMessage;
@@ -79,5 +80,6 @@ public abstract class DataSource {
     public abstract void connectChatroom(OnMMessagesCallback onMMessageCallback, String chatroom, int page);
     public abstract void closeChatroom(String chatroom);
     public abstract void sendMMessage(MMessage message, User user, String chatRoom);
+    public abstract void sendImages(Uri mmessage, User user, String chatRoom);
 
 }

@@ -1,5 +1,7 @@
 package com.genesis.hamlet.ui.mmessages;
 
+import android.net.Uri;
+
 import com.genesis.hamlet.data.DataSource;
 import com.genesis.hamlet.data.models.mmessage.MMessage;
 import com.genesis.hamlet.data.models.user.User;
@@ -18,6 +20,7 @@ public class MMessagesContract {
     interface Presenter extends IBasePresenter<View> {
         void connectChatroom(DataSource.OnMMessagesCallback onMMessageCallback, String chatroom, int page);
         void sendMMessage(MMessage message, User user, String chatRoom);
+        void sendImages(Uri mmessage, User user, String chatRoom);
 
     }
 }

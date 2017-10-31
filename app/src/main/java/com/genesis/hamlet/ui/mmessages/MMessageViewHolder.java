@@ -22,7 +22,7 @@ public class MMessageViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.messageTextView) TextView messageTextView;
     @BindView(R.id.messageImageView) ImageView messageImageView;
-    @BindView(R.id.messengerTextView) TextView messengerTextView;
+    @BindView(R.id.tvMessageTime) TextView tvMessageTime;
     @BindView(R.id.messengerImageView) CircleImageView messengerImageView;
 
     public MMessageViewHolder(View itemView) {
@@ -47,12 +47,12 @@ public class MMessageViewHolder extends RecyclerView.ViewHolder {
         this.messageImageView = messageImageView;
     }
 
-    public TextView getMessengerTextView() {
-        return messengerTextView;
+    public TextView getTvMessageTime() {
+        return tvMessageTime;
     }
 
-    public void setMessengerTextView(TextView messengerTextView) {
-        this.messengerTextView = messengerTextView;
+    public void setTvMessageTime(TextView tvMessageTime) {
+        this.tvMessageTime = tvMessageTime;
     }
 
     public CircleImageView getMessengerImageView() {

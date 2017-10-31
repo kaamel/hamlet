@@ -2,6 +2,7 @@ package com.genesis.hamlet.data.local;
 
 
 import android.content.Context;
+import android.net.Uri;
 
 import com.genesis.hamlet.data.DataSource;
 import com.genesis.hamlet.data.models.mmessage.MMessage;
@@ -89,6 +90,11 @@ public class LocalDataSource extends DataSource implements DataSource.OnUsersCal
 
     @Override
     public void sendMMessage(MMessage message, User user, String chatRoom) {
+
+    }
+
+    @Override
+    public void sendImages(Uri mmessage, User user, String chatRoom) {
 
     }
 

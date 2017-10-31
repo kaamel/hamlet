@@ -14,11 +14,12 @@ public class MMessage {
     long locationLon;
     long locationTime;
 
-    long createTime;
+    String createTime;
 
     String senderUid;
     String profileUrl;
     String displayName;
+    int type;
 
     public MMessage() {
 
@@ -100,11 +101,19 @@ public class MMessage {
         this.locationTime = locationTime;
     }
 
-    public long getCreateTime() {
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(long createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 

@@ -1,12 +1,12 @@
 <resources>
-    <string name="app_name">Hamlet</string>
+    <string name="app_name">Konnect</string>
     <string name="action_settings">Settings</string>
     <string name="error_msg">Something went wrong, please try again later.</string>
     <string name="network_failure_msg">No network. Please try again later.</string>
     <string name="offline_mode_msg">No network - Offline mode</string>
     <string name="no_photos_available">No photos available currently</string>
     <string name="no_comments_available">No comments available currently</string>
-    <string name="sign_in_title">You will need a halmet account to continue</string>
+    <string name="sign_in_title">Konnect</string>
 
     <string name="permission_rationale">Location permission is needed for core functionality</string>
     <string name="permission_denied_explanation">Permission was denied, but is needed for core
@@ -29,4 +29,6 @@
     <string name="signInFacebook">Continue with Facebook</string>
     <string name="cancel">Cancel</string>
     <string name="exit">Exit</string>
+
+    <string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
 </resources>

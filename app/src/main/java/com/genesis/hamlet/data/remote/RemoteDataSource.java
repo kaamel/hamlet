@@ -5,6 +5,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+
+
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.genesis.hamlet.data.DataSource;
@@ -15,10 +19,13 @@ import com.genesis.hamlet.data.models.user.RemoteUser;
 import com.genesis.hamlet.data.models.user.User;
 import com.genesis.hamlet.location.HamletConnectionService;
 import com.genesis.hamlet.notifiations.NotificationMessage;
+import com.genesis.hamlet.util.CommonUtils;
 import com.genesis.hamlet.util.UserHelper;
 import com.genesis.hamlet.util.threading.FirebaseHelper;
 import com.genesis.hamlet.util.threading.MainUiThread;
 import com.genesis.hamlet.util.threading.ThreadExecutor;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,6 +34,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
 
 import org.parceler.Parcels;
 
@@ -273,13 +285,28 @@ public class RemoteDataSource extends DataSource {
     }
 
     @Override
+    public void sendImages(final Uri imageUri, User user, String chatRoom) {
+
+
+        DatabaseReference ref = messagesRef.child(chatRoom).push();
+        String key = ref.getKey();
+        StorageReference storageReference = FirebaseStorage.getInstance()
+                                    .getReference(MyInterests.getInstance().getMyUid())
+                                    .child(key)
+                                    .child(imageUri.getLastPathSegment());
+        putImageInStorage(storageReference,imageUri,key,chatRoom);
+
+    }
+
+    @Override
     public void sendMMessage(MMessage message, User user, String chatRoom) {
         message.setSenderUid(MyInterests.getInstance().getMyUid());
         message.setDisplayName(MyInterests.getInstance().getNickName());
         message.setProfileUrl(MyInterests.getInstance().getProfileUrl());
         DatabaseReference ref = messagesRef.child(chatRoom).push();
+        message.setType(CommonUtils.MESSAGE_TEXT);
         message.setId(ref.getKey());
-        message.setCreateTime(System.currentTimeMillis());
+        message.setCreateTime(String.valueOf(System.currentTimeMillis()));
         messagesRef.child(chatRoom).push().setValue(message);
     }
 
@@ -288,5 +315,40 @@ public class RemoteDataSource extends DataSource {
         FirebaseMessaging.getInstance().subscribeToTopic(FirebaseAuth.getInstance().getCurrentUser().getUid());
         Intent intent = new Intent(context.getApplicationContext(), HamletConnectionService.class);
         context.getApplicationContext().startService(intent);
+    }
+
+    private void putImageInStorage(StorageReference storageReference, Uri uri, final String key,final String chatRoom) {
+
+        final MMessage mMessage = new MMessage();
+        mMessage.setType(CommonUtils.MESSAGE_IMAGE);
+        mMessage.setSenderUid(MyInterests.getInstance().getMyUid());
+        mMessage.setDisplayName(MyInterests.getInstance().getNickName());
+        mMessage.setProfileUrl(MyInterests.getInstance().getProfileUrl());
+
+        storageReference.putFile(uri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                            mMessage.setImageUrl(taskSnapshot.getDownloadUrl().toString());
+                            mMessage.setId(key);
+                            mMessage.setCreateTime(String.valueOf(System.currentTimeMillis()));
+                            messagesRef.child(chatRoom).push().setValue(mMessage);
+
+                    }
+                })
+                // If something goes wrong .
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                    }
+                })
+                // On progress change upload time.
+                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                    }
+                });
+
     }
 }
