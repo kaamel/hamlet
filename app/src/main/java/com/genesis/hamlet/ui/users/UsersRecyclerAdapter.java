@@ -1,5 +1,6 @@
 package com.genesis.hamlet.ui.users;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -94,8 +95,9 @@ public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdap
         viewHolder.tvDisplayName.setText(user.getDisplayName());
         viewHolder.tvIntroTitle.setText(user.getIntroTitle());
 
-        Glide.with(context).load(user.getPhotoUrl()).placeholder(R.mipmap.ic_launcher_round).error(
-                R.mipmap.ic_launcher_round).into(viewHolder.ivProfile);
+        if (context != null && !((Activity) context).isFinishing())
+            Glide.with(context).load(user.getPhotoUrl()).placeholder(R.mipmap.ic_launcher_round).error(
+                    R.mipmap.ic_launcher_round).into(viewHolder.ivProfile);
     }
 
     @Override

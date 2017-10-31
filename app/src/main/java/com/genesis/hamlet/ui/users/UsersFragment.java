@@ -51,7 +51,7 @@ public class UsersFragment extends BaseView implements UsersContract.View {
     private BaseFragmentInteractionListener fragmentInteractionListener;
     private boolean shouldRefreshUsers;
 
-    DataRepository dataRepository;
+    //DataRepository dataRepository;
 
     RecyclerView rvUsers;
     SwipeRefreshLayout swipeRefreshLayout;
@@ -68,7 +68,7 @@ public class UsersFragment extends BaseView implements UsersContract.View {
     private void setupRepository() {
         ThreadExecutor threadExecutor = ThreadExecutor.getInstance();
         MainUiThread mainUiThread = MainUiThread.getInstance();
-        dataRepository = fragmentInteractionListener.getDataRepository();
+        DataRepository dataRepository = fragmentInteractionListener.getDataRepository();
         presenter = new UsersPresenter(this, dataRepository, threadExecutor, mainUiThread);
     }
 
@@ -84,8 +84,7 @@ public class UsersFragment extends BaseView implements UsersContract.View {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-        if (recyclerAdapter == null)
-            recyclerAdapter = new UsersRecyclerAdapter(getContext());
+        recyclerAdapter = new UsersRecyclerAdapter(getContext());
         rvUsers.setAdapter(recyclerAdapter);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -95,7 +94,7 @@ public class UsersFragment extends BaseView implements UsersContract.View {
                 0) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                presenter.loadMoreUsers(getContext(), page);
+                presenter.loadMoreUsers(getContext());
             }
         };
 
@@ -254,7 +253,7 @@ public class UsersFragment extends BaseView implements UsersContract.View {
         //// TODO: 10/30/17 testing this new code. Go back if it doesn't work
         recyclerAdapter.clear();
         shouldRefreshUsers = true;
-        dataRepository.refereshUsers(getContext());
+        presenter.refreshUsers(getContext());
         //// TODO: 10/30/17 working code before testing the new code;
         /*
         shouldRefreshUsers = false;

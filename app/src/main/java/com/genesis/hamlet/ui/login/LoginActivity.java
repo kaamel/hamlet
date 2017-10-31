@@ -1,8 +1,14 @@
 package com.genesis.hamlet.ui.login;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -34,7 +40,15 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
 
+import static com.genesis.hamlet.ui.MainActivity.MY_PERMISSIONS_REQUEST_LOCATION;
+
+@RuntimePermissions
 public class LoginActivity extends AppCompatActivity implements DataSource.OnUserCallback {
 
     private static final int RC_SIGN_IN = 9001;
@@ -126,7 +140,7 @@ public class LoginActivity extends AppCompatActivity implements DataSource.OnUse
     @Override
     public void onSuccess(User user) {
         pbLogin.setVisibility(View.GONE);
-        continueToUsersList();
+        LoginActivityPermissionsDispatcher.continueToUsersListWithCheck(this);
     }
 
     @Override
@@ -182,7 +196,8 @@ public class LoginActivity extends AppCompatActivity implements DataSource.OnUse
         googleSignIn.signIn(this, RC_SIGN_IN, this);
     }
 
-    private void continueToUsersList() {
+    @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
+    protected void continueToUsersList() {
         myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         if (remoteIntent != null) {
@@ -237,7 +252,64 @@ public class LoginActivity extends AppCompatActivity implements DataSource.OnUse
     }
 
 
-    // [END auth_with_facebook]
+    @OnShowRationale({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
+    void showRationaleForCamera(final PermissionRequest request) {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.title_location_permission)
+                .setMessage(R.string.text_location_permission)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //Prompt the user once explanation has been shown
+                        ActivityCompat.requestPermissions(LoginActivity.this,
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                MY_PERMISSIONS_REQUEST_LOCATION);
+                    }
+                })
+                .create()
+                .show();
+    }
 
+    @OnNeverAskAgain({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
+    void showNeverAskForLocation() {
+        Toast.makeText(this, "You will need to manually grant location permission", Toast.LENGTH_SHORT).show();
+    }
+
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull
+            String permissions[], @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        LoginActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // location-related task you need to do.
+                    if ((ContextCompat.checkSelfPermission(this,
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) ||
+                            (ContextCompat.checkSelfPermission(this,
+                                    Manifest.permission.ACCESS_COARSE_LOCATION)
+                                    == PackageManager.PERMISSION_GRANTED)) {
+
+                        //showTheFragment();
+                        //showFragment(UsersFragment.class);
+
+                    }
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+
+                }
+            }
+        }
+    }
 
 }

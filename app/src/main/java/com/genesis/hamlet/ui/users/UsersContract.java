@@ -23,8 +23,9 @@ interface UsersContract {
 
     interface Presenter extends IBasePresenter<View> {
         boolean isConnected();
+        void refreshUsers(Context context);
         void connect(Context context);
-        void loadMoreUsers(Context context, int page);
+        void loadMoreUsers(Context context);
         void interestsUpdated(Context context);
     }
 }

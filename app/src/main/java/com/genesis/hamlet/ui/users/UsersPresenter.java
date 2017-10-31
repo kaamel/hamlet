@@ -29,6 +29,8 @@ public class UsersPresenter extends BasePresenter<UsersContract.View> implements
     private ThreadExecutor threadExecutor;
     private MainUiThread mainUiThread;
 
+    //private Context context;
+
     public UsersPresenter(UsersContract.View view, DataRepository dataRepository,
                           ThreadExecutor threadExecutor, MainUiThread mainUiThread) {
         this.view = view;
@@ -40,6 +42,11 @@ public class UsersPresenter extends BasePresenter<UsersContract.View> implements
     @Override
     public boolean isConnected() {
         return dataRepository.isConnected();
+    }
+
+    @Override
+    public void refreshUsers(Context context) {
+        dataRepository.refereshUsers(context);
     }
 
     @Override
@@ -108,7 +115,7 @@ public class UsersPresenter extends BasePresenter<UsersContract.View> implements
     }
 
     @Override
-    public void loadMoreUsers(Context context, int page) {
+    public void loadMoreUsers(Context context) {
         if (dataRepository.isConnected()) {
             if (view != null)
                 view.setProgressBar(false);

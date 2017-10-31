@@ -127,14 +127,14 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
                 //endtButton.setVisibility(View.GONE);
                 acceptButton.setClickable(false);
                 ignoreButton.setVisibility(View.INVISIBLE);
-                getActivity().onBackPressed();
+                //getActivity().onBackPressed();
                 fragmentInteractionListener.getDataRepository().
                         sendNotification(user,
                                 "request_to_connect_accepted",
                                 chatRoom,
                                 MyInterests.getInstance().getIntroTitle(),
                                 MyInterests.getInstance().getIntroDetail());
-                switchToChatView(chatRoom, user);
+                switchToChatView(chatRoom, user, false);
             }
         });
 
@@ -213,12 +213,12 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
                         MyInterests.getInstance().getIntroDetail());
     }
 
-    private void switchToChatView(String chatRoom, User otherUser) {
+    private void switchToChatView(String chatRoom, User otherUser, boolean back) {
         Parcelable parcelable = Parcels.wrap(otherUser);
         Bundle bundle = new Bundle();
         bundle.putParcelable(Properties.BUNDLE_KEY_USER, parcelable);
         bundle.putString("chatRoom", chatRoom);
         fragmentInteractionListener.showFragment(MMessagesFragment.class, chatRoom, bundle,
-                true);
+                back);
     }
 }
