@@ -94,8 +94,10 @@ public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdap
         viewHolder.tvDisplayName.setText(user.getDisplayName());
         viewHolder.tvIntroTitle.setText(user.getIntroTitle());
 
-        Glide.with(context).load(user.getPhotoUrl()).placeholder(R.mipmap.ic_launcher_round).error(
-                R.mipmap.ic_launcher_round).into(viewHolder.ivProfile);
+        Glide.with(context).load(user.getPhotoUrl())
+                .placeholder(R.mipmap.ic_launcher_round)
+                .error(R.mipmap.ic_launcher_round)
+                .into(viewHolder.ivProfile);
     }
 
     @Override
