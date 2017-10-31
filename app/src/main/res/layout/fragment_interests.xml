@@ -4,6 +4,7 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:clipToPadding="false"
+android:background="@color/colorLightGrey"
 tools:context="com.genesis.hamlet.ui.interests.InterestsFragment">
 
 <EditText
@@ -31,7 +32,7 @@ tools:context="com.genesis.hamlet.ui.interests.InterestsFragment">
     android:scaleY="1.2"
     android:paddingEnd="8dp"
     android:paddingRight="8dp"
-    android:text="User Profile"
+    android:text="Sync Profile"
     android:buttonTint="@color/colorBlue"
     android:layout_alignTop="@+id/etNickName"
     android:layout_alignParentRight="true"/>
@@ -283,13 +284,11 @@ tools:context="com.genesis.hamlet.ui.interests.InterestsFragment">
     android:text="@string/ok"
     android:enabled="false"
     android:textAllCaps="false"
-    android:textColor="@android:color/white"
+    android:textColor="@color/colorGrey"
     android:textSize="20sp"
-    android:layout_marginTop="40dp"
-    android:layout_below="@id/viewEnd"
+    android:elevation="8dp"
+    android:layout_below="@+id/viewEnd"
     android:layout_centerHorizontal="true"
-    android:elevation="10dp"
-    android:translationZ="10dp"
-    />
+    android:layout_marginTop="25dp" />
 
 </RelativeLayout>
