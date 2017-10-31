@@ -64,7 +64,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/card_view"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="4dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:textColor="@android:color/black"
@@ -79,9 +79,9 @@
                     android:layout_alignStart="@+id/card_view"
                     android:layout_below="@+id/tvInterestCategory"
                     android:layout_marginLeft="8dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="4dp"
                     android:textColor="@android:color/black"
-                    android:textSize="24sp"
+                    android:textSize="20sp"
                     android:visibility="visible"
                     tools:text="Keep Walking!" />
 
@@ -93,7 +93,6 @@
                     android:layout_alignStart="@+id/card_view"
                     android:layout_below="@+id/tvIntroTitleDetail"
                     android:layout_marginLeft="8dp"
-                    android:layout_marginTop="4dp"
                     android:textColor="@android:color/black"
                     android:textSize="18sp"
                     android:visibility="visible"
@@ -113,9 +112,10 @@
 
                         <Button
                             android:id="@+id/btnConnected"
-                            android:layout_width="match_parent"
+                            android:layout_width="175dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="32dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="8dp"
                             android:background="@color/colorBlue"
                             android:paddingBottom="4dp"
                             android:paddingTop="4dp"
@@ -125,16 +125,17 @@
 
                         <Button
                             android:id="@+id/btnEnd"
-                            android:layout_width="match_parent"
+                            android:layout_width="175dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="32dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="8dp"
                             android:background="@color/colorRed"
                             android:paddingBottom="4dp"
                             android:paddingTop="4dp"
                             android:text="@string/end"
                             android:textColor="@android:color/white"
                             android:textSize="20sp"
-                            android:visibility="gone" />
+                            android:visibility="visible" />
 
                     </LinearLayout>
 
@@ -149,7 +150,7 @@
                             android:id="@+id/btnAccept"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="32dp"
+                            android:layout_marginTop="8dp"
                             android:background="@color/colorBlue"
                             android:paddingBottom="4dp"
                             android:paddingTop="4dp"
@@ -161,7 +162,7 @@
                             android:id="@+id/btnIgnore"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="32dp"
+                            android:layout_marginTop="8dp"
                             android:background="@color/colorRed"
                             android:paddingBottom="4dp"
                             android:paddingTop="4dp"
