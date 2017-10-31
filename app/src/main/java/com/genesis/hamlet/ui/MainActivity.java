@@ -79,7 +79,7 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
 
         dataRepository = Injection.provideDataRepository();
         remoteIntent = getIntent();
-        //MainActivityPermissionsDispatcher.setUpNotificationReceiverWithCheck(this);
+        MainActivityPermissionsDispatcher.setUpNotificationReceiverWithCheck(this);
     }
 
     boolean isNotificationSetup = false;
