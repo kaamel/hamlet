@@ -26,6 +26,8 @@ import com.genesis.hamlet.util.mvp.BaseView;
 
 import org.parceler.Parcels;
 
+import static java.lang.System.load;
+
 /**
  * The {@link Fragment} that receives photo data from
  * {@link UsersFragment}
@@ -196,7 +198,10 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
     private void displayUserInfo(@Nullable User user) {
         if (user != null) {
             if (!TextUtils.isEmpty(user.getPhotoUrl())) {
-                Glide.with(getActivity()).load(getHighResPhotoUrl(user.getPhotoUrl())).into(userProfile);
+                Glide.with(getActivity())
+                        .load(getHighResPhotoUrl(user.getPhotoUrl()))
+                        .placeholder(R.mipmap.ic_konnect_app)
+                        .into(userProfile);
             }
             tvUserName.setText(user.getDisplayName());
             tvIntroTitle.setText(user.getIntroTitle());
