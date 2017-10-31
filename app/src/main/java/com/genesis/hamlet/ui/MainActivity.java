@@ -161,7 +161,19 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
 
     @Override
     protected void onDestroy() {
-        //dataRepository.disconnect(this);
+        final Context context = getApplicationContext();
+        //kill the service after 5 minutes
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(300000);
+                    dataRepository.disconnect(context);
+                } catch (InterruptedException e) {
+                    dataRepository.disconnect(context);
+                }
+            }
+        });
         if (br != null)
             unregisterReceiver(br);
         super.onDestroy();

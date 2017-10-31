@@ -39,6 +39,64 @@ public class UsersPresenter extends BasePresenter<UsersContract.View> implements
         this.mainUiThread = mainUiThread;
     }
 
+    DataSource.OnUsersCallback usersCallback = new DataSource.OnUsersCallback() {
+        @Override
+        public void onSuccess(List<User> users) {
+            if (view != null) {
+                view.setProgressBar(false);
+                if (users == null || users.size() == 0) {
+                    return;
+                }
+                view.showUsers(users);
+                view.shouldShowPlaceholderText();
+            }
+        }
+
+        @Override
+        public void onFailure(Throwable throwable) {
+            if (view != null) {
+                view.setProgressBar(false);
+                //// TODO: 10/14/17 set error message here
+                view.showToastMessage("Something went wrong");
+                view.shouldShowPlaceholderText();
+            }
+        }
+
+        @Override
+        public void onNetworkFailure() {
+            if (view != null) {
+                view.setProgressBar(false);
+                //// TODO: 10/14/17 set the network error message here
+                view.showToastMessage("Something wrong with network");
+                view.shouldShowPlaceholderText();
+            }
+        }
+
+        @Override
+        public void onNewUserJoined(User user) {
+            if (view != null) {
+                view.setProgressBar(false);
+                view.addUser(user);
+            }
+        }
+
+        @Override
+        public void onUserLeft(User user) {
+            if (view != null) {
+                view.setProgressBar(false);
+                view.remove(user);
+            }
+        }
+
+        @Override
+        public void onUserUpdate(User user) {
+            if (view != null) {
+                view.setProgressBar(false);
+                view.updateUser(user);
+            }
+        }
+    };
+
     @Override
     public boolean isConnected() {
         return dataRepository.isConnected();
@@ -55,63 +113,7 @@ public class UsersPresenter extends BasePresenter<UsersContract.View> implements
         //    return;
         view.setProgressBar(true);
 
-        dataRepository.connectRemote(context, new DataSource.OnUsersCallback() {
-            @Override
-            public void onSuccess(List<User> users) {
-                if (view != null) {
-                    view.setProgressBar(false);
-                    if (users == null || users.size() == 0) {
-                        return;
-                    }
-                    view.showUsers(users);
-                    view.shouldShowPlaceholderText();
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable throwable) {
-                if (view != null) {
-                    view.setProgressBar(false);
-                    //// TODO: 10/14/17 set error message here
-                    view.showToastMessage("Something went wrong");
-                    view.shouldShowPlaceholderText();
-                }
-            }
-
-            @Override
-            public void onNetworkFailure() {
-                if (view != null) {
-                    view.setProgressBar(false);
-                    //// TODO: 10/14/17 set the network error message here
-                    view.showToastMessage("Something wrong with network");
-                    view.shouldShowPlaceholderText();
-                }
-            }
-
-            @Override
-            public void onNewUserJoined(User user) {
-                if (view != null) {
-                    view.setProgressBar(false);
-                    view.addUser(user);
-                }
-            }
-
-            @Override
-            public void onUserLeft(User user) {
-                if (view != null) {
-                    view.setProgressBar(false);
-                    view.remove(user);
-                }
-            }
-
-            @Override
-            public void onUserUpdate(User user) {
-                if (view != null) {
-                    view.setProgressBar(false);
-                    view.updateUser(user);
-                }
-            }
-        }, 0);
+        dataRepository.connectRemote(context, usersCallback, 0);
     }
 
     @Override

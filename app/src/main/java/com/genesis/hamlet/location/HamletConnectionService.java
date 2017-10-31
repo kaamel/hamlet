@@ -64,6 +64,7 @@ public class HamletConnectionService extends Service implements
 
     protected com.google.android.gms.common.api.GoogleApiClient mGoogleApiClient;
     private LocationCallback locationCallback;
+    private boolean stopUpdates = false;
 
     public HamletConnectionService() {
     }
@@ -88,6 +89,23 @@ public class HamletConnectionService extends Service implements
                     referesh();
                 } else if ("stop".equals(intent.getStringExtra("command"))) {
                     stopSelf();
+                    return START_NOT_STICKY;
+                } else if ("remove_stop".equals(intent.getStringExtra("command"))) {
+                    stopUpdates = true;
+                    if (mFusedLocationClient != null ) {
+                        mFusedLocationClient.removeLocationUpdates(locationCallback);
+                    }
+                    removeUser();new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                //e.printStackTrace();
+                            }
+                            stopSelf();
+                        }
+                    }).start();
                     return START_NOT_STICKY;
                 }
                 //return START_STICKY;
@@ -181,7 +199,7 @@ public class HamletConnectionService extends Service implements
 
     private void updateLocation() {
         FirebaseUser fu = FirebaseAuth.getInstance().getCurrentUser();
-        if (fu != null && geoFire != null) {
+        if (fu != null && geoFire != null && !stopUpdates) {
             geoFire.setLocation(FirebaseAuth.getInstance().getCurrentUser().getUid(), location);
             if (geoQuery == null)
                 setUpLocationUpdates();
@@ -356,11 +374,32 @@ public class HamletConnectionService extends Service implements
 
     @Override
     public void onDestroy() {
+        /*
         if (mFusedLocationClient != null ) {
             mFusedLocationClient.removeLocationUpdates(locationCallback);
             geoFire.removeLocation(me.getUid());
         }
         removeUser();
+        */
+
+        stopUpdates = true;
+        if (mFusedLocationClient != null ) {
+            mFusedLocationClient.removeLocationUpdates(locationCallback);
+        }
+        removeUser();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    //e.printStackTrace();
+                }
+                removeUser();
+                stopSelf();
+            }
+        }).start();
+
         super.onDestroy();
         Log.d("Hamlet Service", "Leaving the service");
     }

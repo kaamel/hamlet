@@ -150,9 +150,9 @@ public class UsersFragment extends BaseView implements UsersContract.View {
                 presenter.connect(getContext());
             }
         }
-        else {
+        else if (!presenter.isConnected()) {
             presenter.connect(getContext());
-            refreshUsers();
+            //refreshUsers();
         }
     }
 

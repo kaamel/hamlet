@@ -71,7 +71,14 @@ public class RemoteDataSource extends DataSource {
             return;
         connected = false;
         Intent intent = new Intent(context.getApplicationContext(), HamletConnectionService.class);
+
         context.getApplicationContext().stopService(intent);
+
+        /*
+        intent.putExtra("command","remove_stop");
+        context.getApplicationContext().startService(intent);
+        */
+        usersRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).removeValue();
         context.getApplicationContext().unregisterReceiver(br);
     }
 
