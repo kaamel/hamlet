@@ -178,7 +178,7 @@ public class MainActivity extends FoaBaseActivity implements BaseFragmentInterac
                     dr.disconnect(context);
                 }
             }
-        });
+        }).start();
         if (br != null)
             unregisterReceiver(br);
         super.onDestroy();

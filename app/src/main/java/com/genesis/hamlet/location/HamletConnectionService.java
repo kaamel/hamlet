@@ -220,8 +220,7 @@ public class HamletConnectionService extends Service implements
         if (fu != null) {
 
             geoFire.setLocation(FirebaseAuth.getInstance().getCurrentUser().getUid(), new GeoLocation(location.latitude, location.longitude));
-            //// TODO: 10/27/17 make sure to return it to 0.5 mile! For testing only, it is changed to 20
-            geoQuery = geoFire.queryAtLocation(location, 20.0);
+            geoQuery = geoFire.queryAtLocation(location, 0.5);
 
             geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
                 @Override

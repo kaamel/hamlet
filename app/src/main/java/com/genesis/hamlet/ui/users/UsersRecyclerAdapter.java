@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.genesis.hamlet.R;
 import com.genesis.hamlet.data.models.user.User;
+import com.genesis.hamlet.util.RoundedCornersTransformation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,8 +97,9 @@ public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdap
         viewHolder.tvIntroTitle.setText(user.getIntroTitle());
 
         if (context != null && !((Activity) context).isFinishing())
-            Glide.with(context).load(user.getPhotoUrl()).placeholder(R.mipmap.ic_launcher_round).error(
-                    R.mipmap.ic_launcher_round).into(viewHolder.ivProfile);
+            Glide.with(context).load(user.getPhotoUrl()).placeholder(R.mipmap.ic_launcher_round)
+                    .bitmapTransform(new RoundedCornersTransformation( context, 72, 2))
+                    .error(R.mipmap.ic_launcher_round).into(viewHolder.ivProfile);
     }
 
     @Override

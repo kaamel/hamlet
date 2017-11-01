@@ -20,6 +20,7 @@ import com.genesis.hamlet.R;
 public abstract class FoaBaseActivity extends AppCompatActivity implements
         FragmentManager.OnBackStackChangedListener {
 
+    Fragment lastFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,6 +65,9 @@ public abstract class FoaBaseActivity extends AppCompatActivity implements
 
         if (addToBackStack) {
             fragmentTransaction.addToBackStack(null);
+        }
+        else {
+            lastFragment = fragment;
         }
         FrameLayout container = (FrameLayout) findViewById(R.id.fragmentPlaceHolder);
         if (container != null) {
@@ -117,6 +121,14 @@ public abstract class FoaBaseActivity extends AppCompatActivity implements
         shouldShowActionBarUpButton();
     }
 
+    @Override
+    public void onBackPressed() {
+        if (lastFragment != null) {
+            getSupportFragmentManager().beginTransaction().remove(lastFragment).commit();
+            lastFragment = null;
+        }
+        super.onBackPressed();
+    }
 }
 
 

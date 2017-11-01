@@ -67,7 +67,7 @@ public class MMessageRecyclerAdapter extends RecyclerView.Adapter<MMessageViewHo
         viewHolder.getMessengerTextView().setText(mMessage.getDisplayName());
         //viewHolder.messengerImageView.setImageDrawable(ContextCompat.getDrawable(mContext,R.drawable.ic_account_circle));
         if (mMessage.getProfileUrl() == null) {
-            viewHolder.messengerImageView.setImageDrawable(ContextCompat.getDrawable(mContext,R.drawable.ic_account_circle));
+            viewHolder.messengerImageView.setImageDrawable(ContextCompat.getDrawable(mContext,R.mipmap.ic_launcher_round));
         } else {
             Glide.with(mContext)
                     .load(mMessage.getProfileUrl())
@@ -75,7 +75,7 @@ public class MMessageRecyclerAdapter extends RecyclerView.Adapter<MMessageViewHo
         }
 
         if (mMessage.getImageUrl() == null) {
-            viewHolder.messageImageView.setImageDrawable(ContextCompat.getDrawable(mContext,R.drawable.ic_account_circle));
+            viewHolder.messageImageView.setImageDrawable(ContextCompat.getDrawable(mContext,R.mipmap.ic_launcher_round));
         } else {
             Glide.with(mContext)
                     .load(mMessage.getImageUrl())
