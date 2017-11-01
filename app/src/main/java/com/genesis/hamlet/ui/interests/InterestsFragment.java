@@ -79,13 +79,13 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
             }
         });
 
-        //exit = (Button) view.findViewById(R.id.btnExit);
-//        exit.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //getActivity().finish();
-//            }
-//        });
+        exit = (Button) view.findViewById(R.id.btnExit);
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //getActivity().finish();
+            }
+        });
 
         llCheckboxesList = (LinearLayout) view.findViewById(R.id.checkboxList);
         etTitle = (EditText) view.findViewById(R.id.etTitle);
