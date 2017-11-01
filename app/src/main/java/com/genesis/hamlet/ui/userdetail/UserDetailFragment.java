@@ -218,18 +218,20 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
             int count = 0;
             boolean firstItem = true;
 
-            for (boolean b : interests) {
-                if (b) {
-                    if (firstItem == false) {
-                        stringBuilder.append(", ");
+            if (interests != null && interests.length > 0) {
+                for (boolean b : interests) {
+                    if (b) {
+                        if (firstItem == false) {
+                            stringBuilder.append(", ");
+                        }
+                        stringBuilder.append(interestTopics[count]);
+                        firstItem = false;
                     }
-                    stringBuilder.append(interestTopics[count]);
-                    firstItem = false;
+                    count++;
                 }
-                count++;
-            }
 
-            tvInterests.setText(stringBuilder.toString());
+                tvInterests.setText(stringBuilder.toString());
+            }
         }
     }
 

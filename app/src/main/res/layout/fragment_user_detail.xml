@@ -148,11 +148,12 @@
 
                         <Button
                             android:id="@+id/btnAccept"
-                            android:layout_width="match_parent"
+                            android:layout_width="175dp"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
                             android:paddingBottom="4dp"
                             android:paddingTop="4dp"
+                            android:layout_gravity="center_horizontal"
                             android:text="@string/accept"
                             android:textColor="@android:color/white"
                             android:textSize="20sp"
@@ -160,9 +161,10 @@
 
                         <Button
                             android:id="@+id/btnIgnore"
-                            android:layout_width="match_parent"
+                            android:layout_width="175dp"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
+                            android:layout_gravity="center_horizontal"
                             android:paddingBottom="4dp"
                             android:paddingTop="4dp"
                             android:text="@string/ignore"
