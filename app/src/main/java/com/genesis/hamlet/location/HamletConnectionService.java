@@ -307,19 +307,24 @@ public class HamletConnectionService extends Service implements
                         }
                         listenerMap.put(user.getUid(), eventListener);
                         if (isInteresting(user)) {
-                            broadcast(user, what);
+                            broadcast(user, 1);
+                        }
+                        else {
+                            broadcast(user, -1);
                         }
                     } else if (what == -1) {
                         if (user.getUid() != null && listenerMap.get(user.getUid()) != null) {
                             FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).removeEventListener(listenerMap.get(user.getUid()));
                         }
                         listenerMap.remove(user.getUid());
-                        broadcast(user, what);
+                        broadcast(user, -1);
                     }
-                    if (isInteresting(user)) {
-                        broadcast(user, what);
-                    } else {
-                        broadcast(user, what);
+                    else {
+                        if (isInteresting(user)) {
+                            broadcast(user, 0);
+                        } else {
+                            broadcast(user, -1);
+                        }
                     }
                 }
             }

@@ -12,9 +12,9 @@ public class MMessage {
 
     long locationLat;
     long locationLon;
-    long locationTime;
+    String locationTime;
 
-    long createTime;
+    String createTime;
 
     String senderUid;
     String profileUrl;
@@ -92,19 +92,19 @@ public class MMessage {
         this.locationLon = locationLon;
     }
 
-    public long getLocationTime() {
+    public String getLocationTime() {
         return locationTime;
     }
 
-    public void setLocationTime(long locationTime) {
+    public void setLocationTime(String locationTime) {
         this.locationTime = locationTime;
     }
 
-    public long getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(long createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
