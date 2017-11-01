@@ -7,12 +7,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="com.genesis.hamlet.ui.login.LoginActivity">
+
         <LinearLayout
             android:id="@+id/btSignInWithGoogle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_height="48dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
             android:layout_marginTop="40dp"
             android:layout_centerInParent="true"
             android:layout_gravity="center_horizontal"
@@ -33,33 +34,40 @@
                 android:textColor="@android:color/white"/>
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/ivLogo"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@+id/tvAppName"
+            android:src="@mipmap/ic_konnect_app"/>
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/tvAppName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="8dp"
             android:text="@string/sign_in_title"
-            android:minLines="2"
+            android:minLines="1"
             android:textColor="@android:color/black"
             android:textSize="32sp"
-            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
             android:gravity="center"
             android:layout_above="@+id/btSignInWithGoogle"/>
 
         <com.facebook.login.widget.LoginButton
             android:id="@+id/btnFaceBookLogin"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="64dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
             android:layout_below="@+id/btSignInWithGoogle"
             android:text="@string/signInFacebook"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
             android:layout_marginTop="32dp"
-            android:paddingLeft="64dp"
-            android:paddingRight="64dp"
+            android:paddingLeft="72dp"
+            android:paddingRight="8dp"
             android:textStyle="normal"
             style="@style/FacebookLoginButton"/>
 
