@@ -126,6 +126,10 @@ public abstract class FoaBaseActivity extends AppCompatActivity implements
         if (lastFragment != null) {
             getSupportFragmentManager().beginTransaction().remove(lastFragment).commit();
             lastFragment = null;
+            FrameLayout container = (FrameLayout) findViewById(R.id.fragmentPlaceHolder);
+            if (container != null) {
+                container.removeAllViews();
+            }
         }
         super.onBackPressed();
     }
