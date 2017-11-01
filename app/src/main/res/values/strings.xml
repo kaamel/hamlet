@@ -32,6 +32,6 @@
 
     <string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
     <string name="title">What you like to do today!</string>
-    <string name="interestDes">Tell us more(Optional)! </string>
+    <string name="interestDes">Tell us more (Optional)! </string>
 
 </resources>

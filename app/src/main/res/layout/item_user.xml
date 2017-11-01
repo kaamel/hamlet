@@ -1,57 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.v7.widget.CardView
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="15dp"
+    android:layout_marginRight="15dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    card_view:cardCornerRadius="5dp"
+    card_view:cardElevation="8dp">
 
-    <data>
 
-    </data>
+    <RelativeLayout
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:background="@android:drawable/dialog_holo_light_frame"
-        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/ivProfile"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/rectangle"
+            app:srcCompat="@drawable/ic_account_circle"/>
 
-        <android.support.constraint.ConstraintLayout
+        <View
+            android:layout_width="2dp"
+            android:layout_height="48dp"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/ivProfile"
+            android:layout_toEndOf="@id/ivProfile"
+            android:background="@color/colorGrey"
+            android:id="@+id/viewEnd" />
+
+        <TextView
+            android:id="@+id/tvDisplayName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            tools:context="com.genesis.hamlet.ui.interestCats.InterestsFragment">
+            android:paddingLeft="10dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="4dp"
+            android:layout_toRightOf="@id/ivProfile"
+            android:textColor="@color/colorBlue"
+            android:text="John Doe"
+            android:textSize="18sp"
+            android:textStyle="italic"/>
 
-            <TextView
-                android:id="@+id/tvDisplayName"
-                android:layout_width="368dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold|italic"
-                app:layout_constraintLeft_toRightOf="@+id/ivProfile"
-                app:layout_constraintTop_toTopOf="@+id/ivProfile" />
+        <TextView
+        android:id="@+id/tvIntroTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvDisplayName"
+            android:layout_marginTop="3dp"
+            android:paddingLeft="10dp"
+            android:layout_alignStart="@id/tvDisplayName"
+            android:layout_alignLeft="@id/tvDisplayName"
+            android:layout_alignEnd="@id/tvDisplayName"
+            android:layout_alignRight="@id/tvDisplayName"
+            android:textColor="@color/colorBlack"
+            android:text="I am into football"
+            android:textSize="18sp"/>
 
-            <ImageView
-                android:id="@+id/ivProfile"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_account_circle" />
+    </RelativeLayout>
 
-            <TextView
-                android:id="@+id/tvIntroTitle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="8dp"
-                android:textColor="@android:color/black"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintLeft_toLeftOf="@+id/tvDisplayName"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvDisplayName" />
+</android.support.v7.widget.CardView>
 
-        </android.support.constraint.ConstraintLayout>
-    </LinearLayout>
-</layout>
+
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<layout xmlns:app="http://schemas.android.com/apk/res-auto"-->
+    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:tools="http://schemas.android.com/tools">-->
+
+    <!--<data>-->
+
+    <!--</data>-->
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:background="@android:drawable/dialog_holo_light_frame"-->
+        <!--android:layout_height="wrap_content">-->
+
+        <!--<android.support.constraint.ConstraintLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginBottom="8dp"-->
+            <!--tools:context="com.genesis.hamlet.ui.interestCats.InterestsFragment">-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/tvDisplayName"-->
+                <!--android:layout_width="368dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="8dp"-->
+                <!--android:textColor="@android:color/holo_green_dark"-->
+                <!--android:textSize="18sp"-->
+                <!--android:textStyle="bold|italic"-->
+                <!--app:layout_constraintLeft_toRightOf="@+id/ivProfile"-->
+                <!--app:layout_constraintTop_toTopOf="@+id/ivProfile" />-->
+
+            <!--<ImageView-->
+                <!--android:id="@+id/ivProfile"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="8dp"-->
+                <!--android:layout_marginTop="8dp"-->
+                <!--app:layout_constraintLeft_toLeftOf="parent"-->
+                <!--app:layout_constraintTop_toTopOf="parent"-->
+                <!--app:srcCompat="@drawable/ic_account_circle" />-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/tvIntroTitle"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="0dp"-->
+                <!--android:layout_marginRight="8dp"-->
+                <!--android:layout_marginTop="8dp"-->
+                <!--android:textColor="@android:color/holo_orange_dark"-->
+                <!--app:layout_constraintHorizontal_bias="0.0"-->
+                <!--app:layout_constraintLeft_toLeftOf="@+id/tvDisplayName"-->
+                <!--app:layout_constraintRight_toRightOf="parent"-->
+                <!--app:layout_constraintTop_toBottomOf="@+id/tvDisplayName" />-->
+
+        <!--</android.support.constraint.ConstraintLayout>-->
+    <!--</LinearLayout>-->
+<!--</layout>-->

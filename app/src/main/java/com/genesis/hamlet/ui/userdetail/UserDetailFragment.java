@@ -205,7 +205,7 @@ public class UserDetailFragment extends BaseView implements UserDetailContract.V
             if (!TextUtils.isEmpty(user.getPhotoUrl())) {
                 Glide.with(getActivity())
                         .load(getHighResPhotoUrl(user.getPhotoUrl()))
-                        .placeholder(R.mipmap.ic_konnect_app)
+                        .placeholder(R.drawable.ic_konnect_launcher)
                         .into(userProfile);
             }
             tvUserName.setText(user.getDisplayName());

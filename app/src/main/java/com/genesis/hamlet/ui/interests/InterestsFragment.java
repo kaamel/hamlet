@@ -3,7 +3,9 @@ package com.genesis.hamlet.ui.interests;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
@@ -83,13 +85,13 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
             }
         });
 
-        //exit = (Button) view.findViewById(R.id.btnExit);
-//        exit.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //getActivity().finish();
-//            }
-//        });
+        exit = (Button) view.findViewById(R.id.btnExit);
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //getActivity().finish();
+            }
+        });
 
         llCheckboxesList = (LinearLayout) view.findViewById(R.id.checkboxList);
         etTitle = (EditText) view.findViewById(R.id.etTitle);
@@ -310,7 +312,7 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
         super.onDetach();
     }
 
-
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     void checkNewItemForEmptyValues(){
 
         String newTitle= etTitle.getText().toString();
@@ -333,6 +335,7 @@ public class InterestsFragment extends BaseView implements InterestsContract.Vie
         if(newDescription.equals("")){
             done.setEnabled(false);
             done.setTextColor(ContextCompat.getColor(getContext(),R.color.colorLightGrey));
+            done.setElevation(12);
             gradientDrawable1.setStroke(4, ContextCompat.getColor(getContext(),R.color.colorBlue));
 
         } else{
