@@ -107,16 +107,7 @@ public class MMessagesFragment extends BaseView implements MMessagesContract.Vie
             }
         };
 
-        // rvMMessages.addOnScrollListener(endlessScrollListener);
-
-//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                //refreshUsers();
-//            }
-//        });
-//
-//        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark, R.color.colorPrimary);
+        fragmentInteractionListener.setTitle("Konnected to " + user.getDisplayName());
 
         presenter.connectChatroom(new DataSource.OnMMessagesCallback() {
             @Override
